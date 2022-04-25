@@ -1,0 +1,7 @@
+export const EDIT_SCREENSHOT_SETTINGS = 'EDIT_SCREENSHOT_SETTINGS';
+
+export const CREATE_VIDEO = 'CREATE_VIDEO';
+export const IMAGE_VIEWER = 'IMAGE_VIEWER';
+
+export const ADD_CAMERA = 'ADD_CAMERA';
+export const EDIT_CAMERA = 'EDIT_CAMERA';

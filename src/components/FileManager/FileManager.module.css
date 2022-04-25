@@ -1,0 +1,10 @@
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  /* margin: -0.5rem; */
+}
+.item {
+  width: calc((100% / 6) - 1rem);
+  margin: 0.5rem;
+  text-align: center;
+}
