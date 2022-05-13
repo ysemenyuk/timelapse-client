@@ -33,7 +33,12 @@ const deleteOne = async (cameraId) => {
 };
 
 const createScreenshot = async (cameraId, parentId) => {
-  const response = await instance.post(`/${cameraId}/screenshot`, { parentId }, { headers: getAuthHeader() });
+  const response = await instance.post(`/${cameraId}/tasks/screenshot`, { parentId }, { headers: getAuthHeader() });
+  return response;
+};
+
+const createVideo = async (cameraId, parentId) => {
+  const response = await instance.post(`/${cameraId}/tasks/video`, { parentId }, { headers: getAuthHeader() });
   return response;
 };
 
@@ -44,4 +49,5 @@ export default {
   updateOne,
   deleteOne,
   createScreenshot,
+  createVideo,
 };

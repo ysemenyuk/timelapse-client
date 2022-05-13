@@ -63,6 +63,13 @@ function CameraFileManager({ selectedCamera }) {
     }));
   };
 
+  const createVideoHandler = () => {
+    dispatch(cameraActions.createVideo({
+      cameraId: selectedCamera._id,
+      parentId: parentFolder._id,
+    }));
+  };
+
   const deleteFileHandler = (currentFile) => {
     dispatch(
       fileManagerActions.deleteOneFile({
@@ -72,12 +79,12 @@ function CameraFileManager({ selectedCamera }) {
     );
   };
 
-  const renderBreadcrumbs = () => foldersStack.map((folder) => (
+  const renderBreadcrumbs = () => foldersStack.map((folder, index) => (
     <Breadcrumb.Item
       onClick={() => clickBreadcrumbHandler(folder)}
       key={folder._id}
     >
-      {folder.name}
+      {index === 0 ? 'Main' : folder.name}
     </Breadcrumb.Item>
   ));
 
@@ -99,6 +106,7 @@ function CameraFileManager({ selectedCamera }) {
       <ImgWrapper
         width={100}
         height={0.5625}
+        // src={`/files/${file.name}?size=thumbnail`}
         src={`/files/${file.name}?size=thumbnail`}
         role="button"
         onClick={() => clickFileHandler(index)}
@@ -142,6 +150,7 @@ function CameraFileManager({ selectedCamera }) {
           <Button
             type="primary"
             size="sm"
+            onClick={createVideoHandler}
             disabled={btnDisabled}
           >
             CreateVideo

@@ -33,6 +33,7 @@
     "import/extensions": 0,
     "max-len": [1, 120, 2],
     "object-curly-newline": 0,
-    "react/jsx-props-no-spreading": 0
+    "react/jsx-props-no-spreading": 0,
+    "linebreak-style": ["error", "windows"]
   }
 }
