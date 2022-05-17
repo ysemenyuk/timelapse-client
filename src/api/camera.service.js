@@ -32,22 +32,10 @@ const deleteOne = async (cameraId) => {
   return response;
 };
 
-const createScreenshot = async (cameraId, parentId) => {
-  const response = await instance.post(`/${cameraId}/tasks/screenshot`, { parentId }, { headers: getAuthHeader() });
-  return response;
-};
-
-const createVideo = async (cameraId, parentId) => {
-  const response = await instance.post(`/${cameraId}/tasks/video`, { parentId }, { headers: getAuthHeader() });
-  return response;
-};
-
 export default {
   getAll,
   getOne,
   createOne,
   updateOne,
   deleteOne,
-  createScreenshot,
-  createVideo,
 };

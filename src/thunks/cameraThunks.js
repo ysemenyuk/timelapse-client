@@ -64,32 +64,4 @@ const deleteOne = createAsyncThunk('camera/deleteOne', async (camera) => {
   }
 });
 
-const createScreenshot = createAsyncThunk('file/createScreenshot', async ({ cameraId, parentId }) => {
-  try {
-    console.log('file/createScreenshot cameraId, parentId -', cameraId, parentId);
-
-    const { data } = await cameraService.createScreenshot(cameraId, parentId);
-
-    console.log('file/createScreenshot response -', data);
-    return data;
-  } catch (e) {
-    console.log('file/createScreenshot error -', e.message);
-    throw e;
-  }
-});
-
-const createVideo = createAsyncThunk('file/createVideo', async ({ cameraId, parentId }) => {
-  try {
-    console.log('file/createVideo cameraId, parentId -', cameraId, parentId);
-
-    const { data } = await cameraService.createVideo(cameraId, parentId);
-
-    console.log('file/createVideo response -', data);
-    return data;
-  } catch (e) {
-    console.log('file/createVideo error -', e.message);
-    throw e;
-  }
-});
-
-export default { fetchAll, fetchOne, createOne, updateOne, deleteOne, createScreenshot, createVideo };
+export default { fetchAll, fetchOne, createOne, updateOne, deleteOne };

@@ -8,8 +8,6 @@ function CameraScreen({ selectedCamera }) {
     return null;
   }
 
-  console.log(111, selectedCamera);
-
   const imageSrc = selectedCamera.avatar
     ? `/files/${selectedCamera.avatar.name}`
     : '';

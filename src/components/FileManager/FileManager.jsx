@@ -4,7 +4,6 @@ import { Breadcrumb, Col, Button, Spinner } from 'react-bootstrap';
 import styles from './FileManager.module.css';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 import folderImg from '../../assets/folder2.png';
-import { cameraActions } from '../../store/cameraSlice';
 import { fileManagerActions } from '../../store/fileManagerSlice';
 import ButtonsGroup from '../UI/ButtonsGroup';
 import Heading from '../UI/Heading';
@@ -13,6 +12,7 @@ import useFileManager from '../../hooks/useFileManager';
 import { IMAGE_VIEWER } from '../../utils/constants';
 import { modalActions } from '../../store/modalSlice';
 import ImgViewerModal from '../Modals/ImgViewerModal';
+import taskThunks from '../../thunks/taskThunks';
 
 function CameraFileManager({ selectedCamera }) {
   const dispatch = useDispatch();
@@ -47,36 +47,25 @@ function CameraFileManager({ selectedCamera }) {
 
   const clickRefreshHandler = () => {
     if (parentFolder) {
-      dispatch(
-        fileManagerActions.fetchFiles({
-          cameraId: selectedCamera._id,
-          parentId: parentFolder._id,
-        }),
-      );
+      dispatch(fileManagerActions.fetchFiles({
+        cameraId: selectedCamera._id,
+        parentId: parentFolder._id,
+      }));
     }
   };
 
   const createScreenshotHandler = () => {
-    dispatch(cameraActions.createScreenshot({
-      cameraId: selectedCamera._id,
-      parentId: parentFolder._id,
-    }));
-  };
-
-  const createVideoHandler = () => {
-    dispatch(cameraActions.createVideo({
+    dispatch(taskThunks.createScreenshot({
       cameraId: selectedCamera._id,
       parentId: parentFolder._id,
     }));
   };
 
   const deleteFileHandler = (currentFile) => {
-    dispatch(
-      fileManagerActions.deleteOneFile({
-        cameraId: selectedCamera._id,
-        fileId: currentFile._id,
-      }),
-    );
+    dispatch(fileManagerActions.deleteOneFile({
+      cameraId: selectedCamera._id,
+      fileId: currentFile._id,
+    }));
   };
 
   const renderBreadcrumbs = () => foldersStack.map((folder, index) => (
@@ -146,14 +135,6 @@ function CameraFileManager({ selectedCamera }) {
             disabled={btnDisabled}
           >
             CreateScreenshot
-          </Button>
-          <Button
-            type="primary"
-            size="sm"
-            onClick={createVideoHandler}
-            disabled={btnDisabled}
-          >
-            CreateVideo
           </Button>
         </ButtonsGroup>
       </Col>

@@ -7,16 +7,16 @@ import withModalWrapper from './withModalWrapper.jsx';
 import { EDIT_SCREENSHOT_SETTINGS } from '../../utils/constants.js';
 
 // const validationSchema = Yup.object({
-//   start: Yup.string().required(),
-//   finish: Yup.string().required(),
-//   interval: Yup.string().required(),
+//   startTime: Yup.string().required(),
+//   stopTime: Yup.string().required(),
+//   interval: Yup.number().required(),
 // });
 
 function EditScreenshotsSettingsModal({ type, show, onHide, onSubmit, initialValues }) {
-  console.log(111666, initialValues);
+  const { startTime, stopTime, interval } = initialValues;
 
   const formik = useFormik({
-    initialValues,
+    initialValues: { startTime, stopTime, interval },
     // validationSchema,
     onSubmit: (values) => {
       console.log('onSubmit values', values);
@@ -25,8 +25,8 @@ function EditScreenshotsSettingsModal({ type, show, onHide, onSubmit, initialVal
     },
   });
 
-  console.log('formik.errors -', formik.errors);
-  console.log('formik.values -', formik.values);
+  // console.log('formik.errors -', formik.errors);
+  // console.log('formik.values -', formik.values);
 
   return (
     <Modal
@@ -124,7 +124,7 @@ function EditScreenshotsSettingsModal({ type, show, onHide, onSubmit, initialVal
           onClick={formik.handleSubmit}
           size="sm"
         >
-          Submit
+          Save settings
         </Button>
       </Modal.Footer>
     </Modal>

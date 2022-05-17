@@ -65,4 +65,18 @@ const deleteOne = createAsyncThunk('task/deleteOne', async (task) => {
   }
 });
 
-export default { fetchAll, fetchOne, createOne, updateOne, deleteOne };
+const createScreenshot = createAsyncThunk('task/createScreenshot', async ({ cameraId, parentId }) => {
+  try {
+    console.log('task/createScreenshot cameraId, parentId -', cameraId, parentId);
+
+    const { data } = await taskService.createScreenshot(cameraId, parentId);
+
+    console.log('task/createScreenshot response -', data);
+    return data;
+  } catch (e) {
+    console.log('task/createScreenshot error -', e.message);
+    throw e;
+  }
+});
+
+export default { fetchAll, fetchOne, createOne, updateOne, deleteOne, createScreenshot };

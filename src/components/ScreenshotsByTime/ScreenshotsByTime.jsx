@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Col, Button, ListGroup, Badge } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import Heading from '../UI/Heading.jsx';
@@ -9,48 +9,80 @@ import taskService from '../../api/task.service.js';
 import EditScreenshotsSettingsModal from '../Modals/EditScreenshotsSettingsModal.jsx';
 
 const initialValues = {
-  status: 'Stopped',
-  startTime: '08:00',
-  stopTime: '20:00',
-  interval: 10,
-  jobName: 'consoleLog',
+  status: '--',
+  screenshotsByTime: {
+    startTime: '--:--',
+    stopTime: '--:--',
+    interval: '--',
+  },
 };
+
+// const screenshotByTimeData = {
+//   status: 'Stopped',
+//   screenshotsByTime: {
+//     startTime: '08:00',
+//     stopTime: '18:00',
+//     interval: '60',
+//   },
+// };
 
 function ScreenshotsByTime({ selectedCamera, row }) {
   const dispatch = useDispatch();
-
-  // const [screenshotsData, setScreenshotsData] = useState(() => {
-  //   const { status, data } = selectedCamera.imagesByTimeTask;
-  //   return { status, ...data };
-  // });
-
   const [screenshotsData, setScreenshotsData] = useState(initialValues);
 
-  // console.log(111111444, screenshotsData);
+  useEffect(() => {
+    if (selectedCamera && selectedCamera.screenshotsByTimeTask) {
+      taskService
+        .getOne(selectedCamera._id, selectedCamera.screenshotsByTimeTask)
+        .then((resp) => {
+          setScreenshotsData({ ...resp.data });
+        });
+    } else {
+      setScreenshotsData(initialValues);
+    }
+  }, [selectedCamera]);
 
-  // useEffect(() => {
-  //   taskService.getOne(selectedCamera._id, selectedCamera.imagesByTimeTask)
-  //     .then((resp) => {
-  //       console.log(11112, resp.data);
-  //       setScreenshotsData({ status: resp.data.status, ...resp.data.data });
-  //     });
-  // }, []);
+  const { status, screenshotsByTime } = screenshotsData;
+  const { startTime, stopTime, interval } = screenshotsByTime;
 
-  const { status, startTime, stopTime, interval } = screenshotsData;
-  const isRunning = status === 'running';
-  const files = getFilesPerDay(screenshotsData);
+  const isRunning = status === 'Running';
+  const files = getFilesPerDay(screenshotsByTime);
 
   const handleOpenEditModal = () => {
     dispatch(modalActions.openModal(EDIT_SCREENSHOT_SETTINGS));
   };
 
-  const handleStart = async () => {
-    const { data } = await taskService.updateOne(selectedCamera._id, screenshotsData);
-    console.log(111222, data);
+  // const handleCreateTask = () => {
+  //   console.log('handleCreateTask');
+  //   taskService
+  //     .createOne(selectedCamera._id, screenshotByTimeData)
+  //     .then((resp) => {
+  //       setScreenshotsData({ ...resp.data });
+  //     });
+  // };
+
+  const handleUpdateScreenshotByTimeTask = (settings, taskStatus = null) => {
+    console.log('handleUpdateTask settings', settings);
+    const data = {
+      status: taskStatus || screenshotsData.status,
+      screenshotsByTime: { ...settings },
+    };
+
+    taskService
+      .screenshotByTimeTask(selectedCamera._id, selectedCamera.screenshotsByTimeTask, data)
+      .then((resp) => {
+        setScreenshotsData({ ...resp.data });
+      });
   };
 
-  const handleStop = () => {
-    // console.log('stop')
+  const handleStartScreenshotByTime = () => {
+    console.log('handleStart');
+    handleUpdateScreenshotByTimeTask(screenshotsData.screenshotsByTime, 'Running');
+  };
+
+  const handleStopScreenshotByTime = () => {
+    console.log('handleStop');
+    handleUpdateScreenshotByTimeTask(screenshotsData.screenshotsByTime, 'Stopped');
   };
 
   if (!selectedCamera) {
@@ -104,20 +136,24 @@ function ScreenshotsByTime({ selectedCamera, row }) {
       </Choose>
 
       <>
-        <Button onClick={handleOpenEditModal} variant="primary" size="sm" className="me-2">
-          EditSettings
-        </Button>
-        <Button disabled={!isRunning} onClick={handleStop} variant="primary" size="sm" className="me-2">
+        <Button onClick={handleStopScreenshotByTime} disabled={!isRunning} variant="primary" size="sm" className="me-2">
           Stop
         </Button>
-        <Button disabled={isRunning} onClick={handleStart} variant="primary" size="sm" className="me-2">
+        <Button onClick={handleOpenEditModal} disabled={isRunning} variant="primary" size="sm" className="me-2">
+          EditSettings
+        </Button>
+        <Button onClick={handleStartScreenshotByTime} disabled={isRunning} variant="primary" size="sm" className="me-2">
           Start
         </Button>
+        {/*
+        <Button onClick={handleCreateTask} variant="primary" size="sm" className="me-2">
+          Create
+        </Button> */}
       </>
 
       <EditScreenshotsSettingsModal
-        initialValues={screenshotsData}
-        onSubmit={setScreenshotsData}
+        initialValues={screenshotsByTime}
+        onSubmit={handleUpdateScreenshotByTimeTask}
       />
     </Col>
   );

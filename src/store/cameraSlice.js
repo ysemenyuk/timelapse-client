@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-
 import cameraThunks from '../thunks/cameraThunks.js';
 import { userActions } from './userSlice.js';
 
