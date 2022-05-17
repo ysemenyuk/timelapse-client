@@ -10,7 +10,7 @@ import EditScreenshotsSettingsModal from '../Modals/EditScreenshotsSettingsModal
 
 const initialValues = {
   status: '--',
-  screenshotsByTime: {
+  screenshotsByTimeSettings: {
     startTime: '--:--',
     stopTime: '--:--',
     interval: '--',
@@ -19,7 +19,7 @@ const initialValues = {
 
 // const screenshotByTimeData = {
 //   status: 'Stopped',
-//   screenshotsByTime: {
+//   screenshotsByTimeSettings: {
 //     startTime: '08:00',
 //     stopTime: '18:00',
 //     interval: '60',
@@ -42,11 +42,11 @@ function ScreenshotsByTime({ selectedCamera, row }) {
     }
   }, [selectedCamera]);
 
-  const { status, screenshotsByTime } = screenshotsData;
-  const { startTime, stopTime, interval } = screenshotsByTime;
+  const { status, screenshotsByTimeSettings } = screenshotsData;
+  const { startTime, stopTime, interval } = screenshotsByTimeSettings;
 
   const isRunning = status === 'Running';
-  const files = getFilesPerDay(screenshotsByTime);
+  const files = getFilesPerDay(screenshotsByTimeSettings);
 
   const handleOpenEditModal = () => {
     dispatch(modalActions.openModal(EDIT_SCREENSHOT_SETTINGS));
@@ -65,7 +65,7 @@ function ScreenshotsByTime({ selectedCamera, row }) {
     console.log('handleUpdateTask settings', settings);
     const data = {
       status: taskStatus || screenshotsData.status,
-      screenshotsByTime: { ...settings },
+      screenshotsByTimeSettings: { ...settings },
     };
 
     taskService
@@ -77,12 +77,12 @@ function ScreenshotsByTime({ selectedCamera, row }) {
 
   const handleStartScreenshotByTime = () => {
     console.log('handleStart');
-    handleUpdateScreenshotByTimeTask(screenshotsData.screenshotsByTime, 'Running');
+    handleUpdateScreenshotByTimeTask(screenshotsData.screenshotsByTimeSettings, 'Running');
   };
 
   const handleStopScreenshotByTime = () => {
     console.log('handleStop');
-    handleUpdateScreenshotByTimeTask(screenshotsData.screenshotsByTime, 'Stopped');
+    handleUpdateScreenshotByTimeTask(screenshotsData.screenshotsByTimeSettings, 'Stopped');
   };
 
   if (!selectedCamera) {
@@ -152,7 +152,7 @@ function ScreenshotsByTime({ selectedCamera, row }) {
       </>
 
       <EditScreenshotsSettingsModal
-        initialValues={screenshotsByTime}
+        initialValues={screenshotsByTimeSettings}
         onSubmit={handleUpdateScreenshotByTimeTask}
       />
     </Col>
