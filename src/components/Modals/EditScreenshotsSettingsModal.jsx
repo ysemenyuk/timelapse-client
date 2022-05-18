@@ -2,7 +2,7 @@ import React from 'react';
 import { useFormik } from 'formik';
 // import * as Yup from 'yup';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
-import { getFilesPerDay } from '../../utils/utils.js';
+import { calculateFilesPerDay } from '../../utils/utils.js';
 import withModalWrapper from './withModalWrapper.jsx';
 import { EDIT_SCREENSHOT_SETTINGS } from '../../utils/constants.js';
 
@@ -93,7 +93,7 @@ function EditScreenshotsSettingsModal({ type, show, onHide, onSubmit, initialVal
         <Row className="mb-3">
           <Col>
             <span className="fw-bold">
-              {`${getFilesPerDay(formik.values)} files`}
+              {`${calculateFilesPerDay(formik.values)} files`}
             </span>
             {' '}
             per day
@@ -103,7 +103,7 @@ function EditScreenshotsSettingsModal({ type, show, onHide, onSubmit, initialVal
         <Row className="mb-3">
           <Col>
             <span className="fw-bold">
-              {`${Math.round(getFilesPerDay(formik.values) / 25)} seconds`}
+              {`${Math.round(calculateFilesPerDay(formik.values) / 25)} seconds`}
             </span>
             {' '}
             (25 fps) video of the day

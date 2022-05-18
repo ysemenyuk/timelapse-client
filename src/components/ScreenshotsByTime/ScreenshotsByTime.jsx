@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Col, Button, ListGroup, Badge } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import Heading from '../UI/Heading.jsx';
-import { getFilesPerDay } from '../../utils/utils.js';
+import { calculateFilesPerDay } from '../../utils/utils.js';
 import { modalActions } from '../../store/modalSlice.js';
 import { EDIT_SCREENSHOT_SETTINGS } from '../../utils/constants.js';
-import taskService from '../../api/task.service.js';
 import EditScreenshotsSettingsModal from '../Modals/EditScreenshotsSettingsModal.jsx';
+import taskThunks from '../../thunks/taskThunks.js';
 
 const initialValues = {
   status: '--',
@@ -28,25 +28,21 @@ const initialValues = {
 
 function ScreenshotsByTime({ selectedCamera, row }) {
   const dispatch = useDispatch();
-  const [screenshotsData, setScreenshotsData] = useState(initialValues);
+  const [screenshotByTimeTask, setScreenshotByTimeTask] = useState(initialValues);
 
   useEffect(() => {
     if (selectedCamera && selectedCamera.screenshotsByTimeTask) {
-      taskService
-        .getOne(selectedCamera._id, selectedCamera.screenshotsByTimeTask)
-        .then((resp) => {
-          setScreenshotsData({ ...resp.data });
-        });
+      setScreenshotByTimeTask(selectedCamera.screenshotsByTimeTask);
     } else {
-      setScreenshotsData(initialValues);
+      setScreenshotByTimeTask(initialValues);
     }
   }, [selectedCamera]);
 
-  const { status, screenshotsByTimeSettings } = screenshotsData;
+  const { status, screenshotsByTimeSettings } = screenshotByTimeTask;
   const { startTime, stopTime, interval } = screenshotsByTimeSettings;
 
   const isRunning = status === 'Running';
-  const files = getFilesPerDay(screenshotsByTimeSettings);
+  const files = calculateFilesPerDay(screenshotsByTimeSettings);
 
   const handleOpenEditModal = () => {
     dispatch(modalActions.openModal(EDIT_SCREENSHOT_SETTINGS));
@@ -61,28 +57,28 @@ function ScreenshotsByTime({ selectedCamera, row }) {
   //     });
   // };
 
-  const handleUpdateScreenshotByTimeTask = (settings, taskStatus = null) => {
+  const handleUpdateScreenshotByTime = (settings, taskStatus = null) => {
     console.log('handleUpdateTask settings', settings);
-    const data = {
-      status: taskStatus || screenshotsData.status,
+    const payload = {
+      status: taskStatus || screenshotByTimeTask.status,
       screenshotsByTimeSettings: { ...settings },
     };
 
-    taskService
-      .screenshotByTimeTask(selectedCamera._id, selectedCamera.screenshotsByTimeTask, data)
-      .then((resp) => {
-        setScreenshotsData({ ...resp.data });
-      });
+    dispatch(taskThunks.updateScreenshotByTime({
+      cameraId: selectedCamera._id,
+      taskId: selectedCamera.screenshotsByTimeTask._id,
+      payload,
+    }));
   };
 
   const handleStartScreenshotByTime = () => {
     console.log('handleStart');
-    handleUpdateScreenshotByTimeTask(screenshotsData.screenshotsByTimeSettings, 'Running');
+    handleUpdateScreenshotByTime(screenshotByTimeTask.screenshotsByTimeSettings, 'Running');
   };
 
   const handleStopScreenshotByTime = () => {
     console.log('handleStop');
-    handleUpdateScreenshotByTimeTask(screenshotsData.screenshotsByTimeSettings, 'Stopped');
+    handleUpdateScreenshotByTime(screenshotByTimeTask.screenshotsByTimeSettings, 'Stopped');
   };
 
   if (!selectedCamera) {
@@ -107,7 +103,7 @@ function ScreenshotsByTime({ selectedCamera, row }) {
         </When>
         <Otherwise>
           <Heading lvl={6} className="mb-3">
-            Get screenshots by time
+            Screenshots by time
           </Heading>
 
           <ListGroup className="mb-3">
@@ -153,7 +149,7 @@ function ScreenshotsByTime({ selectedCamera, row }) {
 
       <EditScreenshotsSettingsModal
         initialValues={screenshotsByTimeSettings}
-        onSubmit={handleUpdateScreenshotByTimeTask}
+        onSubmit={handleUpdateScreenshotByTime}
       />
     </Col>
   );

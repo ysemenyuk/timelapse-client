@@ -41,7 +41,7 @@ function ImgViewerModal({ type, show, onHide, files, onDeleteFile }) {
         <Modal.Title>{currentFile?.name}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <ImgWrapper width={100} height={0.5625} src={`/files/${currentFile?.name}`} />
+        <ImgWrapper width={100} height={0.5625} src={`/files/${currentFile?._id}`} />
       </Modal.Body>
       <Modal.Footer>
         <Button key="prew" onClick={prewImageHandler} disabled={prewImgBtnDisabled}>

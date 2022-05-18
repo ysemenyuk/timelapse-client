@@ -1,62 +1,90 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createSelector } from '@reduxjs/toolkit';
 import cameraThunks from '../thunks/cameraThunks.js';
+import taskThunks from '../thunks/taskThunks.js';
 import { userActions } from './userSlice.js';
 
 const { fetchAll, fetchOne, createOne, updateOne, deleteOne } = cameraThunks;
+const { updateScreenshotByTime } = taskThunks;
 
 // console.log("cameraSlice");
 
 const cameraSlice = createSlice({
   name: 'camera',
   initialState: {
-    allCameras: [],
-    selectedCamera: null,
+    cameras: {},
+    selectedCameraId: null,
   },
   reducers: {
     selectCamera: (state, action) => {
-      state.selectedCamera = action.payload;
+      state.selectedCameraId = action.payload;
     },
   },
   extraReducers: {
     [userActions.logout]: (state) => {
-      state.allCameras = [];
-      state.selectedCamera = null;
+      state.cameras = [];
+      state.selectedCameraId = null;
     },
     [fetchAll.fulfilled]: (state, action) => {
-      state.allCameras = action.payload;
-      if (state.selectedCamera === null && action.payload.length !== 0) {
-        // eslint-disable-next-line prefer-destructuring
-        state.selectedCamera = action.payload[0];
+      // console.log('fetchAll.fulfilled action -', action);
+      const cameras = action.payload;
+      if (cameras.length > 0) {
+        cameras.forEach((camera) => {
+          state.cameras[`${camera._id}`] = camera;
+        });
+        if (state.selectedCameraId === null) {
+          state.selectedCameraId = cameras[0]._id;
+        }
       }
     },
     [fetchOne.fulfilled]: (state, action) => {
-      state.selectedCamera = action.payload;
+      // console.log('fetchOne.fulfilled action -', action);
+      const camera = action.payload;
+      state.cameras[`${camera._id}`] = camera;
+      state.selectedCameraId = camera._id;
     },
     [createOne.fulfilled]: (state, action) => {
-      // console.log('action createOne -', action);
-      state.allCameras.push(action.payload);
-      state.selectedCamera = action.payload;
+      // console.log('createOne.fulfilled action -', action);
+      const createdCamera = action.payload;
+      state.cameras[`${createdCamera._id}`] = createdCamera;
+      state.selectedCameraId = createdCamera._id;
     },
     [updateOne.fulfilled]: (state, action) => {
-      // console.log('action updateOne -', action);
-      const updatedItem = action.payload;
-      const updatedItemIndex = state.allCameras.findIndex((item) => item._id === updatedItem._id);
-      state.allCameras[updatedItemIndex] = updatedItem;
-      state.selectedCamera = updatedItem;
+      // console.log('updateOne.fulfilled action -', action);
+      const updatedCamera = action.payload;
+      state.cameras[`${updatedCamera._id}`] = updatedCamera;
+      state.selectedCameraId = updatedCamera._id;
     },
     [deleteOne.fulfilled]: (state, action) => {
-      // console.log('action deleteOne -', action);
+      // console.log('deleteOne.fulfilled action -', action);
       const deletedItem = action.payload;
-      state.allCameras = state.allCameras.filter((item) => item._id !== deletedItem._id);
-      if (state.allCameras.length === 0) {
-        state.selectedCamera = null;
-      } else {
-        // eslint-disable-next-line prefer-destructuring
-        state.selectedCamera = state.allCameras[0];
-      }
+
+      const cameras = { ...state.cameras };
+      delete cameras[`${deletedItem._id}`];
+
+      const selectedCameraId = Object.keys(cameras)[0] || null;
+
+      return { cameras, selectedCameraId };
+    },
+    [updateScreenshotByTime.fulfilled]: (state, action) => {
+      // console.log('updateScreenshotByTime.fulfilled action -', action);
+      const updatedTask = action.payload;
+      const camera = state.cameras[updatedTask.camera];
+      camera.screenshotsByTimeTask = updatedTask;
     },
   },
 });
+
+const allCameras = (state) => Object.values(state.camera.cameras);
+const camerasObject = (state) => state.camera.cameras;
+const selectedCameraId = (state) => state.camera.selectedCameraId;
+
+const selectedCamera = createSelector(
+  camerasObject,
+  selectedCameraId,
+  (cameras, id) => cameras[id] || null,
+);
+
+export const cameraSelectors = { allCameras, selectedCamera };
 
 export const cameraActions = { ...cameraSlice.actions, ...cameraThunks };
 

@@ -5,7 +5,7 @@ import Heading from '../UI/Heading.jsx';
 // import { formActions } from '../store/formSlice.js';
 // import cameraThunks from '../thunks/cameraThunks.js';
 
-const VideoStatus = ({ selectedCamera }) => {
+function VideoStatus({ selectedCamera }) {
   // const dispatch = useDispatch();
 
   if (selectedCamera === null) {
@@ -13,30 +13,30 @@ const VideoStatus = ({ selectedCamera }) => {
   }
 
   return (
-    <Col md={12} className='mb-4'>
-      <Heading lvl={6} className='mb-3'>
-        Make video of the day
+    <Col md={12} className="mb-4">
+      <Heading lvl={6} className="mb-3">
+        Video of the day
       </Heading>
-      <ListGroup className='mb-3'>
-        <ListGroup.Item className='d-flex'>
-          <div className='me-3 w-50'>Status</div>
-          <Badge bg='secondary'>Stopped</Badge>
+      <ListGroup className="mb-3">
+        <ListGroup.Item className="d-flex">
+          <div className="me-3 w-50">Status</div>
+          <Badge bg="secondary">Stopped</Badge>
         </ListGroup.Item>
-        <ListGroup.Item className='d-flex'>
-          <div className='me-3 w-50'>Time, sec</div>
+        <ListGroup.Item className="d-flex">
+          <div className="me-3 w-50">Time, sec</div>
           <span>60</span>
         </ListGroup.Item>
       </ListGroup>
       <>
-        <Button variant='primary' size='sm' className='me-2'>
+        <Button variant="primary" size="sm" className="me-2">
           Edit
         </Button>
-        <Button variant='primary' size='sm' className='me-2'>
+        <Button variant="primary" size="sm" className="me-2">
           Start
         </Button>
       </>
     </Col>
   );
-};
+}
 
 export default VideoStatus;

@@ -57,7 +57,6 @@ function CameraFileManager({ selectedCamera }) {
   const createScreenshotHandler = () => {
     dispatch(taskThunks.createScreenshot({
       cameraId: selectedCamera._id,
-      parentId: parentFolder._id,
     }));
   };
 
@@ -95,8 +94,7 @@ function CameraFileManager({ selectedCamera }) {
       <ImgWrapper
         width={100}
         height={0.5625}
-        // src={`/files/${file.name}?size=thumbnail`}
-        src={`/files/${file.name}?size=thumbnail`}
+        src={`/files/${file._id}?size=thumbnail`}
         role="button"
         onClick={() => clickFileHandler(index)}
       />

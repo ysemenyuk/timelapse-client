@@ -21,7 +21,7 @@ export default function ImgWrapper({ src, width, height, ...props }) {
       <div style={{ width: wd, paddingBottom: pd, position: 'relative' }}>
         <div className={styles.wrapper}>
           <Choose>
-            <When condition={!error}>
+            <When condition={!error && src}>
               <img
                 alt=""
                 onLoad={() => {
@@ -41,7 +41,7 @@ export default function ImgWrapper({ src, width, height, ...props }) {
             </Otherwise>
           </Choose>
 
-          <If condition={!load}>
+          <If condition={!load && src}>
             <span>
               <Spinner animation="border" />
             </span>

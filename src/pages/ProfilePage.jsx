@@ -12,7 +12,7 @@ import useCamerasList from '../hooks/useCamerasList.js';
 function ProfilePage() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-  const { cameras, fetchStatus } = useCamerasList();
+  const { allCameras, fetchStatus } = useCamerasList();
 
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
@@ -43,7 +43,7 @@ function ProfilePage() {
       <When condition={fetchStatus.isSuccess}>
         <Row>
           <Col sm={3}>
-            <CamerasList cameras={cameras} selectedCamera={null} />
+            <CamerasList cameras={allCameras} selectedCamera={null} />
           </Col>
 
           <Col sm={6}>

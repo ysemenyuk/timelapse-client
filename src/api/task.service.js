@@ -7,48 +7,48 @@ const instance = axios.create({
   baseURL: `${host}/api/cameras`,
 });
 
-const getAll = async (cameraId) => {
-  const response = await instance.get(`${cameraId}/tasks`, { headers: getAuthHeader() });
-  return response;
-};
+// const getAll = async (cameraId) => {
+//   const response = await instance.get(`${cameraId}/tasks`, { headers: getAuthHeader() });
+//   return response;
+// };
 
-const getOne = async (cameraId, taskId) => {
-  const response = await instance.get(`${cameraId}/tasks/${taskId}`, { headers: getAuthHeader() });
-  return response;
-};
+// const getOne = async (cameraId, taskId) => {
+//   const response = await instance.get(`${cameraId}/tasks/${taskId}`, { headers: getAuthHeader() });
+//   return response;
+// };
 
-const createOne = async (cameraId, data) => {
-  const response = await instance.post(`/${cameraId}/tasks`, data, { headers: getAuthHeader() });
-  return response;
-};
+// const createOne = async (cameraId, data) => {
+//   const response = await instance.post(`/${cameraId}/tasks`, data, { headers: getAuthHeader() });
+//   return response;
+// };
 
-const updateOne = async (cameraId, taskId, data) => {
-  const response = await instance.put(`/${cameraId}/tasks/${taskId}`, data, { headers: getAuthHeader() });
-  return response;
-};
+// const updateOne = async (cameraId, taskId, data) => {
+//   const response = await instance.put(`/${cameraId}/tasks/${taskId}`, data, { headers: getAuthHeader() });
+//   return response;
+// };
 
-const deleteOne = async (cameraId, taskId) => {
-  const response = await instance.delete(`/${cameraId}/tasks/${taskId}`, { headers: getAuthHeader() });
-  return response;
-};
+// const deleteOne = async (cameraId, taskId) => {
+//   const response = await instance.delete(`/${cameraId}/tasks/${taskId}`, { headers: getAuthHeader() });
+//   return response;
+// };
 
-const createScreenshot = async (cameraId, data) => {
+const createScreenshotTask = async (cameraId, data = {}) => {
   const response = await instance.post(`/${cameraId}/tasks/screenshot`, data, { headers: getAuthHeader() });
   return response;
 };
 
-const screenshotByTimeTask = async (cameraId, taskId, data) => {
+const updateScreenshotByTimeTask = async (cameraId, taskId, data) => {
   const response = await instance
     .put(`/${cameraId}/tasks/${taskId}/screenshotsByTime`, data, { headers: getAuthHeader() });
   return response;
 };
 
 export default {
-  getAll,
-  getOne,
-  createOne,
-  updateOne,
-  deleteOne,
-  createScreenshot,
-  screenshotByTimeTask,
+  // getAll,
+  // getOne,
+  // createOne,
+  // updateOne,
+  // deleteOne,
+  createScreenshotTask,
+  updateScreenshotByTimeTask,
 };

@@ -52,11 +52,11 @@ const updateOne = createAsyncThunk('camera/updateOne', async (values) => {
 
 const deleteOne = createAsyncThunk('camera/deleteOne', async (camera) => {
   try {
-    console.log('camera/deleteOne camera -', camera);
+    console.log(11111111, 'camera/deleteOne camera -', camera);
 
     const { data } = await cameraService.deleteOne(camera._id);
 
-    console.log('camera/deleteOne response -', data);
+    console.log(222222222, 'camera/deleteOne response -', data);
     return camera;
   } catch (e) {
     console.log('camera/deleteOne error -', e.message);

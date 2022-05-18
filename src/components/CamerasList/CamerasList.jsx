@@ -9,13 +9,13 @@ import { ADD_CAMERA } from '../../utils/constants.js';
 import { modalActions } from '../../store/modalSlice.js';
 import AddCameraModal from '../Modals/AddCameraModal.jsx';
 
-function CamerasList({ cameras, selectedCamera }) {
+function CamerasList({ cameras, selectedCameraId }) {
   const dispatch = useDispatch();
   const history = useHistory();
   const match = useRouteMatch('/');
 
-  const handleSelectItem = (item) => () => {
-    dispatch(cameraActions.selectCamera(item));
+  const handleSelectItem = (cameraId) => () => {
+    dispatch(cameraActions.selectCamera(cameraId));
     if (match.isExact === false) {
       history.push('/');
     }
@@ -28,9 +28,9 @@ function CamerasList({ cameras, selectedCamera }) {
   const renderCamerasList = () => cameras.map((camera) => (
     <ListGroup.Item
       action
-      onClick={handleSelectItem(camera)}
+      onClick={handleSelectItem(camera._id)}
       key={camera._id}
-      className={cn(selectedCamera?._id === camera._id && 'active')}
+      className={cn(selectedCameraId === camera._id && 'active')}
     >
       <div className="d-flex justify-content-between align-items-start">
         <div className="w-75 text-truncate fw-bold">{camera.name}</div>

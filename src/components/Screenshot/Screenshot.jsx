@@ -10,7 +10,7 @@ function CameraScreen({ selectedCamera }) {
 
   const imageSrc = selectedCamera.avatar
     ? `/files/${selectedCamera.avatar.name}`
-    : '';
+    : null;
 
   return (
     <Col md={12} className="mb-4">

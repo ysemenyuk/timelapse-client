@@ -1,33 +1,22 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import CamerasList from '../components/CamerasList/CamerasList.jsx';
 import Screenshot from '../components/Screenshot/Screenshot.jsx';
 import CameraInfo from '../components/CameraInfo/CameraInfo.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
-import useThunkStatus from '../hooks/useThunkStatus.js';
-import cameraThunks from '../thunks/cameraThunks.js';
 import ScreenshotsByTime from '../components/ScreenshotsByTime/ScreenshotsByTime.jsx';
+import useCameraList from '../hooks/useCamerasList.js';
 
 function CameraListPage() {
-  const dispatch = useDispatch();
-  const { allCameras, selectedCamera } = useSelector((state) => state.camera);
-
-  const fetchStatus = useThunkStatus(cameraThunks.fetchAll);
-
-  useEffect(() => {
-    if (allCameras.length === 0) {
-      dispatch(cameraThunks.fetchAll());
-    }
-  }, []);
+  const { allCameras, selectedCamera, fetchStatus } = useCameraList();
 
   return (
     <Choose>
       <When condition={fetchStatus.isSuccess}>
         <Row>
           <Col sm={3}>
-            <CamerasList cameras={allCameras} selectedCamera={selectedCamera} />
+            <CamerasList cameras={allCameras} selectedCameraId={selectedCamera && selectedCamera._id} />
           </Col>
           <Col sm={6}>
             <Choose>

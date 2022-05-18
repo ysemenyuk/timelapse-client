@@ -44,7 +44,7 @@ const deleteOneFile = createAsyncThunk('file/deleteOneFile', async ({ cameraId, 
 
     return { cameraId, fileId };
   } catch (e) {
-    console.log('file/deleteOneFile error -', e.message);
+    console.log(555555, 'file/deleteOneFile error -', e);
     throw e;
   }
 });

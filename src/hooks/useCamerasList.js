@@ -1,20 +1,21 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-
-import cameraThunks from '../thunks/cameraThunks.js';
+import { cameraActions, cameraSelectors } from '../store/cameraSlice.js';
 import useThunkStatus from './useThunkStatus.js';
 
 export default function useCameraList() {
   const dispatch = useDispatch();
 
-  const fetchStatus = useThunkStatus(cameraThunks.fetchAll);
-  const cameras = useSelector((state) => state.camera.allCameras);
+  const allCameras = useSelector(cameraSelectors.allCameras);
+  const selectedCamera = useSelector(cameraSelectors.selectedCamera);
+
+  const fetchStatus = useThunkStatus(cameraActions.fetchAll);
 
   useEffect(() => {
-    if (cameras.length === 0) {
-      dispatch(cameraThunks.fetchAll());
+    if (allCameras.length < 2) {
+      dispatch(cameraActions.fetchAll());
     }
   }, []);
 
-  return { cameras, fetchStatus };
+  return { allCameras, selectedCamera, fetchStatus };
 }
