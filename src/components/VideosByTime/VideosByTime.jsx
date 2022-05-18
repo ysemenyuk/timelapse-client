@@ -23,8 +23,12 @@ function VideoStatus({ selectedCamera }) {
           <Badge bg="secondary">Stopped</Badge>
         </ListGroup.Item>
         <ListGroup.Item className="d-flex">
-          <div className="me-3 w-50">Time, sec</div>
+          <div className="me-3 w-50">Duration, sec</div>
           <span>60</span>
+        </ListGroup.Item>
+        <ListGroup.Item className="d-flex">
+          <div className="me-3 w-50">Start time</div>
+          <span>23:00</span>
         </ListGroup.Item>
       </ListGroup>
       <>

@@ -37,7 +37,7 @@ const createScreenshotTask = async (cameraId, data = {}) => {
   return response;
 };
 
-const updateScreenshotByTimeTask = async (cameraId, taskId, data) => {
+const updateScreenshotsByTimeTask = async (cameraId, taskId, data) => {
   const response = await instance
     .put(`/${cameraId}/tasks/${taskId}/screenshotsByTime`, data, { headers: getAuthHeader() });
   return response;
@@ -50,5 +50,5 @@ export default {
   // updateOne,
   // deleteOne,
   createScreenshotTask,
-  updateScreenshotByTimeTask,
+  updateScreenshotsByTimeTask,
 };

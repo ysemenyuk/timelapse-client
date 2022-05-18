@@ -7,23 +7,24 @@ const instance = axios.create({
   baseURL: `${host}/api/cameras`,
 });
 
-const getFiles = async (cameraId, parentId) => {
-  const response = await instance.get(`/${cameraId}/files?parentId=${parentId}`, { headers: getAuthHeader() });
+const getAll = async (cameraId, query) => {
+  const queryString = Object.entries(query).map(([key, value]) => `${key}=${value}`).join('&');
+  const response = await instance.get(`/${cameraId}/files?${queryString}`, { headers: getAuthHeader() });
   return response;
 };
 
-const getOneFile = async (cameraId, fileId) => {
-  const response = await instance.get(`/${cameraId}/files/${fileId}`, { headers: getAuthHeader() });
+const getOneById = async (cameraId, id) => {
+  const response = await instance.get(`/${cameraId}/files/${id}`, { headers: getAuthHeader() });
   return response;
 };
 
-const deleteOneFile = async (cameraId, fileId) => {
-  const response = await instance.delete(`/${cameraId}/files/${fileId}`, { headers: getAuthHeader() });
+const deleteOneById = async (cameraId, id) => {
+  const response = await instance.delete(`/${cameraId}/files/${id}`, { headers: getAuthHeader() });
   return response;
 };
 
 export default {
-  getFiles,
-  getOneFile,
-  deleteOneFile,
+  getAll,
+  getOneById,
+  deleteOneById,
 };

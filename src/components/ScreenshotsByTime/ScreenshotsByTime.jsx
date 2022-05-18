@@ -28,17 +28,15 @@ const initialValues = {
 
 function ScreenshotsByTime({ selectedCamera, row }) {
   const dispatch = useDispatch();
-  const [screenshotByTimeTask, setScreenshotByTimeTask] = useState(initialValues);
+  const [screenshotsByTimeTask, setScreenshotByTimeTask] = useState(initialValues);
 
   useEffect(() => {
     if (selectedCamera && selectedCamera.screenshotsByTimeTask) {
       setScreenshotByTimeTask(selectedCamera.screenshotsByTimeTask);
-    } else {
-      setScreenshotByTimeTask(initialValues);
     }
   }, [selectedCamera]);
 
-  const { status, screenshotsByTimeSettings } = screenshotByTimeTask;
+  const { status, screenshotsByTimeSettings } = screenshotsByTimeTask;
   const { startTime, stopTime, interval } = screenshotsByTimeSettings;
 
   const isRunning = status === 'Running';
@@ -48,23 +46,14 @@ function ScreenshotsByTime({ selectedCamera, row }) {
     dispatch(modalActions.openModal(EDIT_SCREENSHOT_SETTINGS));
   };
 
-  // const handleCreateTask = () => {
-  //   console.log('handleCreateTask');
-  //   taskService
-  //     .createOne(selectedCamera._id, screenshotByTimeData)
-  //     .then((resp) => {
-  //       setScreenshotsData({ ...resp.data });
-  //     });
-  // };
-
   const handleUpdateScreenshotByTime = (settings, taskStatus = null) => {
     console.log('handleUpdateTask settings', settings);
     const payload = {
-      status: taskStatus || screenshotByTimeTask.status,
+      status: taskStatus || screenshotsByTimeTask.status,
       screenshotsByTimeSettings: { ...settings },
     };
 
-    dispatch(taskThunks.updateScreenshotByTime({
+    dispatch(taskThunks.updateScreenshotsByTime({
       cameraId: selectedCamera._id,
       taskId: selectedCamera.screenshotsByTimeTask._id,
       payload,
@@ -73,12 +62,12 @@ function ScreenshotsByTime({ selectedCamera, row }) {
 
   const handleStartScreenshotByTime = () => {
     console.log('handleStart');
-    handleUpdateScreenshotByTime(screenshotByTimeTask.screenshotsByTimeSettings, 'Running');
+    handleUpdateScreenshotByTime(screenshotsByTimeTask.screenshotsByTimeSettings, 'Running');
   };
 
   const handleStopScreenshotByTime = () => {
     console.log('handleStop');
-    handleUpdateScreenshotByTime(screenshotByTimeTask.screenshotsByTimeSettings, 'Stopped');
+    handleUpdateScreenshotByTime(screenshotsByTimeTask.screenshotsByTimeSettings, 'Stopped');
   };
 
   if (!selectedCamera) {
@@ -141,10 +130,6 @@ function ScreenshotsByTime({ selectedCamera, row }) {
         <Button onClick={handleStartScreenshotByTime} disabled={isRunning} variant="primary" size="sm" className="me-2">
           Start
         </Button>
-        {/*
-        <Button onClick={handleCreateTask} variant="primary" size="sm" className="me-2">
-          Create
-        </Button> */}
       </>
 
       <EditScreenshotsSettingsModal

@@ -4,7 +4,7 @@ import taskThunks from '../thunks/taskThunks.js';
 import { userActions } from './userSlice.js';
 
 const { fetchAll, fetchOne, createOne, updateOne, deleteOne } = cameraThunks;
-const { updateScreenshotByTime } = taskThunks;
+const { updateScreenshotsByTime } = taskThunks;
 
 // console.log("cameraSlice");
 
@@ -65,7 +65,7 @@ const cameraSlice = createSlice({
 
       return { cameras, selectedCameraId };
     },
-    [updateScreenshotByTime.fulfilled]: (state, action) => {
+    [updateScreenshotsByTime.fulfilled]: (state, action) => {
       // console.log('updateScreenshotByTime.fulfilled action -', action);
       const updatedTask = action.payload;
       const camera = state.cameras[updatedTask.camera];

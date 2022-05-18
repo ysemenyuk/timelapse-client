@@ -65,36 +65,36 @@ import taskService from '../api/task.service.js';
 //   }
 // });
 
-const createScreenshot = createAsyncThunk('task/createScreenshotTask', async ({ cameraId }) => {
-  try {
-    console.log('task/createScreenshot cameraId -', cameraId);
+// const createScreenshot = createAsyncThunk('task/createScreenshot', async ({ cameraId }) => {
+//   try {
+//     console.log('task/createScreenshot cameraId -', cameraId);
 
-    const { data } = await taskService.createScreenshotTask(cameraId);
+//     const { data } = await taskService.createScreenshotTask(cameraId);
 
-    console.log('task/createScreenshot response -', data);
-    return data;
-  } catch (e) {
-    console.log('task/createScreenshot error -', e.message);
-    throw e;
-  }
-});
+//     console.log('task/createScreenshot response -', data);
+//     return data;
+//   } catch (e) {
+//     console.log('task/createScreenshot error -', e.message);
+//     throw e;
+//   }
+// });
 
 // eslint-disable-next-line max-len
-const updateScreenshotByTime = createAsyncThunk('task/updateScreenshotByTimeTask', async ({ cameraId, taskId, payload }) => {
+const updateScreenshotsByTime = createAsyncThunk('task/updateScreenshotsByTime', async ({ cameraId, taskId, payload }) => {
   try {
-    console.log('task/updateScreenshotByTimeTask cameraId -', cameraId);
+    console.log('task/updateScreenshotsByTime cameraId -', cameraId);
 
-    const { data } = await taskService.updateScreenshotByTimeTask(cameraId, taskId, payload);
+    const { data } = await taskService.updateScreenshotsByTimeTask(cameraId, taskId, payload);
 
-    console.log('task/updateScreenshotByTimeTask response -', data);
+    console.log('task/updateScreenshotsByTime response -', data);
     return data;
   } catch (e) {
-    console.log('task/updateScreenshotByTimeTask error -', e.message);
+    console.log('task/updateScreenshotsByTime error -', e.message);
     throw e;
   }
 });
 
 export default {
-  // fetchAll, fetchOne, createOne, updateOne, deleteOne,
-  createScreenshot, updateScreenshotByTime,
+  // fetchAll, fetchOne, createOne, updateOne, deleteOne,  createScreenshot,
+  updateScreenshotsByTime,
 };

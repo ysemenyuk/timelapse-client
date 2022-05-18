@@ -9,10 +9,11 @@ import ButtonsGroup from '../UI/ButtonsGroup';
 import Heading from '../UI/Heading';
 import Error from '../UI/Error';
 import useFileManager from '../../hooks/useFileManager';
-import { IMAGE_VIEWER } from '../../utils/constants';
+import { IMAGE_VIEWER, CREATE_VIDEO } from '../../utils/constants';
 import { modalActions } from '../../store/modalSlice';
 import ImgViewerModal from '../Modals/ImgViewerModal';
-import taskThunks from '../../thunks/taskThunks';
+import CreateVideoModal from '../Modals/CreateVideoModal';
+import taskService from '../../api/task.service';
 
 function CameraFileManager({ selectedCamera }) {
   const dispatch = useDispatch();
@@ -55,9 +56,11 @@ function CameraFileManager({ selectedCamera }) {
   };
 
   const createScreenshotHandler = () => {
-    dispatch(taskThunks.createScreenshot({
-      cameraId: selectedCamera._id,
-    }));
+    taskService.createScreenshotTask(selectedCamera._id);
+  };
+
+  const createVideofileHandler = () => {
+    dispatch(modalActions.openModal(CREATE_VIDEO));
   };
 
   const deleteFileHandler = (currentFile) => {
@@ -83,7 +86,7 @@ function CameraFileManager({ selectedCamera }) {
         height={0.5625}
         src={folderImg}
         role="button"
-        onClick={() => clickFolderHandler(folder)}
+        onDoubleClick={() => clickFolderHandler(folder)}
       />
       <span>{folder.name}</span>
     </div>
@@ -134,6 +137,14 @@ function CameraFileManager({ selectedCamera }) {
           >
             CreateScreenshot
           </Button>
+          <Button
+            type="primary"
+            size="sm"
+            onClick={createVideofileHandler}
+            disabled={btnDisabled}
+          >
+            CreateVideo
+          </Button>
         </ButtonsGroup>
       </Col>
 
@@ -178,6 +189,9 @@ function CameraFileManager({ selectedCamera }) {
         files={files}
         onDeleteFile={deleteFileHandler}
       />
+
+      <CreateVideoModal selectedCamera={selectedCamera} />
+
     </>
   );
 }
