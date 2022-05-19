@@ -3,8 +3,27 @@
   flex-wrap: wrap;
   /* margin: -0.5rem; */
 }
+
 .item {
   width: calc((100% / 6) - 1rem);
   margin: 0.5rem;
   text-align: center;
+  cursor: pointer;
+  overflow-wrap: break-word;
+}
+
+/* .item:hover {
+    border: none;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px grey;
+    outline: none;
+    transition: .1s;
+} */
+
+.selectedItem {
+    border: none;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px rgb(231, 230, 230);
+    outline: none;
+    transition: .1s;
 }
