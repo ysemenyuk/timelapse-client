@@ -8,41 +8,21 @@ const fileManagerSlice = createSlice({
   initialState: {
     files: {},
     folders: {},
-    parent: {},
-    stack: {},
-    currentFileIndex: null,
+    // stack: [],
   },
   reducers: {
-    setCurrentFileIndex: (state, action) => {
-      const { index } = action.payload;
-      state.currentFileIndex = index;
-    },
-    nextFile: (state) => {
-      state.currentFileIndex += 1;
-    },
-    prewFile: (state) => {
-      state.currentFileIndex -= 1;
-    },
-    setParentFolder: (state, action) => {
-      const { cameraId, folder } = action.payload;
-      if (state.stack[cameraId]) {
-        const index = state.stack[cameraId].findIndex((item) => item._id === folder._id);
-        state.stack[cameraId] = state.stack[cameraId].slice(0, index + 1);
-      } else {
-        state.stack[cameraId] = [folder];
-      }
-      state.parent[cameraId] = folder;
-    },
-    pushToFoldersStack: (state, action) => {
-      const { cameraId, item } = action.payload;
-      state.stack[cameraId].push(item);
-      state.parent[cameraId] = state.stack[cameraId][state.stack[cameraId].length - 1];
-    },
-    popFromFoldersStack: (state, action) => {
-      const { cameraId } = action.payload;
-      state.stack[cameraId].pop();
-      state.parent[cameraId] = state.stack[cameraId][state.stack[cameraId].length - 1];
-    },
+    // selectFolderFromStack: (state, action) => {
+    //   const folder = action.payload;
+    //   const index = state.stack.findIndex((item) => item._id === folder._id);
+    //   state.stack = state.stack.slice(0, index + 1);
+    // },
+    // pushFolderToStack: (state, action) => {
+    //   const folder = action.payload;
+    //   state.stack.push(folder);
+    // },
+    // popFolderFromStack: (state) => {
+    //   state.stack.pop();
+    // },
   },
   extraReducers: {
     [fetchFiles.fulfilled]: (state, action) => {
@@ -63,16 +43,8 @@ const fileManagerSlice = createSlice({
       state.folders[parentId] = folders;
     },
     [deleteOneFile.fulfilled]: (state, action) => {
-      const { cameraId, fileId } = action.payload;
-
-      const parentId = state.parent[cameraId]._id;
-      state.files[parentId] = state.files[parentId].filter((file) => file._id !== fileId);
-
-      if (state.files[parentId].length === 0) {
-        state.currentFileIndex = null;
-      } else if (state.currentFileIndex > state.files[parentId].length - 1) {
-        state.currentFileIndex = state.files[parentId].length - 1;
-      }
+      const deleted = action.payload;
+      state.files[deleted.parent] = state.files[deleted.parent].filter((item) => item._id !== deleted._id);
     },
   },
 });

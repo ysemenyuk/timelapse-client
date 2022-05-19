@@ -16,39 +16,21 @@ const fetchFiles = createAsyncThunk('file/fetchFiles', async ({ cameraId, parent
   }
 });
 
-// const fetchMainFolder = createAsyncThunk(
-//   'folder/fetchMainFolder',
-//   async ({ cameraId, folderId }) => {
-//     try {
-//       console.log('folder/fetchMainFolder cameraId folderId -', { cameraId, folderId });
-
-//       const response = await fileManagerService.getOneFolder(cameraId, folderId);
-
-//       console.log('folder/fetchMainFolder response.data -', response.data);
-
-//       return { cameraId, data: response.data };
-//     } catch (e) {
-//       console.log('folder/fetchMainFolder error -', e.message);
-//       throw e;
-//     }
-//   },
-// );
-
-const deleteOneFile = createAsyncThunk('file/deleteOneFile', async ({ cameraId, fileId }, { rejectWithValue }) => {
+const deleteOneFile = createAsyncThunk('file/deleteOneFile', async ({ cameraId, file }, { rejectWithValue }) => {
   try {
-    console.log('file/deleteOneFile cameraId fileId -', { cameraId, fileId });
+    console.log('file/deleteOneFile cameraId file -', file);
 
-    const response = await fileManagerService.deleteOneById(cameraId, fileId);
+    const response = await fileManagerService.deleteOneById(cameraId, file._id);
 
-    console.log(44444, 'file/deleteOneFile response.data -', response.data);
+    console.log('file/deleteOneFile response.data -', response.data);
 
-    return { cameraId, fileId };
+    return file;
   } catch (error) {
-    console.log(555555, 'file/deleteOneFile error -', error);
+    console.log('file/deleteOneFile error -', error);
     if (!error.response) {
       throw error;
     }
-    console.log(66666, 'file/deleteOneFile error.response.data -', error.response.data);
+    console.log('file/deleteOneFile error.response.data -', error.response.data);
     return rejectWithValue(error.response.data);
   }
 });

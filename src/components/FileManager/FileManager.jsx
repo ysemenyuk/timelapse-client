@@ -1,109 +1,126 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
-import { Breadcrumb, Col, Button, Spinner } from 'react-bootstrap';
+import React, { useState } from 'react';
+// import { useDispatch } from 'react-redux';
+import { Breadcrumb, Col, Button, Spinner, Form } from 'react-bootstrap';
+import cn from 'classnames';
 import styles from './FileManager.module.css';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 import folderImg from '../../assets/folder2.png';
-import { fileManagerActions } from '../../store/fileManagerSlice';
+// import { fileManagerActions } from '../../store/fileManagerSlice';
 import ButtonsGroup from '../UI/ButtonsGroup';
 import Heading from '../UI/Heading';
 import Error from '../UI/Error';
 import useFileManager from '../../hooks/useFileManager';
-import { IMAGE_VIEWER, CREATE_VIDEO } from '../../utils/constants';
-import { modalActions } from '../../store/modalSlice';
-import ImgViewerModal from '../Modals/ImgViewerModal';
+// import { IMAGE_VIEWER, CREATE_VIDEO } from '../../utils/constants';
+// import { modalActions } from '../../store/modalSlice';
+import ImageViewerModal from '../Modals/ImageViewerModal';
 import CreateVideoModal from '../Modals/CreateVideoModal';
-import taskService from '../../api/task.service';
+// import taskService from '../../api/task.service';
+import useImageViewer from '../../hooks/useImageViewer';
 
 function CameraFileManager({ selectedCamera }) {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
+
+  const [selectedItems, selectItem] = useState({});
+  const [multiSelect, setMultiSelect] = useState(false);
 
   const {
+    fetchStatus,
     files,
     folders,
-    parentFolder,
-    foldersStack,
-    fetchStatus,
+    navigationStack,
+    selectedFolder,
+    onRefreshClick,
+    onBreadCrumbClick,
+    onFolderDoubleClick,
+    onBackButtonClick,
   } = useFileManager(selectedCamera);
 
-  const cameraId = selectedCamera._id;
-  const btnDisabled = !parentFolder || fetchStatus.isLoading;
+  const {
+    onImageDoubleClick,
+    ...imageViewerProps
+  } = useImageViewer(selectedCamera, files);
 
-  const clickFileHandler = (index) => {
-    dispatch(fileManagerActions.setCurrentFileIndex({ cameraId, index }));
-    dispatch(modalActions.openModal(IMAGE_VIEWER));
+  // const deleteFileHandler = (file) => {
+  //   dispatch(fileManagerActions.deleteOneFile({
+  //     cameraId: selectedCamera._id,
+  //     file: file,
+  //   }));
+  // };
+
+  const deleteSelectedHandler = () => {
+    // delete selectedItems
   };
 
-  const clickFolderHandler = (item) => {
-    dispatch(fileManagerActions.pushToFoldersStack({ cameraId, item }));
+  const multiSelectClickHandler = () => {
+    if (multiSelect) {
+      selectItem({});
+    }
+    setMultiSelect(!multiSelect);
   };
 
-  const clickBreadcrumbHandler = (folder) => {
-    dispatch(fileManagerActions.setParentFolder({ cameraId, folder }));
+  const doubleClickFileHandler = (file, index) => {
+    // if file is image
+    onImageDoubleClick(index);
   };
 
-  const clickBackHandler = () => {
-    dispatch(fileManagerActions.popFromFoldersStack({ cameraId }));
-  };
-
-  const clickRefreshHandler = () => {
-    if (parentFolder) {
-      dispatch(fileManagerActions.fetchFiles({
-        cameraId: selectedCamera._id,
-        parentId: parentFolder._id,
-      }));
+  const selectItemHandler = (item) => {
+    if (multiSelect) {
+      selectItem((prew) => ({ ...prew, [item._id]: item }));
+    } else {
+      selectItem({ [item._id]: item });
     }
   };
 
-  const createScreenshotHandler = () => {
-    taskService.createScreenshotTask(selectedCamera._id);
-  };
+  // const createScreenshotHandler = () => {
+  //   taskService.createScreenshotTask(selectedCamera._id);
+  // };
 
-  const createVideofileHandler = () => {
-    dispatch(modalActions.openModal(CREATE_VIDEO));
-  };
+  // const createVideofileHandler = () => {
+  //   dispatch(modalActions.openModal(CREATE_VIDEO));
+  // };
 
-  const deleteFileHandler = (currentFile) => {
-    dispatch(fileManagerActions.deleteOneFile({
-      cameraId: selectedCamera._id,
-      fileId: currentFile._id,
-    }));
-  };
-
-  const renderBreadcrumbs = () => foldersStack.map((folder, index) => (
+  const renderBreadcrumbs = () => navigationStack.map((folder) => (
     <Breadcrumb.Item
-      onClick={() => clickBreadcrumbHandler(folder)}
+      onClick={() => onBreadCrumbClick(folder)}
       key={folder._id}
     >
-      {index === 0 ? 'Main' : folder.name}
+      {folder.name}
     </Breadcrumb.Item>
   ));
 
-  const renderFolders = () => folders.map((folder) => (
-    <div className={styles.item} key={folder._id}>
-      <ImgWrapper
-        width={100}
-        height={0.5625}
-        src={folderImg}
-        role="button"
-        onDoubleClick={() => clickFolderHandler(folder)}
-      />
-      <span>{folder.name}</span>
-    </div>
-  ));
+  const renderFolders = () => folders.map((folder) => {
+    const classNames = cn(styles.item, { [styles.selectedItem]: selectedItems[folder._id] });
+    return (
+      <div className={classNames} key={folder._id}>
+        <ImgWrapper
+          width={100}
+          height={0.5625}
+          src={folderImg}
+          role="button"
+          onClick={(e) => selectItemHandler(folder, e)}
+          onDoubleClick={() => onFolderDoubleClick(folder)}
+        />
+        <span>{folder.name}</span>
+      </div>
+    );
+  });
 
-  const renderFiles = () => files.map((file, index) => (
-    <div className={styles.item} key={file._id}>
-      <ImgWrapper
-        width={100}
-        height={0.5625}
-        src={`/files/${file._id}?size=thumbnail`}
-        role="button"
-        onClick={() => clickFileHandler(index)}
-      />
-      <span>{file.name}</span>
-    </div>
-  ));
+  const renderFiles = () => files.map((file, index) => {
+    const classNames = cn(styles.item, { [styles.selectedItem]: selectedItems[file._id] });
+    return (
+      <div className={classNames} key={file._id}>
+        <ImgWrapper
+          width={100}
+          height={0.5625}
+          src={`/files/${file._id}?size=thumbnail`}
+          role="button"
+          onClick={() => selectItemHandler(file)}
+          onDoubleClick={() => doubleClickFileHandler(file, index)}
+        />
+        <span>{file.name}</span>
+      </div>
+    );
+  });
 
   return (
     <>
@@ -116,20 +133,38 @@ function CameraFileManager({ selectedCamera }) {
           <Button
             type="primary"
             size="sm"
-            onClick={clickBackHandler}
-            disabled={btnDisabled || foldersStack.length === 1}
+            onClick={onBackButtonClick}
+            disabled={fetchStatus.isLoading}
           >
             Back
           </Button>
           <Button
             type="primary"
             size="sm"
-            onClick={clickRefreshHandler}
-            disabled={btnDisabled}
+            onClick={onRefreshClick}
+            disabled={fetchStatus.isLoading}
           >
             Refresh
           </Button>
           <Button
+            type="primary"
+            size="sm"
+            onClick={deleteSelectedHandler}
+            disabled={fetchStatus.isLoading}
+          >
+            DeleteSelected
+          </Button>
+          <Form>
+            <Form.Check
+              type="switch"
+              id="switch"
+              label="MuliSelect"
+              onChange={multiSelectClickHandler}
+              checked={multiSelect}
+            />
+          </Form>
+
+          {/* <Button
             type="primary"
             size="sm"
             onClick={createScreenshotHandler}
@@ -144,12 +179,13 @@ function CameraFileManager({ selectedCamera }) {
             disabled={btnDisabled}
           >
             CreateVideo
-          </Button>
+          </Button> */}
+
         </ButtonsGroup>
       </Col>
 
       <Choose>
-        <When condition={!parentFolder || !foldersStack}>
+        <When condition={!selectedFolder || !navigationStack}>
           <Spinner animation="border" />
         </When>
 
@@ -163,7 +199,7 @@ function CameraFileManager({ selectedCamera }) {
           <Col md={12} className="mb-4">
             <Choose>
               <When condition={fetchStatus.isError}>
-                <Error message="Network error folders and files" type="error" />
+                <Error message="Fetch files. Network error " type="error" />
               </When>
 
               <When condition={!folders || !files || fetchStatus.isLoading}>
@@ -185,11 +221,7 @@ function CameraFileManager({ selectedCamera }) {
         </Otherwise>
       </Choose>
 
-      <ImgViewerModal
-        files={files}
-        onDeleteFile={deleteFileHandler}
-      />
-
+      <ImageViewerModal {...imageViewerProps} />
       <CreateVideoModal selectedCamera={selectedCamera} />
 
     </>
