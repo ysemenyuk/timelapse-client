@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import Heading from '../UI/Heading.jsx';
 import { calculateFilesPerDay } from '../../utils/utils.js';
 import { modalActions } from '../../store/modalSlice.js';
-import { EDIT_SCREENSHOT_SETTINGS } from '../../utils/constants.js';
+import { EDIT_SCREENSHOTSBYTIME_SETTINGS } from '../../utils/constants.js';
 import EditScreenshotsSettingsModal from '../Modals/EditScreenshotsSettingsModal.jsx';
 import taskThunks from '../../thunks/taskThunks.js';
 
@@ -28,11 +28,11 @@ const initialValues = {
 
 function ScreenshotsByTime({ selectedCamera, row }) {
   const dispatch = useDispatch();
-  const [screenshotsByTimeTask, setScreenshotByTimeTask] = useState(initialValues);
+  const [screenshotsByTimeTask, setScreenshotsByTimeTask] = useState(initialValues);
 
   useEffect(() => {
     if (selectedCamera && selectedCamera.screenshotsByTimeTask) {
-      setScreenshotByTimeTask(selectedCamera.screenshotsByTimeTask);
+      setScreenshotsByTimeTask(selectedCamera.screenshotsByTimeTask);
     }
   }, [selectedCamera]);
 
@@ -43,10 +43,10 @@ function ScreenshotsByTime({ selectedCamera, row }) {
   const files = calculateFilesPerDay(screenshotsByTimeSettings);
 
   const handleOpenEditModal = () => {
-    dispatch(modalActions.openModal(EDIT_SCREENSHOT_SETTINGS));
+    dispatch(modalActions.openModal(EDIT_SCREENSHOTSBYTIME_SETTINGS));
   };
 
-  const handleUpdateScreenshotByTime = (settings, taskStatus = null) => {
+  const handleUpdateScreenshotsByTime = (settings, taskStatus = null) => {
     console.log('handleUpdateTask settings', settings);
     const payload = {
       status: taskStatus || screenshotsByTimeTask.status,
@@ -60,14 +60,14 @@ function ScreenshotsByTime({ selectedCamera, row }) {
     }));
   };
 
-  const handleStartScreenshotByTime = () => {
+  const handleStartScreenshotsByTime = () => {
     console.log('handleStart');
-    handleUpdateScreenshotByTime(screenshotsByTimeTask.screenshotsByTimeSettings, 'Running');
+    handleUpdateScreenshotsByTime(screenshotsByTimeTask.screenshotsByTimeSettings, 'Running');
   };
 
-  const handleStopScreenshotByTime = () => {
+  const handleStopScreenshotsByTime = () => {
     console.log('handleStop');
-    handleUpdateScreenshotByTime(screenshotsByTimeTask.screenshotsByTimeSettings, 'Stopped');
+    handleUpdateScreenshotsByTime(screenshotsByTimeTask.screenshotsByTimeSettings, 'Stopped');
   };
 
   if (!selectedCamera) {
@@ -121,20 +121,38 @@ function ScreenshotsByTime({ selectedCamera, row }) {
       </Choose>
 
       <>
-        <Button onClick={handleStopScreenshotByTime} disabled={!isRunning} variant="primary" size="sm" className="me-2">
+        <Button
+          onClick={handleStopScreenshotsByTime}
+          disabled={!isRunning}
+          variant="primary"
+          size="sm"
+          className="me-2"
+        >
           Stop
         </Button>
-        <Button onClick={handleOpenEditModal} disabled={isRunning} variant="primary" size="sm" className="me-2">
+        <Button
+          onClick={handleOpenEditModal}
+          disabled={isRunning}
+          variant="primary"
+          size="sm"
+          className="me-2"
+        >
           EditSettings
         </Button>
-        <Button onClick={handleStartScreenshotByTime} disabled={isRunning} variant="primary" size="sm" className="me-2">
+        <Button
+          onClick={handleStartScreenshotsByTime}
+          disabled={isRunning}
+          variant="primary"
+          size="sm"
+          className="me-2"
+        >
           Start
         </Button>
       </>
 
       <EditScreenshotsSettingsModal
         initialValues={screenshotsByTimeSettings}
-        onSubmit={handleUpdateScreenshotByTime}
+        onSubmit={handleUpdateScreenshotsByTime}
       />
     </Col>
   );

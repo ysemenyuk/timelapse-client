@@ -43,6 +43,17 @@ const updateScreenshotsByTimeTask = async (cameraId, taskId, data) => {
   return response;
 };
 
+const createVideoFileTask = async (cameraId, data) => {
+  const response = await instance.post(`/${cameraId}/tasks/video`, data, { headers: getAuthHeader() });
+  return response;
+};
+
+const updateVideosByTimeTask = async (cameraId, taskId, data) => {
+  const response = await instance
+    .put(`/${cameraId}/tasks/${taskId}/videosByTime`, data, { headers: getAuthHeader() });
+  return response;
+};
+
 export default {
   // getAll,
   // getOne,
@@ -51,4 +62,6 @@ export default {
   // deleteOne,
   createScreenshotTask,
   updateScreenshotsByTimeTask,
+  createVideoFileTask,
+  updateVideosByTimeTask,
 };

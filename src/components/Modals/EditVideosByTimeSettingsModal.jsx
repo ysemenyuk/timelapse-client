@@ -2,35 +2,36 @@ import React from 'react';
 import { useFormik } from 'formik';
 // import * as Yup from 'yup';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
-import { calculateFilesPerDay } from '../../utils/utils.js';
 import withModalWrapper from './withModalWrapper.jsx';
-import { EDIT_SCREENSHOTSBYTIME_SETTINGS } from '../../utils/constants.js';
+import { EDIT_VIDEOSBYTIME_SETTINGS } from '../../utils/constants.js';
 
 // const validationSchema = Yup.object({
 //   startTime: Yup.string().required(),
-//   stopTime: Yup.string().required(),
-//   interval: Yup.number().required(),
+//   duration: Yup.number().required(),
+//   fps: Yup.number().required(),
 // });
 
-function EditScreenshotsSettingsModal({ type, show, onHide, onSubmit, initialValues }) {
-  const { startTime, stopTime, interval } = initialValues;
+function EditVideosByTimeSettingsModal({ type, show, onHide, onSubmit, initialValues }) {
+  const { startTime, duration, fps } = initialValues;
 
   const formik = useFormik({
-    initialValues: { startTime, stopTime, interval },
+    initialValues: { startTime, duration, fps },
     // validationSchema,
     onSubmit: (values) => {
-      console.log('onSubmit values', values);
+      // console.log('onSubmit values', values);
       onSubmit(values);
       onHide();
     },
   });
+
+  const files = formik.values.duration * formik.values.fps || '--';
 
   // console.log('formik.errors -', formik.errors);
   // console.log('formik.values -', formik.values);
 
   return (
     <Modal
-      show={show && type === EDIT_SCREENSHOTSBYTIME_SETTINGS}
+      show={show && type === EDIT_VIDEOSBYTIME_SETTINGS}
       onHide={onHide}
     >
       <Modal.Header closeButton>
@@ -39,7 +40,7 @@ function EditScreenshotsSettingsModal({ type, show, onHide, onSubmit, initialVal
       <Modal.Body>
         <Row className="mb-3">
           <Col>
-            Create screenshot files every day
+            Create video file from screenshots every day
           </Col>
         </Row>
 
@@ -59,32 +60,34 @@ function EditScreenshotsSettingsModal({ type, show, onHide, onSubmit, initialVal
                 {formik.errors && formik.errors.startTime}
               </Form.Control.Feedback>
             </Form.Group>
+
             <Form.Group as={Col}>
-              <Form.Label htmlFor="stopTime">Stop time</Form.Label>
+              <Form.Label htmlFor="duration">Duration  (seconds)</Form.Label>
               <Form.Control
                 onChange={formik.handleChange}
-                value={formik.values.stopTime}
-                name="stopTime"
-                id="stopTime"
-                type="time"
-                isInvalid={formik.errors && formik.errors.stopTime}
+                value={formik.values.duration}
+                name="duration"
+                id="duration"
+                type="number"
+                isInvalid={formik.errors && formik.errors.duration}
               />
               <Form.Control.Feedback type="invalid">
-                {formik.errors && formik.errors.stopTime}
+                {formik.errors && formik.errors.duration}
               </Form.Control.Feedback>
             </Form.Group>
+
             <Form.Group as={Col}>
-              <Form.Label htmlFor="interval">Interval (seconds)</Form.Label>
+              <Form.Label htmlFor="fps">Fps</Form.Label>
               <Form.Control
                 onChange={formik.handleChange}
-                value={formik.values.interval}
-                name="interval"
-                id="interval"
+                value={formik.values.fps}
+                name="fps"
+                id="fps"
                 type="number"
-                isInvalid={formik.errors && formik.errors.interval}
+                isInvalid={formik.errors && formik.errors.fps}
               />
               <Form.Control.Feedback type="invalid">
-                {formik.errors && formik.errors.interval}
+                {formik.errors && formik.errors.fps}
               </Form.Control.Feedback>
             </Form.Group>
           </Row>
@@ -92,21 +95,7 @@ function EditScreenshotsSettingsModal({ type, show, onHide, onSubmit, initialVal
 
         <Row className="mb-3">
           <Col>
-            <span className="fw-bold">
-              {`${calculateFilesPerDay(formik.values)} files`}
-            </span>
-            {' '}
-            per day
-          </Col>
-        </Row>
-
-        <Row className="mb-3">
-          <Col>
-            <span className="fw-bold">
-              {`${Math.round(calculateFilesPerDay(formik.values) / 25)} seconds`}
-            </span>
-            {' '}
-            (25 fps) video of the day
+            {`Required: ${files} files for ${formik.values.duration} secons video file (${formik.values.fps})`}
           </Col>
         </Row>
 
@@ -131,4 +120,4 @@ function EditScreenshotsSettingsModal({ type, show, onHide, onSubmit, initialVal
   );
 }
 
-export default withModalWrapper(EditScreenshotsSettingsModal);
+export default withModalWrapper(EditVideosByTimeSettingsModal);

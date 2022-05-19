@@ -94,7 +94,21 @@ const updateScreenshotsByTime = createAsyncThunk('task/updateScreenshotsByTime',
   }
 });
 
+const updateVideosByTime = createAsyncThunk('task/updateVideosByTime', async ({ cameraId, taskId, payload }) => {
+  try {
+    console.log('task/updateVideosByTime cameraId -', cameraId);
+
+    const { data } = await taskService.updateVideosByTimeTask(cameraId, taskId, payload);
+
+    console.log('task/updateVideosByTime response -', data);
+    return data;
+  } catch (e) {
+    console.log('task/updateVideosByTime error -', e.message);
+    throw e;
+  }
+});
+
 export default {
   // fetchAll, fetchOne, createOne, updateOne, deleteOne,  createScreenshot,
-  updateScreenshotsByTime,
+  updateScreenshotsByTime, updateVideosByTime,
 };

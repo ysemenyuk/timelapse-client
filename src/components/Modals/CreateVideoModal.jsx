@@ -4,19 +4,21 @@ import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import withModalWrapper from './withModalWrapper.jsx';
 import { CREATE_VIDEO } from '../../utils/constants.js';
 import fileManagerService from '../../api/fileManager.service.js';
+import taskService from '../../api/task.service.js';
 
-const screenshotByTimeData = {
-  startTime: '2022-05-01T10:00',
-  stopTime: '2022-05-18T18:00',
-  duration: '60',
+const videosByTimeData = {
+  startDateTime: '2022-05-01T21:00',
+  endDateTime: '2022-05-30T21:00',
+  duration: 60,
+  fps: 25,
 };
 
 function CreateVideoModal({ type, show, onHide, selectedCamera }) {
   const formik = useFormik({
-    initialValues: screenshotByTimeData,
+    initialValues: videosByTimeData,
     onSubmit: (values) => {
-      console.log('onSubmit values', values);
-      // onHide();
+      taskService.createVideoFileTask(selectedCamera._id, values);
+      onHide();
     },
   });
 
@@ -27,8 +29,8 @@ function CreateVideoModal({ type, show, onHide, selectedCamera }) {
 
   useEffect(() => {
     const query = {
-      startTime: formik.values.startTime,
-      stopTime: formik.values.stopTime,
+      startDateTime: formik.values.startDateTime,
+      endDateTime: formik.values.endDateTime,
       type: 'ScreenshotByTime',
       count: true,
     };
@@ -57,45 +59,61 @@ function CreateVideoModal({ type, show, onHide, selectedCamera }) {
         <Form className="mb-3">
           <Row className="mb-3">
             <Form.Group as={Col}>
-              <Form.Label htmlFor="startTime">Start time</Form.Label>
+              <Form.Label htmlFor="startDateTime">Start time</Form.Label>
               <Form.Control
                 onChange={formik.handleChange}
-                value={formik.values.startTime}
-                name="startTime"
-                id="startTime"
+                value={formik.values.startDateTime}
+                name="startDateTime"
+                id="startDateTime"
                 type="datetime-local"
-                isInvalid={formik.errors && formik.errors.startTime}
+                isInvalid={formik.errors && formik.errors.startDateTime}
               />
               <Form.Control.Feedback type="invalid">
-                {formik.errors && formik.errors.startTime}
+                {formik.errors && formik.errors.startDateTime}
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group as={Col}>
-              <Form.Label htmlFor="stopTime">Stop time</Form.Label>
+              <Form.Label htmlFor="endDateTime">End time</Form.Label>
               <Form.Control
                 onChange={formik.handleChange}
-                value={formik.values.stopTime}
-                name="stopTime"
-                id="stopTime"
+                value={formik.values.endDateTime}
+                name="endDateTime"
+                id="endDateTime"
                 type="datetime-local"
-                isInvalid={formik.errors && formik.errors.stopTime}
+                isInvalid={formik.errors && formik.errors.endDateTime}
               />
               <Form.Control.Feedback type="invalid">
-                {formik.errors && formik.errors.stopTime}
+                {formik.errors && formik.errors.endDateTime}
               </Form.Control.Feedback>
             </Form.Group>
+          </Row>
+          <Row className="mb-3">
             <Form.Group as={Col}>
-              <Form.Label htmlFor="interval">Duration (seconds)</Form.Label>
+              <Form.Label htmlFor="duration">Duration (seconds)</Form.Label>
               <Form.Control
                 onChange={formik.handleChange}
                 value={formik.values.duration}
-                name="interval"
-                id="interval"
+                name="duration"
+                id="duration"
                 type="number"
                 isInvalid={formik.errors && formik.errors.duration}
               />
               <Form.Control.Feedback type="invalid">
-                {formik.errors && formik.errors.interval}
+                {formik.errors && formik.errors.duration}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group as={Col}>
+              <Form.Label htmlFor="fps">Frames per second (fps)</Form.Label>
+              <Form.Control
+                onChange={formik.handleChange}
+                value={formik.values.fps}
+                name="fps"
+                id="fps"
+                type="number"
+                isInvalid={formik.errors && formik.errors.fps}
+              />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors && formik.errors.fps}
               </Form.Control.Feedback>
             </Form.Group>
           </Row>
@@ -103,13 +121,13 @@ function CreateVideoModal({ type, show, onHide, selectedCamera }) {
 
         <Row className="mb-3">
           <Col>
-            {`Total: ${filesCount} files -- ${Math.round(filesCount / 25)} seconds video (25 fps)`}
+            {`Total: ${filesCount} files -- ${Math.round(filesCount / formik.values.fps)} seconds video (${formik.values.fps} fps)`}
           </Col>
         </Row>
 
         <Row className="mb-3">
           <Col>
-            {`Required: ${formik.values.duration * 25} files -- ${formik.values.duration} seconds video (25 fps)`}
+            {`Required: ${formik.values.duration * formik.values.fps} files -- ${formik.values.duration} seconds video (${formik.values.fps} fps)`}
           </Col>
         </Row>
 
