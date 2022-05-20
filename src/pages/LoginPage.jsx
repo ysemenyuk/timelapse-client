@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { useHistory, Link, Redirect } from 'react-router-dom';
+import { useNavigate, Link, Navigate, useLocation } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Container, Row, Col, Form, Button, Spinner, Alert, Stack } from 'react-bootstrap';
@@ -10,7 +10,9 @@ import userThunks from '../thunks/userThunks.js';
 
 function LoginPage() {
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/';
 
   const { isLoggedIn } = useSelector((state) => state.user);
 
@@ -30,7 +32,7 @@ function LoginPage() {
           unwrapResult(resp);
           resetForm();
           setSubmitting(false);
-          history.push('/');
+          navigate(from, { replace: true });
         })
         .catch((e) => {
           setSubmitting(false);
@@ -44,7 +46,7 @@ function LoginPage() {
   // console.log('formik.errors -', formik.errors);
 
   if (isLoggedIn) {
-    return <Redirect to="/" />;
+    return <Navigate to="/" />;
   }
 
   return (

@@ -23,7 +23,7 @@ function NavBar() {
             <>
               <Nav className="collapse navbar-collapse">
                 <Nav.Item as="li">
-                  <Link className="nav-link" to="/">
+                  <Link className="nav-link" to="/cameras">
                     All cameras
                   </Link>
                 </Nav.Item>

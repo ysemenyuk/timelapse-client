@@ -78,7 +78,7 @@ function ScreenshotsByTime({ selectedCamera, row }) {
     <Col md={12} className="mb-4">
       <Choose>
         <When condition={row}>
-          <ListGroup className="mb-3">
+          <ListGroup className="mb-3" role="button" onClick={handleOpenEditModal}>
             <ListGroup.Item>
               <div className="d-flex justify-content-between align-items-start">
                 <div className="me-3">Make screenshots by time</div>
@@ -95,7 +95,7 @@ function ScreenshotsByTime({ selectedCamera, row }) {
             Screenshots by time
           </Heading>
 
-          <ListGroup className="mb-3">
+          <ListGroup className="mb-3" role="button" onClick={handleOpenEditModal}>
             <ListGroup.Item className="d-flex">
               <div className="me-3 w-50">Status</div>
               <Badge bg={isRunning ? 'success' : 'secondary'}>{isRunning ? 'Running' : 'Stopped'}</Badge>
@@ -117,6 +117,7 @@ function ScreenshotsByTime({ selectedCamera, row }) {
               <span>{files}</span>
             </ListGroup.Item>
           </ListGroup>
+
         </Otherwise>
       </Choose>
 
@@ -130,7 +131,7 @@ function ScreenshotsByTime({ selectedCamera, row }) {
         >
           Stop
         </Button>
-        <Button
+        {/* <Button
           onClick={handleOpenEditModal}
           disabled={isRunning}
           variant="primary"
@@ -138,7 +139,7 @@ function ScreenshotsByTime({ selectedCamera, row }) {
           className="me-2"
         >
           EditSettings
-        </Button>
+        </Button> */}
         <Button
           onClick={handleStartScreenshotsByTime}
           disabled={isRunning}

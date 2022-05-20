@@ -11,6 +11,7 @@ import Screenshot from '../components/Screenshot/Screenshot.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
 import { cameraActions, cameraSelectors } from '../store/cameraSlice.js';
+import Tasks from '../components/Tasks/Tasks.jsx';
 
 function CameraPage() {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ function CameraPage() {
         <Row>
           <Col sm={3}>
             <Screenshot selectedCamera={selectedCamera} />
+            <Tasks selectedCamera={selectedCamera} />
             <ScreenshotsByTime selectedCamera={selectedCamera} />
             <VideosByTime selectedCamera={selectedCamera} />
           </Col>

@@ -7,6 +7,8 @@ import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
 import ScreenshotsByTime from '../components/ScreenshotsByTime/ScreenshotsByTime.jsx';
 import useCameraList from '../hooks/useCamerasList.js';
+import VideosByTime from '../components/VideosByTime/VideosByTime.jsx';
+import FoldersList from '../components/FoldersList/FoldersList.jsx';
 
 function CameraListPage() {
   const { allCameras, selectedCamera, fetchStatus } = useCameraList();
@@ -26,11 +28,13 @@ function CameraListPage() {
               <Otherwise>
                 <CameraInfo selectedCamera={selectedCamera} />
                 <ScreenshotsByTime row selectedCamera={selectedCamera} />
+                <VideosByTime row selectedCamera={selectedCamera} />
               </Otherwise>
             </Choose>
           </Col>
           <Col sm={3}>
             <Screenshot selectedCamera={selectedCamera} />
+            <FoldersList selectedCamera={selectedCamera} />
           </Col>
         </Row>
       </When>

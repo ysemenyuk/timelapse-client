@@ -63,6 +63,7 @@ export default function useImageViewer(selectedCamera, files) {
     onImageDoubleClick,
     show,
     onHide,
+    images,
     image,
     onNextClick,
     onPrewClick,

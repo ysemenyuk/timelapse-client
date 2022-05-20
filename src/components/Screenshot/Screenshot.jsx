@@ -18,7 +18,7 @@ function CameraScreen({ selectedCamera }) {
         Screenshot
       </Heading>
       <ImgWrapper width={100} height={0.5625} src={imageSrc} />
-      <span>{selectedCamera.name}</span>
+      {/* <span>{selectedCamera.name}</span> */}
     </Col>
   );
 }

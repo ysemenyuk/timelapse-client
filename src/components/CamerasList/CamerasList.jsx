@@ -1,7 +1,7 @@
 import React from 'react';
 import cn from 'classnames';
 import { useDispatch } from 'react-redux';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useNavigate, useMatch } from 'react-router-dom';
 import { Col, ListGroup, Button } from 'react-bootstrap';
 import Heading from '../UI/Heading.jsx';
 import { cameraActions } from '../../store/cameraSlice.js';
@@ -11,13 +11,13 @@ import AddCameraModal from '../Modals/AddCameraModal.jsx';
 
 function CamerasList({ cameras, selectedCameraId }) {
   const dispatch = useDispatch();
-  const history = useHistory();
-  const match = useRouteMatch('/');
+  const navigate = useNavigate();
+  const match = useMatch('/cameras');
 
   const handleSelectItem = (cameraId) => () => {
     dispatch(cameraActions.selectCamera(cameraId));
-    if (match.isExact === false) {
-      history.push('/');
+    if (!match) {
+      navigate('/cameras');
     }
   };
 

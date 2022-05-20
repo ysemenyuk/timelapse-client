@@ -71,14 +71,6 @@ function CameraFileManager({ selectedCamera }) {
     }
   };
 
-  // const createScreenshotHandler = () => {
-  //   taskService.createScreenshotTask(selectedCamera._id);
-  // };
-
-  // const createVideofileHandler = () => {
-  //   dispatch(modalActions.openModal(CREATE_VIDEO));
-  // };
-
   const renderBreadcrumbs = () => navigationStack.map((folder) => (
     <Breadcrumb.Item
       onClick={() => onBreadCrumbClick(folder)}
@@ -163,24 +155,6 @@ function CameraFileManager({ selectedCamera }) {
               checked={multiSelect}
             />
           </Form>
-
-          {/* <Button
-            type="primary"
-            size="sm"
-            onClick={createScreenshotHandler}
-            disabled={btnDisabled}
-          >
-            CreateScreenshot
-          </Button>
-          <Button
-            type="primary"
-            size="sm"
-            onClick={createVideofileHandler}
-            disabled={btnDisabled}
-          >
-            CreateVideo
-          </Button> */}
-
         </ButtonsGroup>
       </Col>
 

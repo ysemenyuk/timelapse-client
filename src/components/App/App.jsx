@@ -1,21 +1,28 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import userThunks from '../../thunks/userThunks.js';
-import NavBar from '../Navbar/Navbar.jsx';
 import Spinner from '../UI/Spinner.jsx';
 import LoginPage from '../../pages/LoginPage.jsx';
 import SignupPage from '../../pages/SignupPage.jsx';
 import ProfilePage from '../../pages/ProfilePage.jsx';
-import CameraListPage from '../../pages/CamerasListPage.jsx';
-import OneCameraPage from '../../pages/OneCameraPage.jsx';
+import CamerasListPage from '../../pages/CamerasListPage.jsx';
+import CameraPage from '../../pages/CameraPage.jsx';
+import HomePage from '../../pages/HomePage.jsx';
+import Layout from '../../pages/Layout.jsx';
 
-function PrivateRoute({ children, ...rest }) {
+function RequireAuth({ children }) {
   const user = useSelector((state) => state.user);
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const isAuth = user.isLoggedIn && userInfo && userInfo.token;
-  return <Route {...rest} render={() => (isAuth ? children : <Redirect to="/login" />)} />;
+  const location = useLocation();
+
+  if (!isAuth) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  return children;
 }
 
 function App() {
@@ -34,19 +41,39 @@ function App() {
           <Spinner />
         </When>
         <Otherwise>
-          <Router>
-            <NavBar />
-            <Switch>
-              <Route exact path="/login" component={LoginPage} />
-              <Route exact path="/signup" component={SignupPage} />
-              <PrivateRoute>
-                <Route exact path="/user" component={ProfilePage} />
-                <Route exact path="/cameras/:id" component={OneCameraPage} />
-                <Route exact path={['/', '/cameras']} component={CameraListPage} />
-              </PrivateRoute>
-              <Redirect to="/" />
-            </Switch>
-          </Router>
+          <BrowserRouter>
+            <Routes>
+              <Route element={<Layout />}>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/signup" element={<SignupPage />} />
+                <Route
+                  path="/user"
+                  element={(
+                    <RequireAuth>
+                      <ProfilePage />
+                    </RequireAuth>
+                  )}
+                />
+                <Route
+                  path="/cameras"
+                  element={(
+                    <RequireAuth>
+                      <CamerasListPage />
+                    </RequireAuth>
+                  )}
+                />
+                <Route
+                  path="/cameras/:id"
+                  element={(
+                    <RequireAuth>
+                      <CameraPage />
+                    </RequireAuth>
+                  )}
+                />
+              </Route>
+            </Routes>
+          </BrowserRouter>
         </Otherwise>
       </Choose>
     </Container>

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
@@ -5,10 +6,12 @@ import withModalWrapper from './withModalWrapper.jsx';
 import { CREATE_VIDEO } from '../../utils/constants.js';
 import fileManagerService from '../../api/fileManager.service.js';
 import taskService from '../../api/task.service.js';
+import 'react-date-range/dist/styles.css'; // main css file
+import 'react-date-range/dist/theme/default.css'; // theme css file
 
 const videosByTimeData = {
-  startDateTime: '2022-05-01T21:00',
-  endDateTime: '2022-05-30T21:00',
+  startDateTime: '2022-05-01',
+  endDateTime: '2022-05-30',
   duration: 60,
   fps: 25,
 };
@@ -45,6 +48,7 @@ function CreateVideoModal({ type, show, onHide, selectedCamera }) {
     <Modal
       show={show && type === CREATE_VIDEO}
       onHide={onHide}
+      // size="lg"
     >
       <Modal.Header closeButton>
         <Modal.Title>Create video</Modal.Title>
@@ -65,7 +69,7 @@ function CreateVideoModal({ type, show, onHide, selectedCamera }) {
                 value={formik.values.startDateTime}
                 name="startDateTime"
                 id="startDateTime"
-                type="datetime-local"
+                type="date"
                 isInvalid={formik.errors && formik.errors.startDateTime}
               />
               <Form.Control.Feedback type="invalid">
@@ -79,7 +83,7 @@ function CreateVideoModal({ type, show, onHide, selectedCamera }) {
                 value={formik.values.endDateTime}
                 name="endDateTime"
                 id="endDateTime"
-                type="datetime-local"
+                type="date"
                 isInvalid={formik.errors && formik.errors.endDateTime}
               />
               <Form.Control.Feedback type="invalid">
