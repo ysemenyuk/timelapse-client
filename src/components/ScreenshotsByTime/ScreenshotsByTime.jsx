@@ -131,7 +131,7 @@ function ScreenshotsByTime({ selectedCamera, row }) {
         >
           Stop
         </Button>
-        {/* <Button
+        <Button
           onClick={handleOpenEditModal}
           disabled={isRunning}
           variant="primary"
@@ -139,7 +139,7 @@ function ScreenshotsByTime({ selectedCamera, row }) {
           className="me-2"
         >
           EditSettings
-        </Button> */}
+        </Button>
         <Button
           onClick={handleStartScreenshotsByTime}
           disabled={isRunning}

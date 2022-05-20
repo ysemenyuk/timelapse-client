@@ -1,17 +1,31 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Col, Row } from 'react-bootstrap';
+import { cameraActions, cameraSelectors } from '../store/cameraSlice.js';
+import useThunkStatus from '../hooks/useThunkStatus.js';
 import CamerasList from '../components/CamerasList/CamerasList.jsx';
 import Screenshot from '../components/Screenshot/Screenshot.jsx';
 import CameraInfo from '../components/CameraInfo/CameraInfo.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
 import ScreenshotsByTime from '../components/ScreenshotsByTime/ScreenshotsByTime.jsx';
-import useCameraList from '../hooks/useCamerasList.js';
+// import useCameraList from '../hooks/useCamerasList.js';
 import VideosByTime from '../components/VideosByTime/VideosByTime.jsx';
 import FoldersList from '../components/FoldersList/FoldersList.jsx';
 
 function CameraListPage() {
-  const { allCameras, selectedCamera, fetchStatus } = useCameraList();
+  const dispatch = useDispatch();
+
+  const allCameras = useSelector(cameraSelectors.allCameras);
+  const selectedCamera = useSelector(cameraSelectors.selectedCamera);
+
+  const fetchStatus = useThunkStatus(cameraActions.fetchAll);
+
+  useEffect(() => {
+    if (allCameras.length < 2) {
+      dispatch(cameraActions.fetchAll());
+    }
+  }, []);
 
   return (
     <Choose>

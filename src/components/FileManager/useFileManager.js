@@ -1,8 +1,8 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
-import { fileManagerActions } from '../store/fileManagerSlice.js';
-import useThunkStatus from './useThunkStatus.js';
+import { fileManagerActions } from '../../store/fileManagerSlice.js';
+import useThunkStatus from '../../hooks/useThunkStatus.js';
 
 export default function useFileManager(selectedCamera) {
   const dispatch = useDispatch();

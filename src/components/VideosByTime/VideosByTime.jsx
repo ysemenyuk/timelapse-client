@@ -70,7 +70,7 @@ function VideosByTime({ selectedCamera, row }) {
           <ListGroup className="mb-3" role="button" onClick={handleOpenEditModal}>
             <ListGroup.Item>
               <div className="d-flex justify-content-between align-items-start">
-                <div className="me-3">Make screenshots by time</div>
+                <div className="me-3">Video of the day</div>
                 <Badge bg={isRunning ? 'success' : 'secondary'}>{isRunning ? 'Running' : 'Stopped'}</Badge>
               </div>
               <div className="w-75 text-truncate text-muted">
@@ -119,7 +119,7 @@ function VideosByTime({ selectedCamera, row }) {
         >
           Stop
         </Button>
-        {/* <Button
+        <Button
           onClick={handleOpenEditModal}
           disabled={isRunning}
           variant="primary"
@@ -127,7 +127,7 @@ function VideosByTime({ selectedCamera, row }) {
           className="me-2"
         >
           EditSettings
-        </Button> */}
+        </Button>
         <Button
           onClick={handleStopVideosByTime}
           disabled={isRunning}

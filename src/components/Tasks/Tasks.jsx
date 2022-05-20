@@ -7,6 +7,7 @@ import ButtonsGroup from '../UI/ButtonsGroup';
 import { CREATE_VIDEO } from '../../utils/constants.js';
 import taskService from '../../api/task.service';
 import { modalActions } from '../../store/modalSlice';
+import CreateVideoModal from '../Modals/CreateVideoModal';
 
 function Tasks({ selectedCamera }) {
   const dispatch = useDispatch();
@@ -24,30 +25,33 @@ function Tasks({ selectedCamera }) {
   }
 
   return (
-    <Col md={12} className="mb-4">
-      {/* <Heading lvl={6} className="mb-3">
+    <>
+      <Col md={12} className="mb-4">
+        {/* <Heading lvl={6} className="mb-3">
         Files
       </Heading> */}
 
-      <ButtonsGroup>
+        <ButtonsGroup>
 
-        <Button
-          type="primary"
-          size="sm"
-          onClick={createScreenshotHandler}
-        >
-          CreateScreenshot
-        </Button>
-        <Button
-          type="primary"
-          size="sm"
-          onClick={createVideofileHandler}
-        >
-          CreateVideoFile
-        </Button>
+          <Button
+            type="primary"
+            size="sm"
+            onClick={createScreenshotHandler}
+          >
+            CreateScreenshot
+          </Button>
+          <Button
+            type="primary"
+            size="sm"
+            onClick={createVideofileHandler}
+          >
+            CreateVideoFile
+          </Button>
 
-      </ButtonsGroup>
-    </Col>
+        </ButtonsGroup>
+      </Col>
+      <CreateVideoModal selectedCamera={selectedCamera} />
+    </>
   );
 }
 

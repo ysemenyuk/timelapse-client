@@ -9,19 +9,18 @@ import folderImg from '../../assets/folder2.png';
 import ButtonsGroup from '../UI/ButtonsGroup';
 import Heading from '../UI/Heading';
 import Error from '../UI/Error';
-import useFileManager from '../../hooks/useFileManager';
+import useFileManager from './useFileManager';
 // import { IMAGE_VIEWER, CREATE_VIDEO } from '../../utils/constants';
 // import { modalActions } from '../../store/modalSlice';
-import ImageViewerModal from '../Modals/ImageViewerModal';
-import CreateVideoModal from '../Modals/CreateVideoModal';
-// import taskService from '../../api/task.service';
-import useImageViewer from '../../hooks/useImageViewer';
+import ImageViewerModal from '../ImageViewerModal/ImageViewerModal';
+// import useImageViewer from '../ImageViewerModal/useImageViewer';
 
 function CameraFileManager({ selectedCamera }) {
   // const dispatch = useDispatch();
 
   const [selectedItems, selectItem] = useState({});
   const [multiSelect, setMultiSelect] = useState(false);
+  const [show, setShow] = useState(false);
 
   const {
     fetchStatus,
@@ -35,10 +34,10 @@ function CameraFileManager({ selectedCamera }) {
     onBackButtonClick,
   } = useFileManager(selectedCamera);
 
-  const {
-    onImageDoubleClick,
-    ...imageViewerProps
-  } = useImageViewer(selectedCamera, files);
+  // const {
+  //   onImageDoubleClick,
+  //   ...imageViewerProps
+  // } = useImageViewer(selectedCamera, files);
 
   // const deleteFileHandler = (file) => {
   //   dispatch(fileManagerActions.deleteOneFile({
@@ -58,9 +57,11 @@ function CameraFileManager({ selectedCamera }) {
     setMultiSelect(!multiSelect);
   };
 
-  const doubleClickFileHandler = (file, index) => {
+  const doubleClickFileHandler = (file) => {
     // if file is image
-    onImageDoubleClick(index);
+    // onImageDoubleClick(index);
+    selectItem({ [file._id]: file });
+    setShow(true);
   };
 
   const selectItemHandler = (item) => {
@@ -195,8 +196,9 @@ function CameraFileManager({ selectedCamera }) {
         </Otherwise>
       </Choose>
 
-      <ImageViewerModal {...imageViewerProps} />
-      <CreateVideoModal selectedCamera={selectedCamera} />
+      <If condition={show}>
+        <ImageViewerModal files={files} selectedFiles={selectedItems} setShow={setShow} show={show} />
+      </If>
 
     </>
   );
