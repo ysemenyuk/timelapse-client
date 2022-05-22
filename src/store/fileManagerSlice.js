@@ -7,7 +7,7 @@ const fileManagerSlice = createSlice({
   name: 'fileManager',
   initialState: {
     files: {},
-    folders: {},
+    // folders: {},
     // stack: [],
   },
   reducers: {
@@ -27,20 +27,7 @@ const fileManagerSlice = createSlice({
   extraReducers: {
     [fetchFiles.fulfilled]: (state, action) => {
       const { parentId, data } = action.payload;
-
-      const files = [];
-      const folders = [];
-
-      data.forEach((item) => {
-        if (item.type === 'folder') {
-          folders.push(item);
-        } else {
-          files.push(item);
-        }
-      });
-
-      state.files[parentId] = files;
-      state.folders[parentId] = folders;
+      state.files[parentId] = data;
     },
     [deleteOneFile.fulfilled]: (state, action) => {
       const deleted = action.payload;

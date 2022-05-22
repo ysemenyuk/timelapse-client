@@ -27,3 +27,22 @@
     outline: none;
     transition: .1s;
 }
+
+.btnsContainer {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  /* padding: 0 20px; */
+}
+
+.deleteBtns {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.defaultBtns {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

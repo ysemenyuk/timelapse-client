@@ -7,66 +7,134 @@ import useThunkStatus from '../../hooks/useThunkStatus.js';
 export default function useFileManager(selectedCamera) {
   const dispatch = useDispatch();
 
-  const [stack, setStack] = useState([selectedCamera.mainFolder]);
-  const selectedFolder = useMemo(() => _.last(stack), [stack]);
-
-  const { files, folders } = useSelector((state) => state.fileManager);
+  const { files } = useSelector((state) => state.fileManager);
   const fetchStatus = useThunkStatus(fileManagerActions.fetchFiles);
 
-  const currentFolders = selectedFolder ? folders[selectedFolder._id] : null;
-  const currentFiles = selectedFolder ? files[selectedFolder._id] : null;
+  const [selectedIndexes, setSelectedIndexes] = useState([]);
+  const [multiSelect, setMultiSelect] = useState(false);
+  const [show, setShow] = useState(false);
+  const [stack, setStack] = useState([selectedCamera.mainFolder]);
+
+  const currentFolder = useMemo(() => _.last(stack), [stack]);
+  const currentFiles = useMemo(() => files[currentFolder._id], [currentFolder, files]);
 
   useEffect(() => {
     setStack([selectedCamera.mainFolder]);
   }, [selectedCamera]);
 
   useEffect(() => {
-    if (selectedCamera && selectedFolder && !currentFolders && !currentFiles) {
+    if (selectedCamera && currentFolder && !currentFiles) {
       dispatch(
         fileManagerActions.fetchFiles({
           cameraId: selectedCamera._id,
-          parentId: selectedFolder._id,
+          parentId: currentFolder._id,
         }),
       );
     }
-  }, [selectedFolder, selectedCamera]);
+  }, [currentFolder, selectedCamera]);
+
+  useEffect(() => {
+    if (currentFiles) {
+      const currentFilesCount = currentFiles.length;
+
+      if (currentFilesCount === 0) {
+        setSelectedIndexes([]);
+        return;
+      }
+
+      if (_.head(selectedIndexes) > currentFilesCount - 1) {
+        setSelectedIndexes([currentFilesCount - 1]);
+      }
+    }
+  }, [currentFiles]);
 
   const onRefreshClick = () => {
-    if (selectedCamera && selectedFolder) {
+    setSelectedIndexes([]);
+    if (selectedCamera && currentFolder) {
       dispatch(fileManagerActions.fetchFiles({
         cameraId: selectedCamera._id,
-        parentId: selectedFolder._id,
+        parentId: currentFolder._id,
       }));
     }
   };
 
-  const onFolderDoubleClick = (folder) => {
-    setStack((currentStack) => _.concat(currentStack, folder));
-  };
-
   const onBackButtonClick = () => {
-    if (stack.length === 1) {
-      return;
-    }
+    setSelectedIndexes([]);
     setStack((currentStack) => _.initial(currentStack));
   };
 
   const onBreadCrumbClick = (folder) => {
+    setSelectedIndexes([]);
     setStack((currentStack) => {
       const index = _.findIndex(currentStack, (item) => item._id === folder._id);
       return _.slice(currentStack, 0, index + 1);
     });
   };
 
+  //
+
+  const onDeleteSelected = (allFiles) => {
+    // delete selectedIndexes
+    setSelectedIndexes((prew) => ([_.head(prew)]));
+    const selectedItems = selectedIndexes.map((index) => allFiles[index]);
+    Promise.all(selectedItems.map((item) => dispatch(fileManagerActions.deleteOneFile({
+      cameraId: item.camera,
+      file: item,
+    }))));
+  };
+
+  const onMultiSelectClick = () => {
+    if (multiSelect) {
+      setSelectedIndexes((prew) => ([_.head(prew)]));
+    }
+    setMultiSelect(!multiSelect);
+  };
+
+  const onFileDoubleClick = (file, index) => {
+    if (file.type === 'folder') {
+      setSelectedIndexes([]);
+      setStack((currentStack) => _.concat(currentStack, file));
+    } else {
+    // if file is image
+      setSelectedIndexes([index]);
+      setShow(true);
+    }
+  };
+
+  const onFileClick = (index) => {
+    if (multiSelect) {
+      setSelectedIndexes((prew) => ([...prew, index]));
+    } else {
+      setSelectedIndexes([index]);
+    }
+  };
+
+  const onCloseImageViewer = () => {
+    setShow(false);
+  };
+
   return {
     fetchStatus,
-    folders: currentFolders,
-    files: currentFiles,
+    currentFolder,
+    currentFiles,
     navigationStack: stack,
-    selectedFolder,
+    selectedIndexes,
+    multiSelect,
+    showImageViewer: show,
+
+    onCloseImageViewer,
+
     onRefreshClick,
-    onBreadCrumbClick,
-    onFolderDoubleClick,
     onBackButtonClick,
+    onBreadCrumbClick,
+
+    onDeleteSelected,
+    onMultiSelectClick,
+
+    setMultiSelect,
+    setSelectedIndexes,
+
+    onFileClick,
+    onFileDoubleClick,
   };
 }

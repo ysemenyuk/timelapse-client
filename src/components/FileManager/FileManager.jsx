@@ -1,76 +1,34 @@
-import React, { useState } from 'react';
-// import { useDispatch } from 'react-redux';
+import React from 'react';
 import { Breadcrumb, Col, Button, Spinner, Form } from 'react-bootstrap';
 import cn from 'classnames';
 import styles from './FileManager.module.css';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 import folderImg from '../../assets/folder2.png';
-// import { fileManagerActions } from '../../store/fileManagerSlice';
-import ButtonsGroup from '../UI/ButtonsGroup';
 import Heading from '../UI/Heading';
 import Error from '../UI/Error';
 import useFileManager from './useFileManager';
-// import { IMAGE_VIEWER, CREATE_VIDEO } from '../../utils/constants';
-// import { modalActions } from '../../store/modalSlice';
-import ImageViewerModal from '../ImageViewerModal/ImageViewerModal';
-// import useImageViewer from '../ImageViewerModal/useImageViewer';
+import ImageViewer from './ImageViewer';
 
 function CameraFileManager({ selectedCamera }) {
-  // const dispatch = useDispatch();
-
-  const [selectedItems, selectItem] = useState({});
-  const [multiSelect, setMultiSelect] = useState(false);
-  const [show, setShow] = useState(false);
-
   const {
     fetchStatus,
-    files,
-    folders,
+    currentFolder,
+    currentFiles,
     navigationStack,
-    selectedFolder,
+    selectedIndexes,
+    multiSelect,
+    showImageViewer,
+    onCloseImageViewer,
     onRefreshClick,
-    onBreadCrumbClick,
-    onFolderDoubleClick,
     onBackButtonClick,
+    onBreadCrumbClick,
+    onDeleteSelected,
+    onMultiSelectClick,
+    setSelectedIndexes,
+    setMultiSelect,
+    onFileClick,
+    onFileDoubleClick,
   } = useFileManager(selectedCamera);
-
-  // const {
-  //   onImageDoubleClick,
-  //   ...imageViewerProps
-  // } = useImageViewer(selectedCamera, files);
-
-  // const deleteFileHandler = (file) => {
-  //   dispatch(fileManagerActions.deleteOneFile({
-  //     cameraId: selectedCamera._id,
-  //     file: file,
-  //   }));
-  // };
-
-  const deleteSelectedHandler = () => {
-    // delete selectedItems
-  };
-
-  const multiSelectClickHandler = () => {
-    if (multiSelect) {
-      selectItem({});
-    }
-    setMultiSelect(!multiSelect);
-  };
-
-  const doubleClickFileHandler = (file) => {
-    // if file is image
-    // onImageDoubleClick(index);
-    selectItem({ [file._id]: file });
-    setShow(true);
-  };
-
-  const selectItemHandler = (item) => {
-    if (multiSelect) {
-      selectItem((prew) => ({ ...prew, [item._id]: item }));
-    } else {
-      selectItem({ [item._id]: item });
-    }
-  };
 
   const renderBreadcrumbs = () => navigationStack.map((folder) => (
     <Breadcrumb.Item
@@ -81,34 +39,21 @@ function CameraFileManager({ selectedCamera }) {
     </Breadcrumb.Item>
   ));
 
-  const renderFolders = () => folders.map((folder) => {
-    const classNames = cn(styles.item, { [styles.selectedItem]: selectedItems[folder._id] });
+  const renderCurrentFiles = () => currentFiles.map((file, index) => {
+    const src = file.type === 'folder' ? folderImg : `/files/${file._id}?size=thumbnail`;
+    const classNames = cn(styles.item, { [styles.selectedItem]: selectedIndexes.includes(index) });
     return (
-      <div className={classNames} key={folder._id}>
+      <div
+        role="presentation"
+        className={classNames}
+        key={file._id}
+        onClick={() => onFileClick(index)}
+        onDoubleClick={() => onFileDoubleClick(file, index)}
+      >
         <ImgWrapper
           width={100}
           height={0.5625}
-          src={folderImg}
-          role="button"
-          onClick={(e) => selectItemHandler(folder, e)}
-          onDoubleClick={() => onFolderDoubleClick(folder)}
-        />
-        <span>{folder.name}</span>
-      </div>
-    );
-  });
-
-  const renderFiles = () => files.map((file, index) => {
-    const classNames = cn(styles.item, { [styles.selectedItem]: selectedItems[file._id] });
-    return (
-      <div className={classNames} key={file._id}>
-        <ImgWrapper
-          width={100}
-          height={0.5625}
-          src={`/files/${file._id}?size=thumbnail`}
-          role="button"
-          onClick={() => selectItemHandler(file)}
-          onDoubleClick={() => doubleClickFileHandler(file, index)}
+          src={src}
         />
         <span>{file.name}</span>
       </div>
@@ -122,45 +67,49 @@ function CameraFileManager({ selectedCamera }) {
           Files
         </Heading>
 
-        <ButtonsGroup>
-          <Button
-            type="primary"
-            size="sm"
-            onClick={onBackButtonClick}
-            disabled={fetchStatus.isLoading}
-          >
-            Back
-          </Button>
-          <Button
-            type="primary"
-            size="sm"
-            onClick={onRefreshClick}
-            disabled={fetchStatus.isLoading}
-          >
-            Refresh
-          </Button>
-          <Button
-            type="primary"
-            size="sm"
-            onClick={deleteSelectedHandler}
-            disabled={fetchStatus.isLoading}
-          >
-            DeleteSelected
-          </Button>
-          <Form>
-            <Form.Check
-              type="switch"
-              id="switch"
-              label="MuliSelect"
-              onChange={multiSelectClickHandler}
-              checked={multiSelect}
-            />
-          </Form>
-        </ButtonsGroup>
+        <div className={styles.btnsContainer}>
+          <div className={styles.defaultBtns}>
+            <Button
+              type="primary"
+              size="sm"
+              onClick={onBackButtonClick}
+              disabled={fetchStatus.isLoading || navigationStack.length < 2}
+            >
+              Back
+            </Button>
+            <Button
+              type="primary"
+              size="sm"
+              onClick={onRefreshClick}
+              disabled={fetchStatus.isLoading}
+            >
+              Refresh
+            </Button>
+          </div>
+          <div className={styles.deleteBtns}>
+            <Form>
+              <Form.Check
+                type="switch"
+                id="switch"
+                label="MuliSelect"
+                onChange={onMultiSelectClick}
+                checked={multiSelect}
+              />
+            </Form>
+            <Button
+              type="primary"
+              size="sm"
+              onClick={() => onDeleteSelected(currentFiles)}
+              disabled={fetchStatus.isLoading}
+            >
+              {`DeleteSelected (${selectedIndexes.length})`}
+            </Button>
+          </div>
+        </div>
       </Col>
 
       <Choose>
-        <When condition={!selectedFolder || !navigationStack}>
+        <When condition={!currentFolder || !navigationStack}>
           <Spinner animation="border" />
         </When>
 
@@ -177,18 +126,17 @@ function CameraFileManager({ selectedCamera }) {
                 <Error message="Fetch files. Network error " type="error" />
               </When>
 
-              <When condition={!folders || !files || fetchStatus.isLoading}>
+              <When condition={!currentFiles || fetchStatus.isLoading}>
                 <Spinner animation="border" />
               </When>
 
-              <When condition={folders.length === 0 && files.length === 0}>
+              <When condition={currentFiles.length === 0}>
                 <div className={styles.container}>No files or folders..</div>
               </When>
 
-              <When condition={folders && files}>
+              <When condition={currentFiles}>
                 <div className={styles.container}>
-                  {renderFolders()}
-                  {renderFiles()}
+                  {renderCurrentFiles()}
                 </div>
               </When>
             </Choose>
@@ -196,8 +144,18 @@ function CameraFileManager({ selectedCamera }) {
         </Otherwise>
       </Choose>
 
-      <If condition={show}>
-        <ImageViewerModal files={files} selectedFiles={selectedItems} setShow={setShow} show={show} />
+      <If condition={showImageViewer}>
+        <ImageViewer
+          onClose={onCloseImageViewer}
+          currentFiles={currentFiles}
+          selectedIndexes={selectedIndexes}
+          multiSelect={multiSelect}
+          onFileClick={onFileClick}
+          onDeleteSelected={onDeleteSelected}
+          setSelectedIndexes={setSelectedIndexes}
+          setMultiSelect={setMultiSelect}
+          onMultiSelectClick={onMultiSelectClick}
+        />
       </If>
 
     </>
