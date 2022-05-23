@@ -10,8 +10,8 @@ const isImage = (file) => file.type !== 'Folder';
 
 function ImageViewer(props) {
   const {
-    onClose, currentFiles, onFileClick, selectedIndexes, setSelectedIndexes,
-    onDeleteSelected, multiSelect, setMultiSelect, onMultiSelectClick,
+    onClose, currentFiles, selectedIndexes, setSelectedIndexes,
+    onDeleteSelected, multiSelect, setMultiSelect,
   } = props;
 
   const [images, setImages] = useState(currentFiles.filter(isImage));
@@ -32,6 +32,14 @@ function ImageViewer(props) {
     onClose();
   };
 
+  const onFileClick = (index) => {
+    if (multiSelect) {
+      setSelectedIndexes((prew) => ([...prew, index]));
+    } else {
+      setSelectedIndexes([index]);
+    }
+  };
+
   const onNextClick = () => {
     if (multiSelect) {
       setMultiSelect(false);
@@ -44,6 +52,16 @@ function ImageViewer(props) {
       setMultiSelect(false);
     }
     setSelectedIndexes((prew) => ([_.head(prew) - 1]));
+  };
+
+  const onMultiSelectClick = () => {
+    setSelectedIndexes((prew) => ([_.head(prew)]));
+    setMultiSelect(!multiSelect);
+  };
+
+  const onDeleteBtnClick = () => {
+    const selectedItems = selectedIndexes.map((index) => images[index]);
+    onDeleteSelected(selectedItems);
   };
 
   useEffect(() => {
@@ -116,7 +134,7 @@ function ImageViewer(props) {
       <Modal.Footer>
         <div className={styles.footerContainer}>
           <div className={styles.deleteBtns}>
-            <Button key="del" onClick={() => onDeleteSelected(images)}>
+            <Button key="del" onClick={onDeleteBtnClick}>
               {`DeleteSelected (${selectedIndexes.length})`}
             </Button>
             <Form>

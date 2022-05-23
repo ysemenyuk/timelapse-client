@@ -20,7 +20,7 @@ export default function useFileManager(selectedCamera) {
 
   useEffect(() => {
     setStack([selectedCamera.mainFolder]);
-  }, [selectedCamera]);
+  }, [selectedCamera.mainFolder]);
 
   useEffect(() => {
     if (selectedCamera && currentFolder && !currentFiles) {
@@ -73,20 +73,19 @@ export default function useFileManager(selectedCamera) {
 
   //
 
-  const onDeleteSelected = (allFiles) => {
-    // delete selectedIndexes
+  const onDeleteSelected = (selectedItems) => {
     setSelectedIndexes((prew) => ([_.head(prew)]));
-    const selectedItems = selectedIndexes.map((index) => allFiles[index]);
-    Promise.all(selectedItems.map((item) => dispatch(fileManagerActions.deleteOneFile({
-      cameraId: item.camera,
-      file: item,
-    }))));
+    // delete selectedIndexes
+    Promise.all(selectedItems.map((item) => dispatch(
+      fileManagerActions.deleteOneFile({
+        cameraId: item.camera,
+        file: item,
+      }),
+    )));
   };
 
   const onMultiSelectClick = () => {
-    if (multiSelect) {
-      setSelectedIndexes((prew) => ([_.head(prew)]));
-    }
+    setSelectedIndexes((prew) => ([_.head(prew)]));
     setMultiSelect(!multiSelect);
   };
 

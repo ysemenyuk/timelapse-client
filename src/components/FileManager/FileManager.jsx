@@ -18,17 +18,24 @@ function CameraFileManager({ selectedCamera }) {
     selectedIndexes,
     multiSelect,
     showImageViewer,
-    onCloseImageViewer,
+
     onRefreshClick,
     onBackButtonClick,
     onBreadCrumbClick,
     onDeleteSelected,
     onMultiSelectClick,
-    setSelectedIndexes,
-    setMultiSelect,
     onFileClick,
     onFileDoubleClick,
+
+    onCloseImageViewer,
+    setSelectedIndexes,
+    setMultiSelect,
   } = useFileManager(selectedCamera);
+
+  const onDeleteBtnClick = () => {
+    const selectedItems = selectedIndexes.map((index) => currentFiles[index]);
+    onDeleteSelected(selectedItems);
+  };
 
   const renderBreadcrumbs = () => navigationStack.map((folder) => (
     <Breadcrumb.Item
@@ -86,25 +93,27 @@ function CameraFileManager({ selectedCamera }) {
               Refresh
             </Button>
           </div>
-          <div className={styles.deleteBtns}>
-            <Form>
-              <Form.Check
-                type="switch"
-                id="switch"
-                label="MuliSelect"
-                onChange={onMultiSelectClick}
-                checked={multiSelect}
-              />
-            </Form>
-            <Button
-              type="primary"
-              size="sm"
-              onClick={() => onDeleteSelected(currentFiles)}
-              disabled={fetchStatus.isLoading}
-            >
-              {`DeleteSelected (${selectedIndexes.length})`}
-            </Button>
-          </div>
+          <If condition={navigationStack.length > 1}>
+            <div className={styles.deleteBtns}>
+              <Form>
+                <Form.Check
+                  type="switch"
+                  id="switch"
+                  label="MuliSelect"
+                  onChange={onMultiSelectClick}
+                  checked={multiSelect}
+                />
+              </Form>
+              <Button
+                type="primary"
+                size="sm"
+                onClick={onDeleteBtnClick}
+                disabled={fetchStatus.isLoading}
+              >
+                {`DeleteSelected (${selectedIndexes.length})`}
+              </Button>
+            </div>
+          </If>
         </div>
       </Col>
 
@@ -135,8 +144,10 @@ function CameraFileManager({ selectedCamera }) {
               </When>
 
               <When condition={currentFiles}>
-                <div className={styles.container}>
-                  {renderCurrentFiles()}
+                <div className={styles.overflowContainer}>
+                  <div className={styles.filesContainer}>
+                    {renderCurrentFiles()}
+                  </div>
                 </div>
               </When>
             </Choose>
@@ -149,12 +160,10 @@ function CameraFileManager({ selectedCamera }) {
           onClose={onCloseImageViewer}
           currentFiles={currentFiles}
           selectedIndexes={selectedIndexes}
-          multiSelect={multiSelect}
-          onFileClick={onFileClick}
-          onDeleteSelected={onDeleteSelected}
           setSelectedIndexes={setSelectedIndexes}
+          multiSelect={multiSelect}
           setMultiSelect={setMultiSelect}
-          onMultiSelectClick={onMultiSelectClick}
+          onDeleteSelected={onDeleteSelected}
         />
       </If>
 

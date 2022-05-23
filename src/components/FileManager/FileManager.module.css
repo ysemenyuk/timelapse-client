@@ -1,7 +1,12 @@
-.container {
+.filesContainer {
   display: flex;
   flex-wrap: wrap;
   /* margin: -0.5rem; */
+}
+
+.overflowContainer {
+  /* /* overflow-y: auto; */
+  max-height: 800px;
 }
 
 .item {

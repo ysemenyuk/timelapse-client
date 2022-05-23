@@ -111,7 +111,7 @@ function VideosByTime({ selectedCamera, row }) {
 
       <>
         <Button
-          onClick={handleStartVideosByTime}
+          onClick={handleStopVideosByTime}
           disabled={!isRunning}
           variant="primary"
           size="sm"
@@ -129,7 +129,7 @@ function VideosByTime({ selectedCamera, row }) {
           EditSettings
         </Button>
         <Button
-          onClick={handleStopVideosByTime}
+          onClick={handleStartVideosByTime}
           disabled={isRunning}
           variant="primary"
           size="sm"
