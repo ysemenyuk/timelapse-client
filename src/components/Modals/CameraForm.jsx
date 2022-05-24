@@ -88,6 +88,7 @@ function CameraForm({ initialValues = values, onCancel, onSubmit }) {
       </Modal.Body>
 
       <Modal.Footer>
+        {formik.isSubmitting && <Spinner as="span" animation="border" size="sm" />}
         <Button
           size="sm"
           onClick={onCancel}
@@ -103,8 +104,6 @@ function CameraForm({ initialValues = values, onCancel, onSubmit }) {
           variant="primary"
         >
           Submit
-          {' '}
-          {formik.isSubmitting && <Spinner as="span" animation="border" size="sm" />}
         </Button>
       </Modal.Footer>
     </>

@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import taskService from '../../api/task.service.js';
 
@@ -86,6 +87,8 @@ const createScreenshot = createAsyncThunk('task/createScreenshot', async ({ came
     const { data } = await taskService.createScreenshotTask(cameraId, payload);
 
     console.log('task/createScreenshot response -', data);
+    toast('task/createScreenshot');
+
     return { cameraId, data };
   } catch (e) {
     console.log('task/createScreenshot error -', e.message);

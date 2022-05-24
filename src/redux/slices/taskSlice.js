@@ -30,21 +30,37 @@ const taskSlice = createSlice({
     },
     [createVideoFile.fulfilled]: (state, action) => {
       console.log('createScreenshot.fulfilled action -', action);
+
+      const { cameraId, data } = action.payload;
+      state.tasks[cameraId].push(data);
     },
     [updateScreenshotsByTime.fulfilled]: (state, action) => {
       console.log('updateScreenshotByTime.fulfilled action -', action);
-      // const updatedTask = action.payload;
-      // const camera = state.cameras[updatedTask.camera];
-      // camera.screenshotsByTimeTask = updatedTask;
+
+      const { cameraId, taskId, data } = action.payload;
+      const index = state.tasks[cameraId].findIndex((task) => task._id === taskId);
+      state.tasks[cameraId][index] = data;
     },
     [updateVideosByTime.fulfilled]: (state, action) => {
       console.log('updateVideosByTime.fulfilled action -', action);
+
+      const { cameraId, taskId, data } = action.payload;
+      const index = state.tasks[cameraId].findIndex((task) => task._id === taskId);
+      state.tasks[cameraId][index] = data;
     },
   },
 });
 
-const tasksByCameraId = (state) => state.task.tasks;
+const camerasById = (state) => state.camera.cameras;
 const selectedCameraId = (state) => state.camera.selectedCameraId;
+
+const selectedCamera = createSelector(
+  camerasById,
+  selectedCameraId,
+  (cameras, id) => cameras[id] || null,
+);
+
+const tasksByCameraId = (state) => state.task.tasks;
 
 const cameraTasks = createSelector(
   tasksByCameraId,
@@ -52,9 +68,33 @@ const cameraTasks = createSelector(
   (tasks, cameraId) => tasks[cameraId] || null,
 );
 
-const screenshotsByTimeTaskSelector = (camera) => (state) => state.camera.selectedCameraId;
+const screenshotsByTimeTask = createSelector(
+  cameraTasks,
+  selectedCamera,
+  (tasks, camera) => tasks && tasks.find((task) => task._id === camera.screenshotsByTimeTask),
+);
 
-export const taskSelectors = { cameraTasks, selectedCameraId, screenshotsByTimeTaskSelector };
+const videosByTimeTask = createSelector(
+  cameraTasks,
+  selectedCamera,
+  (tasks, camera) => tasks && tasks.find((task) => task._id === camera.videosByTimeTask),
+);
+
+const createScreenshotTask = createSelector(
+  cameraTasks,
+  selectedCamera,
+  (tasks, camera) => tasks && tasks.find((task) => task._id === camera.createScreenshotTask),
+);
+
+const createVideoTask = createSelector(
+  cameraTasks,
+  selectedCamera,
+  (tasks, camera) => tasks && tasks.find((task) => task._id === camera.videosByTimeTask),
+);
+
+export const taskSelectors = {
+  cameraTasks, screenshotsByTimeTask, videosByTimeTask, createScreenshotTask, createVideoTask,
+};
 
 export const taskActions = { ...taskSlice.actions, ...taskAsyncActions };
 

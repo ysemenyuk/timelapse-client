@@ -83,7 +83,7 @@ const selectedCamera = createSelector(
   (cameras, id) => cameras[id] || null,
 );
 
-export const cameraSelectors = { allCameras, selectedCamera };
+export const cameraSelectors = { allCameras, selectedCameraId, selectedCamera };
 
 export const cameraActions = { ...cameraSlice.actions, ...cameraAsyncActions };
 

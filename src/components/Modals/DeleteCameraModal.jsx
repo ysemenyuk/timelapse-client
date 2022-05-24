@@ -1,15 +1,22 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Modal, Spinner } from 'react-bootstrap';
 import { cameraActions, cameraSelectors } from '../../redux/slices/cameraSlice.js';
+import useThunkStatus from '../../hooks/useThunkStatus.js';
 
 function DeleteCameraModal({ show, onHide }) {
   const dispatch = useDispatch();
   const selectedCamera = useSelector(cameraSelectors.selectedCamera);
-  // const fetchStatus = useThunkStatus(cameraThunks.deleteOne);
+  const fetchStatus = useThunkStatus(cameraActions.deleteOne);
 
   const handleSubmit = () => {
-    dispatch(cameraActions.deleteOne(selectedCamera));
+    dispatch(cameraActions.deleteOne(selectedCamera))
+      .then(() => {
+        onHide();
+      })
+      .catch((e) => {
+        console.log('catch formik err -', e);
+      });
   };
 
   return (
@@ -25,6 +32,8 @@ function DeleteCameraModal({ show, onHide }) {
         {`Delete "${selectedCamera.name}" camera and all files?`}
       </Modal.Body>
       <Modal.Footer>
+        {fetchStatus.isLoading && <Spinner as="span" animation="border" size="sm" />}
+
         <Button
           key="close"
           onClick={onHide}

@@ -1,17 +1,10 @@
 import React from 'react';
-// import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 // import * as Yup from 'yup';
-import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
-
-const initialValues = {
-  status: '--',
-  videosByTimeSettings: {
-    startTime: '10:00',
-    duration: '60',
-    fps: '25',
-  },
-};
+import { Modal, Button, Form, Row, Col, ProgressBar, Spinner } from 'react-bootstrap';
+import { taskActions, taskSelectors } from '../../../redux/slices/taskSlice';
+import useThunkStatus from '../../../hooks/useThunkStatus';
 
 // const validationSchema = Yup.object({
 //   startTime: Yup.string().required(),
@@ -20,41 +13,50 @@ const initialValues = {
 // });
 
 function VideosByTimeModal({ show, onHide }) {
-  const { startTime, duration, fps } = initialValues;
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const fetchStatus = useThunkStatus(taskActions.updateVideosByTime);
+  const task = useSelector(taskSelectors.videosByTimeTask);
 
-  // const handleUpdateVideosByTime = (settings, taskStatus = null) => {
-  //   console.log('handleUpdateTask settings', settings);
-  //   const payload = {
-  //     status: taskStatus || videosByTimeTask.status,
-  //     videosByTimeSettings: { ...settings },
-  //   };
+  const { status, videosByTimeSettings } = task;
+  const { startTime, duration, fps } = videosByTimeSettings;
 
-  //   dispatch(taskActions.updateVideosByTime({
-  //     cameraId: selectedCamera._id,
-  //     taskId: selectedCamera.videosByTimeTask._id,
-  //     payload,
-  //   }));
-  // };
+  const handleStartVideosByTime = (values) => {
+    console.log('handleStart');
+    dispatch(taskActions.updateVideosByTime({
+      cameraId: task.camera,
+      taskId: task._id,
+      payload: {
+        status: 'Running',
+        videosByTimeSettings: values,
+      },
+    }))
+      .then(() => {
+        onHide();
+      })
+      .catch((e) => {
+        console.log('catch formik err -', e);
+      });
+  };
 
-  // const handleStartVideosByTime = () => {
-  //   console.log('handleStart');
-  //   handleUpdateVideosByTime(videosByTimeTask.videosByTimeSettings, 'Running');
-  // };
-
-  // const handleStopVideosByTime = () => {
-  //   console.log('handleStop');
-  //   handleUpdateVideosByTime(videosByTimeTask.videosByTimeSettings, 'Stopped');
-  // };
+  const handleStopVideosByTime = () => {
+    console.log('handleStop');
+    dispatch(taskActions.updateVideosByTime({
+      cameraId: task.camera,
+      taskId: task._id,
+      payload: {
+        status: 'Stopped',
+        videosByTimeSettings,
+      },
+    }));
+  };
 
   const formik = useFormik({
     initialValues: { startTime, duration, fps },
     // validationSchema,
-    onSubmit: (values) => {
-      console.log('onSubmit values', values);
-    },
+    onSubmit: handleStartVideosByTime,
   });
 
+  const isRunning = status === 'Running';
   const files = formik.values.duration * formik.values.fps || '--';
 
   // console.log('formik.errors -', formik.errors);
@@ -66,12 +68,12 @@ function VideosByTimeModal({ show, onHide }) {
       onHide={onHide}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Edit settings</Modal.Title>
+        <Modal.Title>VideosByTimeTask</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Row className="mb-3">
           <Col>
-            Create video file from screenshots every day
+            {`Create video file from screenshots every day - ${status}`}
           </Col>
         </Row>
 
@@ -80,6 +82,7 @@ function VideosByTimeModal({ show, onHide }) {
             <Form.Group as={Col}>
               <Form.Label htmlFor="startTime">Start time</Form.Label>
               <Form.Control
+                disabled={isRunning}
                 onChange={formik.handleChange}
                 value={formik.values.startTime}
                 name="startTime"
@@ -95,6 +98,7 @@ function VideosByTimeModal({ show, onHide }) {
             <Form.Group as={Col}>
               <Form.Label htmlFor="duration">Duration  (seconds)</Form.Label>
               <Form.Control
+                disabled={isRunning}
                 onChange={formik.handleChange}
                 value={formik.values.duration}
                 name="duration"
@@ -110,6 +114,7 @@ function VideosByTimeModal({ show, onHide }) {
             <Form.Group as={Col}>
               <Form.Label htmlFor="fps">Fps</Form.Label>
               <Form.Control
+                disabled={isRunning}
                 onChange={formik.handleChange}
                 value={formik.values.fps}
                 name="fps"
@@ -130,21 +135,34 @@ function VideosByTimeModal({ show, onHide }) {
           </Col>
         </Row>
 
+        <If condition={isRunning}>
+          <ProgressBar animated now={100} />
+        </If>
       </Modal.Body>
+
       <Modal.Footer>
+        {fetchStatus.isLoading && <Spinner as="span" animation="border" size="sm" />}
         <Button
           key="close"
           onClick={onHide}
           size="sm"
         >
-          Cancel
+          Close
         </Button>
         <Button
+          disabled={!isRunning}
+          onClick={handleStopVideosByTime}
+          size="sm"
+        >
+          Stop
+        </Button>
+        <Button
+          disabled={isRunning}
           key="submit"
           onClick={formik.handleSubmit}
           size="sm"
         >
-          Save settings
+          Start
         </Button>
       </Modal.Footer>
     </Modal>

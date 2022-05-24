@@ -5,7 +5,7 @@ import thunkReducer from './slices/thunkSlice.js';
 import userReducer from './slices/userSlice.js';
 import fileManagerReducer from './slices/fileManagerSlice.js';
 import modalReducer from './slices/modalSlice.js';
-import tasksReducer from './slices/taskSlice.js';
+import taskReducer from './slices/taskSlice.js';
 
 export default () => configureStore({
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({
@@ -17,6 +17,6 @@ export default () => configureStore({
     thunk: thunkReducer,
     fileManager: fileManagerReducer,
     modal: modalReducer,
-    tasks: tasksReducer,
+    task: taskReducer,
   },
 });

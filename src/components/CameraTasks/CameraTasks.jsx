@@ -6,15 +6,15 @@ import Heading from '../UI/Heading.jsx';
 import ScreenshotsByTime from './ScreenshotsByTime/ScreenshotsByTime';
 import VideosByTime from './VideosByTime/VideosByTime';
 // import useThunkStatus from '../../hooks/useThunkStatus';
-import { taskActions } from '../../redux/slices/taskSlice';
+import { taskActions, taskSelectors } from '../../redux/slices/taskSlice';
 
 function CameraTasks({ selectedCamera }) {
   const dispatch = useDispatch();
-  const { tasks } = useSelector((state) => state.tasks);
+
+  const cameraTasks = useSelector(taskSelectors.cameraTasks);
+  const screenshotsByTimeTask = useSelector(taskSelectors.screenshotsByTimeTask);
+  const videosByTimeTask = useSelector(taskSelectors.videosByTimeTask);
   // const fetchStatus = useThunkStatus(taskActions.fetchAll);
-
-  const cameraTasks = tasks[selectedCamera._id];
-
   // console.log(44444, cameraTasks);
 
   useEffect(() => {
@@ -29,8 +29,6 @@ function CameraTasks({ selectedCamera }) {
     return null;
   }
 
-  const screenshotsByTimeTask = cameraTasks.find((task) => task._id === selectedCamera.screenshotsByTimeTask._id);
-  const videosByTimeTask = cameraTasks.find((task) => task._id === selectedCamera.videosByTimeTask._id);
   const runningTasks = cameraTasks.filter((task) => task.status === 'Running');
 
   return (
@@ -45,7 +43,7 @@ function CameraTasks({ selectedCamera }) {
       {runningTasks.map((task) => (
         <Card key={task._id} bsPrefix="card mb-3">
           <Card.Header bsPrefix="card-header d-flex justify-content-between align-items-start">
-            {task.type}
+            {task.name}
             <Badge bg="success">{task.status}</Badge>
           </Card.Header>
           <Card.Body bsPrefix="card-body text-truncate pt-2 pb-2">

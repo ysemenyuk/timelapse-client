@@ -2,18 +2,10 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 // import * as Yup from 'yup';
-import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col, Spinner, ProgressBar } from 'react-bootstrap';
 import { calculateFilesPerDay } from '../../../utils/utils.js';
 import { taskActions, taskSelectors } from '../../../redux/slices/taskSlice.js';
-
-const data = {
-  status: 'Stopped',
-  screenshotsByTimeSettings: {
-    startTime: '10:00',
-    stopTime: '20:00',
-    interval: '20',
-  },
-};
+import useThunkStatus from '../../../hooks/useThunkStatus';
 
 // const validationSchema = Yup.object({
 //   startTime: Yup.string().required(),
@@ -23,46 +15,46 @@ const data = {
 
 function ScreenshotsByTimeModal({ show, onHide }) {
   const dispatch = useDispatch();
+  const fetchStatus = useThunkStatus(taskActions.updateScreenshotsByTime);
+  const task = useSelector(taskSelectors.screenshotsByTimeTask);
 
-  const selectedCamera = useSelector(taskSelectors.selectedCamera);
-  const screenshotsByTimeTask = useSelector(taskSelectors.screenshotsByTimeTaskSelector(selectedCamera));
-
-  const { status, screenshotsByTimeSettings } = data;
+  const { status, screenshotsByTimeSettings } = task;
   const { startTime, stopTime, interval } = screenshotsByTimeSettings;
-
-  console.log(11112222, screenshotsByTimeTask);
-
-  const updatePhotosByTimeTask = (newSettings, newStatus) => {
-    console.log('handleUpdateTask settings', newSettings, newStatus);
-    const payload = {
-      status: newStatus,
-      screenshotsByTimeSettings: { ...newSettings },
-    };
-
-    dispatch(taskActions.updateScreenshotsByTime({
-      cameraId: data.camera,
-      taskId: data._id,
-      payload,
-    }));
-  };
 
   const handleStartPhotosByTime = (values) => {
     console.log('handleStart');
-    updatePhotosByTimeTask(values, 'Running');
+    dispatch(taskActions.updateScreenshotsByTime({
+      cameraId: task.camera,
+      taskId: task._id,
+      payload: {
+        status: 'Running',
+        screenshotsByTimeSettings: values,
+      },
+    }))
+      .then(() => {
+        onHide();
+      })
+      .catch((e) => {
+        console.log('catch formik err -', e);
+      });
   };
 
   const handleStopPhotosByTime = () => {
     console.log('handleStop');
-    updatePhotosByTimeTask(screenshotsByTimeSettings, 'Stopped');
+    dispatch(taskActions.updateScreenshotsByTime({
+      cameraId: task.camera,
+      taskId: task._id,
+      payload: {
+        status: 'Stopped',
+        screenshotsByTimeSettings,
+      },
+    }));
   };
 
   const formik = useFormik({
     initialValues: { startTime, stopTime, interval },
     // validationSchema,
-    onSubmit: (values) => {
-      console.log('onSubmit values', values);
-      handleStartPhotosByTime(values);
-    },
+    onSubmit: handleStartPhotosByTime,
   });
 
   const isRunning = status === 'Running';
@@ -82,7 +74,7 @@ function ScreenshotsByTimeModal({ show, onHide }) {
       <Modal.Body>
         <Row className="mb-3">
           <Col>
-            Create photos by time
+            {`Create photos by time - ${status}`}
           </Col>
         </Row>
 
@@ -156,9 +148,13 @@ function ScreenshotsByTimeModal({ show, onHide }) {
           </Col>
         </Row>
 
+        <If condition={isRunning}>
+          <ProgressBar animated now={100} />
+        </If>
       </Modal.Body>
 
       <Modal.Footer>
+        {fetchStatus.isLoading && <Spinner as="span" animation="border" size="sm" />}
         <Button
           key="close"
           onClick={onHide}
@@ -166,7 +162,6 @@ function ScreenshotsByTimeModal({ show, onHide }) {
         >
           Close
         </Button>
-
         <Button
           disabled={!isRunning}
           onClick={handleStopPhotosByTime}
@@ -174,7 +169,6 @@ function ScreenshotsByTimeModal({ show, onHide }) {
         >
           Stop
         </Button>
-
         <Button
           disabled={isRunning}
           onClick={formik.handleSubmit}

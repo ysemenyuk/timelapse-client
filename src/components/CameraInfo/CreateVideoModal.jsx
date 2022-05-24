@@ -3,26 +3,28 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
-import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col, Spinner } from 'react-bootstrap';
 import fileManagerService from '../../api/fileManager.service.js'; //
 import { cameraSelectors } from '../../redux/slices/cameraSlice.js';
 import { taskActions } from '../../redux/slices/taskSlice.js';
+import useThunkStatus from '../../hooks/useThunkStatus.js';
 
-const videosByTimeData = {
+const videoInitialValues = {
   startDateTime: '2022-05-01',
-  endDateTime: '2022-05-30',
+  endDateTime: '2022-06-01',
   duration: 60,
-  fps: 25,
+  fps: 20,
 };
 
 function CreateVideoModal({ show, onHide }) {
   const dispatch = useDispatch();
-  const selectedCamera = useSelector(cameraSelectors.selectedCamera);
+  const fetchStatus = useThunkStatus(taskActions.createVideoFile);
+  const selectedCameraId = useSelector(cameraSelectors.selectedCameraId);
 
   const formik = useFormik({
-    initialValues: videosByTimeData,
+    initialValues: videoInitialValues,
     onSubmit: (values, { resetForm, setSubmitting, setFieldError }) => {
-      dispatch(taskActions.createVideoFile(values))
+      dispatch(taskActions.createVideoFile({ cameraId: selectedCameraId, payload: values }))
         .then((resp) => {
           unwrapResult(resp);
           resetForm();
@@ -53,9 +55,8 @@ function CreateVideoModal({ show, onHide }) {
 
     // !!!
 
-    fileManagerService.getAll(selectedCamera._id, query)
+    fileManagerService.getAll(selectedCameraId, query)
       .then((resp) => {
-        console.log(11111111, resp.data);
         setFilesCount(resp.data.count);
       });
   }, [formik.values.startTime, formik.values.stopTime]);
@@ -152,6 +153,8 @@ function CreateVideoModal({ show, onHide }) {
 
       </Modal.Body>
       <Modal.Footer>
+        {fetchStatus.isLoading && <Spinner as="span" animation="border" size="sm" />}
+
         <Button
           key="close"
           onClick={onHide}
