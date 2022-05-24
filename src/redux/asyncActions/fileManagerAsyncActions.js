@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import fileManagerService from '../api/fileManager.service.js';
+import fileManagerService from '../../api/fileManager.service.js';
 
 const fetchFiles = createAsyncThunk('file/fetchFiles', async ({ cameraId, parentId }) => {
   try {

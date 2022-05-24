@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { cameraActions, cameraSelectors } from '../store/cameraSlice.js';
+import { cameraActions, cameraSelectors } from '../redux/slices/cameraSlice.js';
 import useThunkStatus from './useThunkStatus.js';
 
 export default function useCameraList() {

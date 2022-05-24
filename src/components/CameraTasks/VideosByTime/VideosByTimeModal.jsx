@@ -2,8 +2,8 @@ import React from 'react';
 import { useFormik } from 'formik';
 // import * as Yup from 'yup';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
-import withModalWrapper from './withModalWrapper.jsx';
-import { EDIT_VIDEOSBYTIME_SETTINGS } from '../../utils/constants.js';
+import withModalWrapper from '../../Modals/withModalWrapper.jsx';
+import { EDIT_VIDEOSBYTIME_SETTINGS } from '../../../utils/constants.js';
 
 // const validationSchema = Yup.object({
 //   startTime: Yup.string().required(),
@@ -11,7 +11,7 @@ import { EDIT_VIDEOSBYTIME_SETTINGS } from '../../utils/constants.js';
 //   fps: Yup.number().required(),
 // });
 
-function EditVideosByTimeSettingsModal({ type, show, onHide, onSubmit, initialValues }) {
+function VideosByTimeModal({ type, show, onHide, onSubmit, initialValues }) {
   const { startTime, duration, fps } = initialValues;
 
   const formik = useFormik({
@@ -120,4 +120,4 @@ function EditVideosByTimeSettingsModal({ type, show, onHide, onSubmit, initialVa
   );
 }
 
-export default withModalWrapper(EditVideosByTimeSettingsModal);
+export default withModalWrapper(VideosByTimeModal);

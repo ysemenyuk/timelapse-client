@@ -2,16 +2,16 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Modal } from 'react-bootstrap';
-import cameraThunks from '../../thunks/cameraThunks.js';
 import CameraForm from './CameraForm.jsx';
 import { ADD_CAMERA } from '../../utils/constants.js';
 import withModalWrapper from './withModalWrapper.jsx';
+import { cameraActions } from '../../redux/slices/cameraSlice.js';
 
-function AddCameraModal({ type, show, onHide }) {
+function CreateCameraModal({ type, show, onHide }) {
   const dispatch = useDispatch();
 
   const handleSubmit = (values, { resetForm, setSubmitting, setFieldError }) => {
-    dispatch(cameraThunks.createOne(values))
+    dispatch(cameraActions.createOne(values))
       .then((resp) => {
         unwrapResult(resp);
         resetForm();
@@ -43,4 +43,4 @@ function AddCameraModal({ type, show, onHide }) {
   );
 }
 
-export default withModalWrapper(AddCameraModal);
+export default withModalWrapper(CreateCameraModal);

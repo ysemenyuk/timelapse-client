@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import cameraService from '../api/camera.service.js';
+import cameraService from '../../api/camera.service.js';
 
 const fetchAll = createAsyncThunk('camera/fetchAll', async () => {
   try {

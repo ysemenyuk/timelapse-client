@@ -1,17 +1,15 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Col, Row } from 'react-bootstrap';
-import { cameraActions, cameraSelectors } from '../store/cameraSlice.js';
+import { cameraActions, cameraSelectors } from '../redux/slices/cameraSlice.js';
 import useThunkStatus from '../hooks/useThunkStatus.js';
 import CamerasList from '../components/CamerasList/CamerasList.jsx';
 import Screenshot from '../components/Screenshot/Screenshot.jsx';
 import CameraInfo from '../components/CameraInfo/CameraInfo.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
-import ScreenshotsByTime from '../components/ScreenshotsByTime/ScreenshotsByTime.jsx';
-// import useCameraList from '../hooks/useCamerasList.js';
-import VideosByTime from '../components/VideosByTime/VideosByTime.jsx';
 import FoldersList from '../components/FoldersList/FoldersList.jsx';
+import CameraTasks from '../components/CameraTasks/CameraTasks.jsx';
 
 function CameraListPage() {
   const dispatch = useDispatch();
@@ -29,10 +27,10 @@ function CameraListPage() {
 
   return (
     <Choose>
-      <When condition={fetchStatus.isSuccess}>
+      <When condition={!fetchStatus.isLoading && !fetchStatus.isError && selectedCamera}>
         <Row>
           <Col sm={3}>
-            <CamerasList cameras={allCameras} selectedCameraId={selectedCamera && selectedCamera._id} />
+            <CamerasList cameras={allCameras} selectedCamera={selectedCamera} />
           </Col>
           <Col sm={6}>
             <Choose>
@@ -41,8 +39,7 @@ function CameraListPage() {
               </When>
               <Otherwise>
                 <CameraInfo selectedCamera={selectedCamera} />
-                <ScreenshotsByTime row selectedCamera={selectedCamera} />
-                <VideosByTime row selectedCamera={selectedCamera} />
+                <CameraTasks selectedCamera={selectedCamera} />
               </Otherwise>
             </Choose>
           </Col>

@@ -1,10 +1,9 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
-import cameraThunks from '../thunks/cameraThunks.js';
-import taskThunks from '../thunks/taskThunks.js';
+import cameraAsyncActions from '../asyncActions/cameraAsyncActions.js';
 import { userActions } from './userSlice.js';
 
-const { fetchAll, fetchOne, createOne, updateOne, deleteOne } = cameraThunks;
-const { updateScreenshotsByTime } = taskThunks;
+const { fetchAll, fetchOne, createOne, updateOne, deleteOne } = cameraAsyncActions;
+// const { updateScreenshotsByTime } = taskThunks;
 
 // console.log("cameraSlice");
 
@@ -65,12 +64,12 @@ const cameraSlice = createSlice({
 
       return { cameras, selectedCameraId };
     },
-    [updateScreenshotsByTime.fulfilled]: (state, action) => {
-      // console.log('updateScreenshotByTime.fulfilled action -', action);
-      const updatedTask = action.payload;
-      const camera = state.cameras[updatedTask.camera];
-      camera.screenshotsByTimeTask = updatedTask;
-    },
+    // [updateScreenshotsByTime.fulfilled]: (state, action) => {
+    //   // console.log('updateScreenshotByTime.fulfilled action -', action);
+    //   const updatedTask = action.payload;
+    //   const camera = state.cameras[updatedTask.camera];
+    //   camera.screenshotsByTimeTask = updatedTask;
+    // },
   },
 });
 
@@ -86,6 +85,6 @@ const selectedCamera = createSelector(
 
 export const cameraSelectors = { allCameras, selectedCamera };
 
-export const cameraActions = { ...cameraSlice.actions, ...cameraThunks };
+export const cameraActions = { ...cameraSlice.actions, ...cameraAsyncActions };
 
 export default cameraSlice.reducer;

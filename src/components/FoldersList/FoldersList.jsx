@@ -3,12 +3,6 @@ import React from 'react';
 // import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Col, ListGroup } from 'react-bootstrap';
-// import cameraThunks from '../../thunks/cameraThunks.js';
-// import Heading from '../UI/Heading.jsx';
-// import { EDIT_CAMERA } from '../../utils/constants.js';
-// import { modalActions } from '../../store/modalSlice.js';
-// import useThunkStatus from '../../hooks/useThunkStatus.js';
-// import EditCameraModal from '../Modals/EditCameraModal.jsx';
 
 function FoldersList({ selectedCamera }) {
   // const dispatch = useDispatch();
@@ -31,19 +25,19 @@ function FoldersList({ selectedCamera }) {
 
       <ListGroup className="mb-3" variant="flush" type="button" onClick={handleCameraPage}>
         <ListGroup.Item>
-          <div className="w-75 text-truncate">Main folder</div>
+          <div className="w-75 text-truncate">MainFolder</div>
         </ListGroup.Item>
         <ListGroup.Item>
-          <div className="w-75 text-truncate">Screenshots by task</div>
+          <div className="ms-3 w-75 text-truncate">Screenshots</div>
         </ListGroup.Item>
         <ListGroup.Item>
-          <div className="w-75 text-truncate">Screenshots</div>
+          <div className="ms-3 w-75 text-truncate">ScreenshotsByTime</div>
         </ListGroup.Item>
         <ListGroup.Item>
-          <div className="w-75 text-truncate">Videos by task</div>
+          <div className="ms-3 w-75 text-truncate">Videos</div>
         </ListGroup.Item>
         <ListGroup.Item>
-          <div className="w-75 text-truncate">Videos</div>
+          <div className="ms-3 w-75 text-truncate">VideosByTime</div>
         </ListGroup.Item>
       </ListGroup>
 

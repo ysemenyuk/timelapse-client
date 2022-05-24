@@ -2,16 +2,16 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Modal } from 'react-bootstrap';
-import cameraThunks from '../../thunks/cameraThunks.js';
 import CameraForm from './CameraForm.jsx';
 import { EDIT_CAMERA } from '../../utils/constants.js';
 import withModalWrapper from './withModalWrapper.jsx';
+import { cameraActions } from '../../redux/slices/cameraSlice.js';
 
-function EditCameraModal({ data, type, show, onHide }) {
+function EditCameraModal({ type, show, onHide, selectedCamera }) {
   const dispatch = useDispatch();
 
   const handleSubmit = (values, { resetForm, setSubmitting, setFieldError }) => {
-    dispatch(cameraThunks.updateOne(values))
+    dispatch(cameraActions.updateOne(values))
       .then((resp) => {
         unwrapResult(resp);
         resetForm();
@@ -35,7 +35,7 @@ function EditCameraModal({ data, type, show, onHide }) {
       </Modal.Header>
 
       <CameraForm
-        initialValues={data}
+        initialValues={selectedCamera}
         onCancel={onHide}
         onSubmit={handleSubmit}
       />

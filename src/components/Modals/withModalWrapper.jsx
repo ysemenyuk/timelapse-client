@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { modalActions } from '../../store/modalSlice';
+import { modalActions } from '../../redux/slices/modalSlice';
 
 function withModalWrapper(Component) {
   return function Modal({ ...props }) {

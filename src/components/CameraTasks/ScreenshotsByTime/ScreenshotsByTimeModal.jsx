@@ -2,9 +2,9 @@ import React from 'react';
 import { useFormik } from 'formik';
 // import * as Yup from 'yup';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
-import { calculateFilesPerDay } from '../../utils/utils.js';
-import withModalWrapper from './withModalWrapper.jsx';
-import { EDIT_SCREENSHOTSBYTIME_SETTINGS } from '../../utils/constants.js';
+import { calculateFilesPerDay } from '../../../utils/utils.js';
+import withModalWrapper from '../../Modals/withModalWrapper.jsx';
+import { EDIT_SCREENSHOTSBYTIME_SETTINGS } from '../../../utils/constants.js';
 
 // const validationSchema = Yup.object({
 //   startTime: Yup.string().required(),
@@ -12,7 +12,7 @@ import { EDIT_SCREENSHOTSBYTIME_SETTINGS } from '../../utils/constants.js';
 //   interval: Yup.number().required(),
 // });
 
-function EditScreenshotsSettingsModal({ type, show, onHide, onSubmit, initialValues }) {
+function ScreenshotsByTimeModal({ type, show, onHide, onSubmit, initialValues }) {
   const { startTime, stopTime, interval } = initialValues;
 
   const formik = useFormik({
@@ -53,6 +53,7 @@ function EditScreenshotsSettingsModal({ type, show, onHide, onSubmit, initialVal
                 name="startTime"
                 id="startTime"
                 type="time"
+                disabled
                 isInvalid={formik.errors && formik.errors.startTime}
               />
               <Form.Control.Feedback type="invalid">
@@ -111,6 +112,7 @@ function EditScreenshotsSettingsModal({ type, show, onHide, onSubmit, initialVal
         </Row>
 
       </Modal.Body>
+
       <Modal.Footer>
         <Button
           key="close"
@@ -131,4 +133,4 @@ function EditScreenshotsSettingsModal({ type, show, onHide, onSubmit, initialVal
   );
 }
 
-export default withModalWrapper(EditScreenshotsSettingsModal);
+export default withModalWrapper(ScreenshotsByTimeModal);

@@ -4,12 +4,12 @@ import { useDispatch } from 'react-redux';
 import { useNavigate, useMatch } from 'react-router-dom';
 import { Col, ListGroup, Button } from 'react-bootstrap';
 import Heading from '../UI/Heading.jsx';
-import { cameraActions } from '../../store/cameraSlice.js';
+import { cameraActions } from '../../redux/slices/cameraSlice.js';
 import { ADD_CAMERA } from '../../utils/constants.js';
-import { modalActions } from '../../store/modalSlice.js';
-import AddCameraModal from '../Modals/AddCameraModal.jsx';
+import { modalActions } from '../../redux/slices/modalSlice.js';
+import CreateCameraModal from '../Modals/CreateCameraModal.jsx';
 
-function CamerasList({ cameras, selectedCameraId }) {
+function CamerasList({ cameras, selectedCamera }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const match = useMatch('/cameras');
@@ -30,7 +30,7 @@ function CamerasList({ cameras, selectedCameraId }) {
       action
       onClick={handleSelectItem(camera._id)}
       key={camera._id}
-      className={cn(selectedCameraId === camera._id && 'active')}
+      className={cn(selectedCamera && selectedCamera._id === camera._id && 'active')}
     >
       <div className="d-flex justify-content-between align-items-start">
         <div className="w-75 text-truncate fw-bold">{camera.name}</div>
@@ -45,26 +45,29 @@ function CamerasList({ cameras, selectedCameraId }) {
   ));
 
   return (
-    <Col md={12} className="mb-4">
-      <Heading lvl={6} className="mb-3">
-        Cameras
-      </Heading>
+    <>
+      <Col md={12} className="mb-4">
+        <Heading lvl={6} className="mb-3">
+          Cameras
+        </Heading>
 
-      <Choose>
-        <When condition={!cameras.length}>
-          <div>No cameras.</div>
-        </When>
-        <Otherwise>
-          <ListGroup className="mb-3">
-            {renderCamerasList()}
-          </ListGroup>
-        </Otherwise>
-      </Choose>
-      <Button onClick={handleAddCamera} size="sm">
-        Add camera
-      </Button>
-      <AddCameraModal />
-    </Col>
+        <Choose>
+          <When condition={!cameras.length}>
+            <div>No cameras.</div>
+          </When>
+          <Otherwise>
+            <ListGroup className="mb-3">
+              {renderCamerasList()}
+            </ListGroup>
+          </Otherwise>
+        </Choose>
+        <Button onClick={handleAddCamera} size="sm">
+          AddCamera
+        </Button>
+      </Col>
+
+      <CreateCameraModal />
+    </>
   );
 }
 

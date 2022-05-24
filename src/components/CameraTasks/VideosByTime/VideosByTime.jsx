@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Button, ListGroup, Badge } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
-import { modalActions } from '../../store/modalSlice.js';
-import Heading from '../UI/Heading.jsx';
-import EditVideosByTimeSettingsModal from '../Modals/EditVideosByTimeSettingsModal.jsx';
-import { EDIT_VIDEOSBYTIME_SETTINGS } from '../../utils/constants.js';
-import taskThunks from '../../thunks/taskThunks.js';
+import { modalActions } from '../../../redux/slices/modalSlice.js';
+import Heading from '../../UI/Heading.jsx';
+import VideosByTimeModal from './VideosByTimeModal.jsx';
+import { EDIT_VIDEOSBYTIME_SETTINGS } from '../../../utils/constants.js';
+import { taskActions } from '../../../redux/slices/taskSlice.js';
 
 const initialValues = {
   status: '--',
@@ -16,7 +16,7 @@ const initialValues = {
   },
 };
 
-function VideosByTime({ selectedCamera, row }) {
+function VideosByTime({ selectedCamera, compact }) {
   const dispatch = useDispatch();
   const [videosByTimeTask, setVideosByTimeTask] = useState(initialValues);
 
@@ -43,34 +43,34 @@ function VideosByTime({ selectedCamera, row }) {
       videosByTimeSettings: { ...settings },
     };
 
-    dispatch(taskThunks.updateVideosByTime({
+    dispatch(taskActions.updateVideosByTime({
       cameraId: selectedCamera._id,
       taskId: selectedCamera.videosByTimeTask._id,
       payload,
     }));
   };
 
-  const handleStartVideosByTime = () => {
-    console.log('handleStart');
-    handleUpdateVideosByTime(videosByTimeTask.videosByTimeSettings, 'Running');
-  };
+  // const handleStartVideosByTime = () => {
+  //   console.log('handleStart');
+  //   handleUpdateVideosByTime(videosByTimeTask.videosByTimeSettings, 'Running');
+  // };
 
-  const handleStopVideosByTime = () => {
-    console.log('handleStop');
-    handleUpdateVideosByTime(videosByTimeTask.videosByTimeSettings, 'Stopped');
-  };
+  // const handleStopVideosByTime = () => {
+  //   console.log('handleStop');
+  //   handleUpdateVideosByTime(videosByTimeTask.videosByTimeSettings, 'Stopped');
+  // };
 
   if (!selectedCamera) {
     return null;
   }
   return (
-    <Col md={12} className="mb-4">
+    <>
       <Choose>
-        <When condition={row}>
+        <When condition={compact}>
           <ListGroup className="mb-3" role="button" onClick={handleOpenEditModal}>
             <ListGroup.Item>
               <div className="d-flex justify-content-between align-items-start">
-                <div className="me-3">Video of the day</div>
+                <div className="me-3">Videos By Time</div>
                 <Badge bg={isRunning ? 'success' : 'secondary'}>{isRunning ? 'Running' : 'Stopped'}</Badge>
               </div>
               <div className="w-75 text-truncate text-muted">
@@ -79,37 +79,39 @@ function VideosByTime({ selectedCamera, row }) {
             </ListGroup.Item>
           </ListGroup>
         </When>
-        <Otherwise>
-          <Heading lvl={6} className="mb-3">
-            Video of the day
-          </Heading>
 
-          <ListGroup className="mb-3" role="button" onClick={handleOpenEditModal}>
-            <ListGroup.Item className="d-flex">
-              <div className="me-3 w-50">Status</div>
-              <Badge bg={isRunning ? 'success' : 'secondary'}>{isRunning ? 'Running' : 'Stopped'}</Badge>
-            </ListGroup.Item>
-            <ListGroup.Item className="d-flex">
-              <div className="me-3 w-50">Start time</div>
-              <span>{startTime}</span>
-            </ListGroup.Item>
-            <ListGroup.Item className="d-flex">
-              <div className="me-3 w-50">Duration, sec</div>
-              <span>{duration}</span>
-            </ListGroup.Item>
-            <ListGroup.Item className="d-flex">
-              <div className="me-3 w-50">Fps</div>
-              <span>{fps}</span>
-            </ListGroup.Item>
-            <ListGroup.Item className="d-flex">
-              <div className="me-3 w-50">Files</div>
-              <span>{files}</span>
-            </ListGroup.Item>
-          </ListGroup>
+        <Otherwise>
+          <Col md={12} className="mb-4">
+            <Heading lvl={6} className="mb-3">
+              Videos By Time
+            </Heading>
+            <ListGroup className="mb-3" role="button" onClick={handleOpenEditModal}>
+              <ListGroup.Item className="d-flex">
+                <div className="me-3 w-50">Status</div>
+                <Badge bg={isRunning ? 'success' : 'secondary'}>{isRunning ? 'Running' : 'Stopped'}</Badge>
+              </ListGroup.Item>
+              <ListGroup.Item className="d-flex">
+                <div className="me-3 w-50">Start time</div>
+                <span>{startTime}</span>
+              </ListGroup.Item>
+              <ListGroup.Item className="d-flex">
+                <div className="me-3 w-50">Duration, sec</div>
+                <span>{duration}</span>
+              </ListGroup.Item>
+              <ListGroup.Item className="d-flex">
+                <div className="me-3 w-50">Fps</div>
+                <span>{fps}</span>
+              </ListGroup.Item>
+              <ListGroup.Item className="d-flex">
+                <div className="me-3 w-50">Files</div>
+                <span>{files}</span>
+              </ListGroup.Item>
+            </ListGroup>
+          </Col>
         </Otherwise>
       </Choose>
 
-      <>
+      {/* <>
         <Button
           onClick={handleStopVideosByTime}
           disabled={!isRunning}
@@ -137,13 +139,13 @@ function VideosByTime({ selectedCamera, row }) {
         >
           Start
         </Button>
-      </>
+      </> */}
 
-      <EditVideosByTimeSettingsModal
+      <VideosByTimeModal
         initialValues={videosByTimeSettings}
         onSubmit={handleUpdateVideosByTime}
       />
-    </Col>
+    </>
   );
 }
 

@@ -1,27 +1,27 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import taskService from '../api/task.service.js';
+import taskService from '../../api/task.service.js';
 
-// const fetchAll = createAsyncThunk('task/fetchAll', async () => {
-//   try {
-//     const { data } = await taskService.getAll();
-//     console.log('task/fetchAll response.data -', data);
-//     return data;
-//   } catch (e) {
-//     console.log('task/fetchAll error -', e.message);
-//     throw e;
-//   }
-// });
+const fetchAll = createAsyncThunk('task/fetchAll', async ({ cameraId }) => {
+  try {
+    const { data } = await taskService.getAll(cameraId);
+    console.log('task/fetchAll response.data -', data);
+    return { cameraId, data };
+  } catch (e) {
+    console.log('task/fetchAll error -', e.message);
+    throw e;
+  }
+});
 
-// const fetchOne = createAsyncThunk('task/fetchOne', async (id) => {
-//   try {
-//     const { data } = await taskService.getOne(id);
-//     console.log('task/fetchOne response.data -', data);
-//     return data;
-//   } catch (e) {
-//     console.log('task/fetchOne error -', e.message);
-//     throw e;
-//   }
-// });
+const fetchOne = createAsyncThunk('task/fetchOne', async ({ cameraId, taskId }) => {
+  try {
+    const { data } = await taskService.getOne(cameraId, taskId);
+    console.log('task/fetchOne response.data -', data);
+    return data;
+  } catch (e) {
+    console.log('task/fetchOne error -', e.message);
+    throw e;
+  }
+});
 
 // const createOne = createAsyncThunk('task/createOne', async (values) => {
 //   try {
@@ -65,19 +65,33 @@ import taskService from '../api/task.service.js';
 //   }
 // });
 
-// const createScreenshot = createAsyncThunk('task/createScreenshot', async ({ cameraId }) => {
-//   try {
-//     console.log('task/createScreenshot cameraId -', cameraId);
+const createVideoFile = createAsyncThunk('task/createVideoFile', async ({ cameraId, payload }) => {
+  try {
+    console.log('task/createVideoFile cameraId -', cameraId);
 
-//     const { data } = await taskService.createScreenshotTask(cameraId);
+    const { data } = await taskService.createVideoFileTask(cameraId, payload);
 
-//     console.log('task/createScreenshot response -', data);
-//     return data;
-//   } catch (e) {
-//     console.log('task/createScreenshot error -', e.message);
-//     throw e;
-//   }
-// });
+    console.log('task/createVideoFile response -', data);
+    return data;
+  } catch (e) {
+    console.log('task/createVideoFile error -', e.message);
+    throw e;
+  }
+});
+
+const createScreenshot = createAsyncThunk('task/createScreenshot', async ({ cameraId, payload }) => {
+  try {
+    console.log('task/createScreenshot cameraId -', cameraId);
+
+    const { data } = await taskService.createScreenshotTask(cameraId, payload);
+
+    console.log('task/createScreenshot response -', data);
+    return data;
+  } catch (e) {
+    console.log('task/createScreenshot error -', e.message);
+    throw e;
+  }
+});
 
 // eslint-disable-next-line max-len
 const updateScreenshotsByTime = createAsyncThunk('task/updateScreenshotsByTime', async ({ cameraId, taskId, payload }) => {
@@ -109,6 +123,6 @@ const updateVideosByTime = createAsyncThunk('task/updateVideosByTime', async ({ 
 });
 
 export default {
-  // fetchAll, fetchOne, createOne, updateOne, deleteOne,  createScreenshot,
-  updateScreenshotsByTime, updateVideosByTime,
+  //  createOne, updateOne, deleteOne,
+  fetchAll, fetchOne, createVideoFile, createScreenshot, updateScreenshotsByTime, updateVideosByTime,
 };

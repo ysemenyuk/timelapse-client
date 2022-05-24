@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
-import userThunks from '../../thunks/userThunks.js';
+import { userActions } from '../../redux/slices/userSlice';
 import Spinner from '../UI/Spinner.jsx';
 import LoginPage from '../../pages/LoginPage.jsx';
 import SignupPage from '../../pages/SignupPage.jsx';
@@ -10,7 +10,7 @@ import ProfilePage from '../../pages/ProfilePage.jsx';
 import CamerasListPage from '../../pages/CamerasListPage.jsx';
 import CameraPage from '../../pages/CameraPage.jsx';
 import HomePage from '../../pages/HomePage.jsx';
-import Layout from '../../pages/Layout.jsx';
+import MainLayout from '../../layouts/MainLayout.jsx';
 
 function RequireAuth({ children }) {
   const user = useSelector((state) => state.user);
@@ -31,7 +31,7 @@ function App() {
 
   useEffect(() => {
     // eslint-disable-next-line no-unused-expressions
-    user.tokenVerification && dispatch(userThunks.tokenVerification());
+    user.tokenVerification && dispatch(userActions.tokenVerification());
   }, []);
 
   return (
@@ -43,7 +43,7 @@ function App() {
         <Otherwise>
           <BrowserRouter>
             <Routes>
-              <Route element={<Layout />}>
+              <Route element={<MainLayout />}>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup" element={<SignupPage />} />

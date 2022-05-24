@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Container, Row, Col, Form, Button, Spinner, Alert, Stack } from 'react-bootstrap';
 import Heading from '../components/UI/Heading.jsx';
-import userThunks from '../thunks/userThunks.js';
+import { userActions } from '../redux/slices/userSlice.js';
 
 function LoginPage() {
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ function LoginPage() {
         .oneOf([Yup.ref('password')]),
     }),
     onSubmit: (values, { resetForm, setSubmitting, setFieldError }) => {
-      dispatch(userThunks.singup(values))
+      dispatch(userActions.singup(values))
         .then((resp) => {
           unwrapResult(resp);
           resetForm();

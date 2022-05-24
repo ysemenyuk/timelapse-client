@@ -7,15 +7,15 @@ const instance = axios.create({
   baseURL: `${host}/api/cameras`,
 });
 
-// const getAll = async (cameraId) => {
-//   const response = await instance.get(`${cameraId}/tasks`, { headers: getAuthHeader() });
-//   return response;
-// };
+const getAll = async (cameraId) => {
+  const response = await instance.get(`${cameraId}/tasks`, { headers: getAuthHeader() });
+  return response;
+};
 
-// const getOne = async (cameraId, taskId) => {
-//   const response = await instance.get(`${cameraId}/tasks/${taskId}`, { headers: getAuthHeader() });
-//   return response;
-// };
+const getOne = async (cameraId, taskId) => {
+  const response = await instance.get(`${cameraId}/tasks/${taskId}`, { headers: getAuthHeader() });
+  return response;
+};
 
 // const createOne = async (cameraId, data) => {
 //   const response = await instance.post(`/${cameraId}/tasks`, data, { headers: getAuthHeader() });
@@ -55,8 +55,8 @@ const updateVideosByTimeTask = async (cameraId, taskId, data) => {
 };
 
 export default {
-  // getAll,
-  // getOne,
+  getAll,
+  getOne,
   // createOne,
   // updateOne,
   // deleteOne,

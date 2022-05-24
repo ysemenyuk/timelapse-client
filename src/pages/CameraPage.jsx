@@ -2,22 +2,20 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Col, Row } from 'react-bootstrap';
-import cameraThunks from '../thunks/cameraThunks.js';
 import useThunkStatus from '../hooks/useThunkStatus.js';
 import FileManager from '../components/FileManager/FileManager.jsx';
-import ScreenshotsByTime from '../components/ScreenshotsByTime/ScreenshotsByTime.jsx';
-import VideosByTime from '../components/VideosByTime/VideosByTime.jsx';
 import Screenshot from '../components/Screenshot/Screenshot.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
-import { cameraActions, cameraSelectors } from '../store/cameraSlice.js';
-import Tasks from '../components/Tasks/Tasks.jsx';
+import { cameraActions, cameraSelectors } from '../redux/slices/cameraSlice.js';
+import CameraTasks from '../components/CameraTasks/CameraTasks.jsx';
+import CameraInfo from '../components/CameraInfo/CameraInfo.jsx';
 
 function CameraPage() {
   const dispatch = useDispatch();
   const { id } = useParams();
 
-  const fetchStatus = useThunkStatus(cameraThunks.fetchOne);
+  const fetchStatus = useThunkStatus(cameraActions.fetchOne);
   const selectedCamera = useSelector(cameraSelectors.selectedCamera);
 
   // console.log(1111, selectedCamera);
@@ -34,9 +32,8 @@ function CameraPage() {
         <Row>
           <Col sm={3}>
             <Screenshot selectedCamera={selectedCamera} />
-            <Tasks selectedCamera={selectedCamera} />
-            <ScreenshotsByTime selectedCamera={selectedCamera} />
-            <VideosByTime selectedCamera={selectedCamera} />
+            <CameraInfo selectedCamera={selectedCamera} compact />
+            <CameraTasks selectedCamera={selectedCamera} />
           </Col>
           <Col sm={9}>
             <FileManager selectedCamera={selectedCamera} />

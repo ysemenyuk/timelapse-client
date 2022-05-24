@@ -1,8 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
+import userAsyncActions from '../asyncActions/userAsyncActions.js';
 
-import userThunks from '../thunks/userThunks.js';
-
-const { singup, login, tokenVerification, uploadAvatar, deleteAvatar, updateOne } = userThunks;
+const { singup, login, tokenVerification, uploadAvatar, deleteAvatar, updateOne } = userAsyncActions;
 
 const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
@@ -52,6 +51,6 @@ const userSlice = createSlice({
   },
 });
 
-export const userActions = { ...userSlice.actions, userThunks };
+export const userActions = { ...userSlice.actions, ...userAsyncActions };
 
 export default userSlice.reducer;

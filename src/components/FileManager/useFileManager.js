@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
-import { fileManagerActions } from '../../store/fileManagerSlice.js';
+import { fileManagerActions } from '../../redux/slices/fileManagerSlice.js';
 import useThunkStatus from '../../hooks/useThunkStatus.js';
 
 export default function useFileManager(selectedCamera) {
@@ -20,7 +20,7 @@ export default function useFileManager(selectedCamera) {
 
   useEffect(() => {
     setStack([selectedCamera.mainFolder]);
-  }, [selectedCamera.mainFolder]);
+  }, [selectedCamera._id]);
 
   useEffect(() => {
     if (selectedCamera && currentFolder && !currentFiles) {
@@ -31,7 +31,7 @@ export default function useFileManager(selectedCamera) {
         }),
       );
     }
-  }, [currentFolder, selectedCamera]);
+  }, [currentFolder]);
 
   useEffect(() => {
     if (currentFiles) {

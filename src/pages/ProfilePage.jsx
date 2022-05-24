@@ -6,8 +6,8 @@ import Heading from '../components/UI/Heading.jsx';
 import CamerasList from '../components/CamerasList/CamerasList.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
-import userThunks from '../thunks/userThunks.js';
 import useCamerasList from '../hooks/useCamerasList.js';
+import { userActions } from '../redux/slices/userSlice.js';
 
 function ProfilePage() {
   const dispatch = useDispatch();
@@ -31,7 +31,7 @@ function ProfilePage() {
     setMessage(null);
 
     const values = { name, email, password };
-    dispatch(userThunks.updateOne({ userId: user._id, values }));
+    dispatch(userActions.updateOne({ userId: user._id, values }));
   };
 
   const handleDeleteUser = async (e) => {

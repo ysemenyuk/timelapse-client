@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import fileManagerThunks from '../thunks/fileManagerThunks.js';
+import fileManagerAsyncActions from '../asyncActions/fileManagerAsyncActions.js';
 
-const { fetchFiles, deleteOneFile } = fileManagerThunks;
+const { fetchFiles, deleteOneFile } = fileManagerAsyncActions;
 
 const fileManagerSlice = createSlice({
   name: 'fileManager',
@@ -36,6 +36,6 @@ const fileManagerSlice = createSlice({
   },
 });
 
-export const fileManagerActions = { ...fileManagerSlice.actions, ...fileManagerThunks };
+export const fileManagerActions = { ...fileManagerSlice.actions, ...fileManagerAsyncActions };
 
 export default fileManagerSlice.reducer;

@@ -1,13 +1,13 @@
 /* eslint-disable max-len */
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
-import withModalWrapper from './withModalWrapper.jsx';
-import { CREATE_VIDEO } from '../../utils/constants.js';
-import fileManagerService from '../../api/fileManager.service.js';
-import taskService from '../../api/task.service.js';
-import 'react-date-range/dist/styles.css'; // main css file
-import 'react-date-range/dist/theme/default.css'; // theme css file
+// import withModalWrapper from '../Modals/withModalWrapper.jsx';
+// import { CREATE_VIDEO } from '../../utils/constants.js';
+import fileManagerService from '../../api/fileManager.service.js'; //
+import { taskActions } from '../../redux/slices/taskSlice.js';
 
 const videosByTimeData = {
   startDateTime: '2022-05-01',
@@ -16,13 +16,26 @@ const videosByTimeData = {
   fps: 25,
 };
 
-function CreateVideoModal({ type, show, onHide, selectedCamera }) {
+function CreateVideoModal({ onHide, selectedCamera }) {
+  const dispatch = useDispatch();
+
   const formik = useFormik({
     initialValues: videosByTimeData,
-    onSubmit: (values) => {
-      taskService.createVideoFileTask(selectedCamera._id, values);
-      onHide();
+    onSubmit: (values, { resetForm, setSubmitting, setFieldError }) => {
+      dispatch(taskActions.createVideoFile(values))
+        .then((resp) => {
+          unwrapResult(resp);
+          resetForm();
+          setSubmitting(false);
+          onHide();
+        })
+        .catch((e) => {
+          setSubmitting(false);
+          setFieldError('network', e.message);
+          console.log('catch formik err -', e);
+        });
     },
+
   });
 
   // console.log(11111111, 'formik.errors -', formik.errors);
@@ -38,6 +51,8 @@ function CreateVideoModal({ type, show, onHide, selectedCamera }) {
       count: true,
     };
 
+    // !!!
+
     fileManagerService.getAll(selectedCamera._id, query)
       .then((resp) => {
         setFilesCount(resp.data.count);
@@ -46,9 +61,8 @@ function CreateVideoModal({ type, show, onHide, selectedCamera }) {
 
   return (
     <Modal
-      show={show && type === CREATE_VIDEO}
+      show
       onHide={onHide}
-      // size="lg"
     >
       <Modal.Header closeButton>
         <Modal.Title>Create video</Modal.Title>
@@ -156,4 +170,4 @@ function CreateVideoModal({ type, show, onHide, selectedCamera }) {
   );
 }
 
-export default withModalWrapper(CreateVideoModal);
+export default CreateVideoModal;
