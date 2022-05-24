@@ -1,14 +1,13 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Modal } from 'react-bootstrap';
 import CameraForm from './CameraForm.jsx';
-import { EDIT_CAMERA } from '../../utils/constants.js';
-import withModalWrapper from './withModalWrapper.jsx';
-import { cameraActions } from '../../redux/slices/cameraSlice.js';
+import { cameraActions, cameraSelectors } from '../../redux/slices/cameraSlice.js';
 
-function EditCameraModal({ type, show, onHide, selectedCamera }) {
+function EditCameraModal({ show, onHide }) {
   const dispatch = useDispatch();
+  const selectedCamera = useSelector(cameraSelectors.selectedCamera);
 
   const handleSubmit = (values, { resetForm, setSubmitting, setFieldError }) => {
     dispatch(cameraActions.updateOne(values))
@@ -27,7 +26,7 @@ function EditCameraModal({ type, show, onHide, selectedCamera }) {
 
   return (
     <Modal
-      show={show && type === EDIT_CAMERA}
+      show={show}
       onHide={onHide}
     >
       <Modal.Header closeButton>
@@ -44,4 +43,4 @@ function EditCameraModal({ type, show, onHide, selectedCamera }) {
   );
 }
 
-export default withModalWrapper(EditCameraModal);
+export default EditCameraModal;

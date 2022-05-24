@@ -1,12 +1,11 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, Modal } from 'react-bootstrap';
-import { DELETE_CAMERA } from '../../utils/constants.js';
-import withModalWrapper from './withModalWrapper.jsx';
-import { cameraActions } from '../../redux/slices/cameraSlice.js';
+import { cameraActions, cameraSelectors } from '../../redux/slices/cameraSlice.js';
 
-function DeleteCameraModal({ type, show, onHide, selectedCamera }) {
+function DeleteCameraModal({ show, onHide }) {
   const dispatch = useDispatch();
+  const selectedCamera = useSelector(cameraSelectors.selectedCamera);
   // const fetchStatus = useThunkStatus(cameraThunks.deleteOne);
 
   const handleSubmit = () => {
@@ -15,7 +14,7 @@ function DeleteCameraModal({ type, show, onHide, selectedCamera }) {
 
   return (
     <Modal
-      show={show && type === DELETE_CAMERA}
+      show={show}
       onHide={onHide}
     >
       <Modal.Header closeButton>
@@ -46,4 +45,4 @@ function DeleteCameraModal({ type, show, onHide, selectedCamera }) {
   );
 }
 
-export default withModalWrapper(DeleteCameraModal);
+export default DeleteCameraModal;

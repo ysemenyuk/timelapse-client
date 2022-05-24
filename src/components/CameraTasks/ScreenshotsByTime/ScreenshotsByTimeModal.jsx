@@ -1,10 +1,19 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 // import * as Yup from 'yup';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import { calculateFilesPerDay } from '../../../utils/utils.js';
-import withModalWrapper from '../../Modals/withModalWrapper.jsx';
-import { EDIT_SCREENSHOTSBYTIME_SETTINGS } from '../../../utils/constants.js';
+import { taskActions, taskSelectors } from '../../../redux/slices/taskSlice.js';
+
+const data = {
+  status: 'Stopped',
+  screenshotsByTimeSettings: {
+    startTime: '10:00',
+    stopTime: '20:00',
+    interval: '20',
+  },
+};
 
 // const validationSchema = Yup.object({
 //   startTime: Yup.string().required(),
@@ -12,34 +21,68 @@ import { EDIT_SCREENSHOTSBYTIME_SETTINGS } from '../../../utils/constants.js';
 //   interval: Yup.number().required(),
 // });
 
-function ScreenshotsByTimeModal({ type, show, onHide, onSubmit, initialValues }) {
-  const { startTime, stopTime, interval } = initialValues;
+function ScreenshotsByTimeModal({ show, onHide }) {
+  const dispatch = useDispatch();
+
+  const selectedCamera = useSelector(taskSelectors.selectedCamera);
+  const screenshotsByTimeTask = useSelector(taskSelectors.screenshotsByTimeTaskSelector(selectedCamera));
+
+  const { status, screenshotsByTimeSettings } = data;
+  const { startTime, stopTime, interval } = screenshotsByTimeSettings;
+
+  console.log(11112222, screenshotsByTimeTask);
+
+  const updatePhotosByTimeTask = (newSettings, newStatus) => {
+    console.log('handleUpdateTask settings', newSettings, newStatus);
+    const payload = {
+      status: newStatus,
+      screenshotsByTimeSettings: { ...newSettings },
+    };
+
+    dispatch(taskActions.updateScreenshotsByTime({
+      cameraId: data.camera,
+      taskId: data._id,
+      payload,
+    }));
+  };
+
+  const handleStartPhotosByTime = (values) => {
+    console.log('handleStart');
+    updatePhotosByTimeTask(values, 'Running');
+  };
+
+  const handleStopPhotosByTime = () => {
+    console.log('handleStop');
+    updatePhotosByTimeTask(screenshotsByTimeSettings, 'Stopped');
+  };
 
   const formik = useFormik({
     initialValues: { startTime, stopTime, interval },
     // validationSchema,
     onSubmit: (values) => {
       console.log('onSubmit values', values);
-      onSubmit(values);
-      onHide();
+      handleStartPhotosByTime(values);
     },
   });
 
-  // console.log('formik.errors -', formik.errors);
-  // console.log('formik.values -', formik.values);
+  const isRunning = status === 'Running';
+  const files = calculateFilesPerDay(formik.values.startTime, formik.values.stopTime, formik.values.interval);
+
+  console.log('formik.errors -', formik.errors);
+  console.log('formik.values -', formik.values);
 
   return (
     <Modal
-      show={show && type === EDIT_SCREENSHOTSBYTIME_SETTINGS}
+      show={show}
       onHide={onHide}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Edit settings</Modal.Title>
+        <Modal.Title>PhotosByTimeTask</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Row className="mb-3">
           <Col>
-            Create screenshot files every day
+            Create photos by time
           </Col>
         </Row>
 
@@ -48,12 +91,12 @@ function ScreenshotsByTimeModal({ type, show, onHide, onSubmit, initialValues })
             <Form.Group as={Col}>
               <Form.Label htmlFor="startTime">Start time</Form.Label>
               <Form.Control
+                disabled={isRunning}
                 onChange={formik.handleChange}
                 value={formik.values.startTime}
                 name="startTime"
                 id="startTime"
                 type="time"
-                disabled
                 isInvalid={formik.errors && formik.errors.startTime}
               />
               <Form.Control.Feedback type="invalid">
@@ -63,6 +106,7 @@ function ScreenshotsByTimeModal({ type, show, onHide, onSubmit, initialValues })
             <Form.Group as={Col}>
               <Form.Label htmlFor="stopTime">Stop time</Form.Label>
               <Form.Control
+                disabled={isRunning}
                 onChange={formik.handleChange}
                 value={formik.values.stopTime}
                 name="stopTime"
@@ -77,6 +121,7 @@ function ScreenshotsByTimeModal({ type, show, onHide, onSubmit, initialValues })
             <Form.Group as={Col}>
               <Form.Label htmlFor="interval">Interval (seconds)</Form.Label>
               <Form.Control
+                disabled={isRunning}
                 onChange={formik.handleChange}
                 value={formik.values.interval}
                 name="interval"
@@ -94,7 +139,7 @@ function ScreenshotsByTimeModal({ type, show, onHide, onSubmit, initialValues })
         <Row className="mb-3">
           <Col>
             <span className="fw-bold">
-              {`${calculateFilesPerDay(formik.values)} files`}
+              {`${files} files`}
             </span>
             {' '}
             per day
@@ -104,7 +149,7 @@ function ScreenshotsByTimeModal({ type, show, onHide, onSubmit, initialValues })
         <Row className="mb-3">
           <Col>
             <span className="fw-bold">
-              {`${Math.round(calculateFilesPerDay(formik.values) / 25)} seconds`}
+              {`${Math.round(files / 25)} seconds`}
             </span>
             {' '}
             (25 fps) video of the day
@@ -119,18 +164,28 @@ function ScreenshotsByTimeModal({ type, show, onHide, onSubmit, initialValues })
           onClick={onHide}
           size="sm"
         >
-          Cancel
+          Close
         </Button>
+
         <Button
-          key="submit"
-          onClick={formik.handleSubmit}
+          disabled={!isRunning}
+          onClick={handleStopPhotosByTime}
           size="sm"
         >
-          Save settings
+          Stop
+        </Button>
+
+        <Button
+          disabled={isRunning}
+          onClick={formik.handleSubmit}
+          size="sm"
+          key="submit"
+        >
+          Start
         </Button>
       </Modal.Footer>
     </Modal>
   );
 }
 
-export default withModalWrapper(ScreenshotsByTimeModal);
+export default ScreenshotsByTimeModal;

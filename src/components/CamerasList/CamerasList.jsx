@@ -5,7 +5,7 @@ import { useNavigate, useMatch } from 'react-router-dom';
 import { Col, ListGroup, Button } from 'react-bootstrap';
 import Heading from '../UI/Heading.jsx';
 import { cameraActions } from '../../redux/slices/cameraSlice.js';
-import { ADD_CAMERA } from '../../utils/constants.js';
+import { CREATE_CAMERA } from '../../utils/constants.js';
 import { modalActions } from '../../redux/slices/modalSlice.js';
 import CreateCameraModal from '../Modals/CreateCameraModal.jsx';
 
@@ -22,7 +22,7 @@ function CamerasList({ cameras, selectedCamera }) {
   };
 
   const handleAddCamera = () => {
-    dispatch(modalActions.openModal(ADD_CAMERA));
+    dispatch(modalActions.openModal(CREATE_CAMERA));
   };
 
   const renderCamerasList = () => cameras.map((camera) => (

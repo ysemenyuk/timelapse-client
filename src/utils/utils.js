@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-export const calculateFilesPerDay = ({ startTime, stopTime, interval }) => {
+export const calculateFilesPerDay = (startTime, stopTime, interval) => {
   if (interval === '--' || Number(interval) === 0) {
     return '--';
   }

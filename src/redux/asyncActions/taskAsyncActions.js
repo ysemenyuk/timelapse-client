@@ -72,7 +72,7 @@ const createVideoFile = createAsyncThunk('task/createVideoFile', async ({ camera
     const { data } = await taskService.createVideoFileTask(cameraId, payload);
 
     console.log('task/createVideoFile response -', data);
-    return data;
+    return { cameraId, data };
   } catch (e) {
     console.log('task/createVideoFile error -', e.message);
     throw e;
@@ -86,7 +86,7 @@ const createScreenshot = createAsyncThunk('task/createScreenshot', async ({ came
     const { data } = await taskService.createScreenshotTask(cameraId, payload);
 
     console.log('task/createScreenshot response -', data);
-    return data;
+    return { cameraId, data };
   } catch (e) {
     console.log('task/createScreenshot error -', e.message);
     throw e;
@@ -101,7 +101,7 @@ const updateScreenshotsByTime = createAsyncThunk('task/updateScreenshotsByTime',
     const { data } = await taskService.updateScreenshotsByTimeTask(cameraId, taskId, payload);
 
     console.log('task/updateScreenshotsByTime response -', data);
-    return data;
+    return { cameraId, taskId, data };
   } catch (e) {
     console.log('task/updateScreenshotsByTime error -', e.message);
     throw e;
@@ -115,7 +115,7 @@ const updateVideosByTime = createAsyncThunk('task/updateVideosByTime', async ({ 
     const { data } = await taskService.updateVideosByTimeTask(cameraId, taskId, payload);
 
     console.log('task/updateVideosByTime response -', data);
-    return data;
+    return { cameraId, taskId, data };
   } catch (e) {
     console.log('task/updateVideosByTime error -', e.message);
     throw e;

@@ -2,8 +2,6 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Button, Modal } from 'react-bootstrap';
-import { CREATE_SCREENSHOT } from '../../utils/constants.js';
-// import withModalWrapper from '../Modals/withModalWrapper.jsx';
 import { taskActions } from '../../redux/slices/taskSlice.js';
 import { cameraSelectors } from '../../redux/slices/cameraSlice.js';
 // import useThunkStatus from '../../hooks/useThunkStatus.js';

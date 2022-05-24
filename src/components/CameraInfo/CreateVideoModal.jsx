@@ -1,12 +1,11 @@
 /* eslint-disable max-len */
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
-// import withModalWrapper from '../Modals/withModalWrapper.jsx';
-// import { CREATE_VIDEO } from '../../utils/constants.js';
 import fileManagerService from '../../api/fileManager.service.js'; //
+import { cameraSelectors } from '../../redux/slices/cameraSlice.js';
 import { taskActions } from '../../redux/slices/taskSlice.js';
 
 const videosByTimeData = {
@@ -16,8 +15,9 @@ const videosByTimeData = {
   fps: 25,
 };
 
-function CreateVideoModal({ onHide, selectedCamera }) {
+function CreateVideoModal({ show, onHide }) {
   const dispatch = useDispatch();
+  const selectedCamera = useSelector(cameraSelectors.selectedCamera);
 
   const formik = useFormik({
     initialValues: videosByTimeData,
@@ -45,9 +45,9 @@ function CreateVideoModal({ onHide, selectedCamera }) {
 
   useEffect(() => {
     const query = {
-      startDateTime: formik.values.startDateTime,
-      endDateTime: formik.values.endDateTime,
-      type: 'ScreenshotByTime',
+      startDate: formik.values.startDateTime,
+      endDate: formik.values.endDateTime,
+      type: 'screenshotByTime',
       count: true,
     };
 
@@ -55,13 +55,14 @@ function CreateVideoModal({ onHide, selectedCamera }) {
 
     fileManagerService.getAll(selectedCamera._id, query)
       .then((resp) => {
+        console.log(11111111, resp.data);
         setFilesCount(resp.data.count);
       });
   }, [formik.values.startTime, formik.values.stopTime]);
 
   return (
     <Modal
-      show
+      show={show}
       onHide={onHide}
     >
       <Modal.Header closeButton>

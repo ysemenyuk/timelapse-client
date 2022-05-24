@@ -1,9 +1,17 @@
 import React from 'react';
+// import { useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 // import * as Yup from 'yup';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
-import withModalWrapper from '../../Modals/withModalWrapper.jsx';
-import { EDIT_VIDEOSBYTIME_SETTINGS } from '../../../utils/constants.js';
+
+const initialValues = {
+  status: '--',
+  videosByTimeSettings: {
+    startTime: '10:00',
+    duration: '60',
+    fps: '25',
+  },
+};
 
 // const validationSchema = Yup.object({
 //   startTime: Yup.string().required(),
@@ -11,16 +19,39 @@ import { EDIT_VIDEOSBYTIME_SETTINGS } from '../../../utils/constants.js';
 //   fps: Yup.number().required(),
 // });
 
-function VideosByTimeModal({ type, show, onHide, onSubmit, initialValues }) {
+function VideosByTimeModal({ show, onHide }) {
   const { startTime, duration, fps } = initialValues;
+  // const dispatch = useDispatch();
+
+  // const handleUpdateVideosByTime = (settings, taskStatus = null) => {
+  //   console.log('handleUpdateTask settings', settings);
+  //   const payload = {
+  //     status: taskStatus || videosByTimeTask.status,
+  //     videosByTimeSettings: { ...settings },
+  //   };
+
+  //   dispatch(taskActions.updateVideosByTime({
+  //     cameraId: selectedCamera._id,
+  //     taskId: selectedCamera.videosByTimeTask._id,
+  //     payload,
+  //   }));
+  // };
+
+  // const handleStartVideosByTime = () => {
+  //   console.log('handleStart');
+  //   handleUpdateVideosByTime(videosByTimeTask.videosByTimeSettings, 'Running');
+  // };
+
+  // const handleStopVideosByTime = () => {
+  //   console.log('handleStop');
+  //   handleUpdateVideosByTime(videosByTimeTask.videosByTimeSettings, 'Stopped');
+  // };
 
   const formik = useFormik({
     initialValues: { startTime, duration, fps },
     // validationSchema,
     onSubmit: (values) => {
-      // console.log('onSubmit values', values);
-      onSubmit(values);
-      onHide();
+      console.log('onSubmit values', values);
     },
   });
 
@@ -31,7 +62,7 @@ function VideosByTimeModal({ type, show, onHide, onSubmit, initialValues }) {
 
   return (
     <Modal
-      show={show && type === EDIT_VIDEOSBYTIME_SETTINGS}
+      show={show}
       onHide={onHide}
     >
       <Modal.Header closeButton>
@@ -120,4 +151,4 @@ function VideosByTimeModal({ type, show, onHide, onSubmit, initialValues }) {
   );
 }
 
-export default withModalWrapper(VideosByTimeModal);
+export default VideosByTimeModal;

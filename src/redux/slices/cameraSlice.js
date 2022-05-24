@@ -74,11 +74,11 @@ const cameraSlice = createSlice({
 });
 
 const allCameras = (state) => Object.values(state.camera.cameras);
-const camerasObject = (state) => state.camera.cameras;
+const camerasById = (state) => state.camera.cameras;
 const selectedCameraId = (state) => state.camera.selectedCameraId;
 
 const selectedCamera = createSelector(
-  camerasObject,
+  camerasById,
   selectedCameraId,
   (cameras, id) => cameras[id] || null,
 );
