@@ -68,7 +68,9 @@ function VideosByTimeModal({ show, onHide }) {
       onHide={onHide}
     >
       <Modal.Header closeButton>
-        <Modal.Title>VideosByTimeTask</Modal.Title>
+        <Modal.Title bsPrefix="modal-title h5">
+          VideosByTimeTask
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Row className="mb-3">

@@ -5,13 +5,13 @@ import cn from 'classnames';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 import styles from './ImageViewer.module.css';
 
-const isImage = (file) => file.type !== 'Folder';
+const isImage = (file) => file.type !== 'folder';
 // const getImages = (files) => (files ? files.filter(isImage) : []);
 
 function ImageViewer(props) {
   const {
     onClose, currentFiles, selectedIndexes, setSelectedIndexes,
-    onDeleteSelected, multiSelect, setMultiSelect,
+    onDeleteSelected, multiSelect, setMultiSelect, onSetAvatarClick,
   } = props;
 
   const [images, setImages] = useState(currentFiles.filter(isImage));
@@ -55,13 +55,27 @@ function ImageViewer(props) {
   };
 
   const onMultiSelectClick = () => {
-    setSelectedIndexes((prew) => ([_.head(prew)]));
+    if (!_.isEmpty(selectedIndexes)) {
+      setSelectedIndexes((prew) => ([_.head(prew)]));
+    }
     setMultiSelect(!multiSelect);
   };
 
   const onDeleteBtnClick = () => {
+    if (_.isEmpty(selectedIndexes)) {
+      return;
+    }
     const selectedItems = selectedIndexes.map((index) => images[index]);
     onDeleteSelected(selectedItems);
+  };
+
+  const onAvatarBtnClick = () => {
+    if (_.isEmpty(selectedIndexes)) {
+      return;
+    }
+
+    // TODO: check file is image?
+    onSetAvatarClick(currentImage);
   };
 
   useEffect(() => {
@@ -103,9 +117,10 @@ function ImageViewer(props) {
       onHide={onHide}
       size="xl"
     >
-      <Modal.Header closeButton>
-        <Modal.Title bsPrefix="fs-6">{currentImage.name}</Modal.Title>
+      <Modal.Header bsPrefix="modal-header" closeButton>
+        {currentImage.name}
       </Modal.Header>
+
       <Modal.Body>
         <div className={styles.bodyContainer}>
           <div className={styles.imageContainer}>
@@ -134,8 +149,21 @@ function ImageViewer(props) {
       <Modal.Footer>
         <div className={styles.footerContainer}>
           <div className={styles.deleteBtns}>
-            <Button key="del" onClick={onDeleteBtnClick}>
-              {`DeleteSelected (${selectedIndexes.length})`}
+            <Button
+              type="primary"
+              size="sm"
+              onClick={onAvatarBtnClick}
+              disabled={_.isEmpty(selectedIndexes) || multiSelect}
+            >
+              AsAvatar
+            </Button>
+            <Button
+              type="primary"
+              size="sm"
+              onClick={onDeleteBtnClick}
+              disabled={_.isEmpty(selectedIndexes)}
+            >
+              {`Delete${selectedIndexes.length > 0 ? ` (${selectedIndexes.length})` : ''}`}
             </Button>
             <Form>
               <Form.Check
@@ -148,13 +176,13 @@ function ImageViewer(props) {
             </Form>
           </div>
           <div className={styles.defaultBtns}>
-            <Button key="prew" onClick={onPrewClick} disabled={disabledPrew}>
+            <Button key="prew" size="sm" onClick={onPrewClick} disabled={disabledPrew}>
               Previous
             </Button>
-            <Button key="next" onClick={onNextClick} disabled={disabledNext}>
+            <Button key="next" size="sm" onClick={onNextClick} disabled={disabledNext}>
               Next
             </Button>
-            <Button key="close" onClick={onHide}>
+            <Button key="close" size="sm" onClick={onHide}>
               Close
             </Button>
           </div>

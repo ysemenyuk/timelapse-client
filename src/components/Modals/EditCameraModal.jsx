@@ -10,7 +10,7 @@ function EditCameraModal({ show, onHide }) {
   const selectedCamera = useSelector(cameraSelectors.selectedCamera);
 
   const handleSubmit = (values, { resetForm, setSubmitting, setFieldError }) => {
-    dispatch(cameraActions.updateOne(values))
+    dispatch(cameraActions.updateOne({ cameraId: selectedCamera._id, payload: values }))
       .then((resp) => {
         unwrapResult(resp);
         resetForm();

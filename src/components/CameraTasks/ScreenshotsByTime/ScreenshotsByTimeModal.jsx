@@ -69,7 +69,9 @@ function ScreenshotsByTimeModal({ show, onHide }) {
       onHide={onHide}
     >
       <Modal.Header closeButton>
-        <Modal.Title>PhotosByTimeTask</Modal.Title>
+        <Modal.Title bsPrefix="modal-title h5">
+          PhotosByTimeTask
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Row className="mb-3">

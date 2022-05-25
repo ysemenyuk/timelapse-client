@@ -1,6 +1,7 @@
 import React from 'react';
 import { Breadcrumb, Col, Button, Spinner, Form } from 'react-bootstrap';
 import cn from 'classnames';
+import _ from 'lodash';
 import styles from './FileManager.module.css';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 import folderImg from '../../assets/folder2.png';
@@ -22,6 +23,7 @@ function CameraFileManager({ selectedCamera }) {
     onRefreshClick,
     onBackButtonClick,
     onBreadCrumbClick,
+    onSetAvatarClick,
     onDeleteSelected,
     onMultiSelectClick,
     onFileClick,
@@ -33,8 +35,23 @@ function CameraFileManager({ selectedCamera }) {
   } = useFileManager(selectedCamera);
 
   const onDeleteBtnClick = () => {
+    if (_.isEmpty(selectedIndexes)) {
+      return;
+    }
     const selectedItems = selectedIndexes.map((index) => currentFiles[index]);
     onDeleteSelected(selectedItems);
+  };
+
+  const onAvatarBtnClick = () => {
+    if (_.isEmpty(selectedIndexes)) {
+      return;
+    }
+
+    const currentIndex = _.head(selectedIndexes);
+    const currentFile = currentFiles[currentIndex];
+
+    // TODO: check file is image?
+    onSetAvatarClick(currentFile);
   };
 
   const renderBreadcrumbs = () => navigationStack.map((folder) => (
@@ -108,9 +125,17 @@ function CameraFileManager({ selectedCamera }) {
                 type="primary"
                 size="sm"
                 onClick={onDeleteBtnClick}
-                disabled={fetchStatus.isLoading}
+                disabled={fetchStatus.isLoading || _.isEmpty(selectedIndexes)}
               >
-                {`DeleteSelected (${selectedIndexes.length})`}
+                {`Delete${selectedIndexes.length > 0 ? ` (${selectedIndexes.length})` : ''}`}
+              </Button>
+              <Button
+                type="primary"
+                size="sm"
+                onClick={onAvatarBtnClick}
+                disabled={fetchStatus.isLoading || _.isEmpty(selectedIndexes) || multiSelect}
+              >
+                AsAvatar
               </Button>
             </div>
           </If>
@@ -164,6 +189,7 @@ function CameraFileManager({ selectedCamera }) {
           multiSelect={multiSelect}
           setMultiSelect={setMultiSelect}
           onDeleteSelected={onDeleteSelected}
+          onSetAvatarClick={onSetAvatarClick}
         />
       </If>
 

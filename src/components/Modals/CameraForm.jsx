@@ -2,23 +2,26 @@ import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Form, Button, Spinner, InputGroup, Modal } from 'react-bootstrap';
+import _ from 'lodash';
 import Error from '../UI/Error.jsx';
 
 const validationSchema = Yup.object({
   name: Yup.string().required().min(3).max(20),
   description: Yup.string().required().min(3).max(30),
   screenshotLink: Yup.string().url(),
+  rtspLink: Yup.string(),
 });
 
 const values = {
   name: '',
   description: '',
   screenshotLink: '',
+  rtspLink: '',
 };
 
 function CameraForm({ initialValues = values, onCancel, onSubmit }) {
   const formik = useFormik({
-    initialValues,
+    initialValues: _.pick(initialValues, ['name', 'description', 'screenshotLink', 'rtspLink']),
     validationSchema,
     onSubmit,
   });

@@ -3,6 +3,8 @@ import cameraService from '../../api/camera.service.js';
 
 const fetchAll = createAsyncThunk('camera/fetchAll', async () => {
   try {
+    console.log('camera/fetchAll -');
+
     const { data } = await cameraService.getAll();
     console.log('camera/fetchAll response.data -', data);
     return data;
@@ -12,9 +14,11 @@ const fetchAll = createAsyncThunk('camera/fetchAll', async () => {
   }
 });
 
-const fetchOne = createAsyncThunk('camera/fetchOne', async (id) => {
+const fetchOne = createAsyncThunk('camera/fetchOne', async (cameraId) => {
   try {
-    const { data } = await cameraService.getOne(id);
+    console.log('camera/fetchOne cameraId -', cameraId);
+
+    const { data } = await cameraService.getOne(cameraId);
     console.log('camera/fetchOne response.data -', data);
     return data;
   } catch (e) {
@@ -36,11 +40,11 @@ const createOne = createAsyncThunk('camera/createOne', async (values) => {
   }
 });
 
-const updateOne = createAsyncThunk('camera/updateOne', async (values) => {
+const updateOne = createAsyncThunk('camera/updateOne', async ({ cameraId, payload }) => {
   try {
-    console.log('camera/updateOne values -', values);
+    console.log('camera/updateOne camera, payload -', cameraId, payload);
 
-    const { data } = await cameraService.updateOne(values._id, values);
+    const { data } = await cameraService.updateOne(cameraId, payload);
 
     console.log('camera/updateOne response.data -', data);
     return data;

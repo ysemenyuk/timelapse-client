@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
 import { fileManagerActions } from '../../redux/slices/fileManagerSlice.js';
 import useThunkStatus from '../../hooks/useThunkStatus.js';
+import { cameraActions } from '../../redux/slices/cameraSlice.js';
 
 export default function useFileManager(selectedCamera) {
   const dispatch = useDispatch();
@@ -74,8 +75,11 @@ export default function useFileManager(selectedCamera) {
   //
 
   const onDeleteSelected = (selectedItems) => {
+    if (_.isEmpty(selectedIndexes) || !selectedItems) {
+      return;
+    }
+
     setSelectedIndexes((prew) => ([_.head(prew)]));
-    // delete selectedIndexes
     Promise.all(selectedItems.map((item) => dispatch(
       fileManagerActions.deleteOneFile({
         cameraId: item.camera,
@@ -85,7 +89,9 @@ export default function useFileManager(selectedCamera) {
   };
 
   const onMultiSelectClick = () => {
-    setSelectedIndexes((prew) => ([_.head(prew)]));
+    if (!_.isEmpty(selectedIndexes)) {
+      setSelectedIndexes((prew) => ([_.head(prew)]));
+    }
     setMultiSelect(!multiSelect);
   };
 
@@ -112,6 +118,13 @@ export default function useFileManager(selectedCamera) {
     setShow(false);
   };
 
+  const onSetAvatarClick = (file) => {
+    if (_.isEmpty(selectedIndexes) || !file) {
+      return;
+    }
+    dispatch(cameraActions.updateOne({ cameraId: selectedCamera._id, payload: { avatar: file._id } }));
+  };
+
   return {
     fetchStatus,
     currentFolder,
@@ -127,6 +140,7 @@ export default function useFileManager(selectedCamera) {
     onBackButtonClick,
     onBreadCrumbClick,
 
+    onSetAvatarClick,
     onDeleteSelected,
     onMultiSelectClick,
 
