@@ -7,7 +7,7 @@ import CamerasList from '../components/CamerasList/CamerasList.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
 import useCamerasList from '../hooks/useCamerasList.js';
-import { userActions } from '../redux/slices/userSlice.js';
+import { userActions } from '../redux/user/userSlice.js';
 
 function ProfilePage() {
   const dispatch = useDispatch();

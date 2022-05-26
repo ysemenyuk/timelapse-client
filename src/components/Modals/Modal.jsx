@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { modalActions } from '../../redux/slices/modalSlice';
+import { modalActions } from '../../redux/modalSlice';
 import CreateScreenshotModal from '../CameraInfo/CreateScreenshotModal';
 import CreateVideoModal from '../CameraInfo/CreateVideoModal';
 import CreateCameraModal from './CreateCameraModal';

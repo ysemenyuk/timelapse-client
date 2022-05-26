@@ -5,11 +5,11 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
 import { Modal, Button, Form, Row, Col, Spinner } from 'react-bootstrap';
 import fileManagerService from '../../api/fileManager.service.js'; //
-import { cameraSelectors } from '../../redux/slices/cameraSlice.js';
-import { taskActions } from '../../redux/slices/taskSlice.js';
+import { cameraSelectors } from '../../redux/camera/cameraSlice.js';
+import { taskActions } from '../../redux/task/taskSlice.js';
 import useThunkStatus from '../../hooks/useThunkStatus.js';
 
-const videoInitialValues = {
+const videoSettingsInitialValues = {
   startDateTime: '2022-05-01',
   endDateTime: '2022-06-01',
   duration: 60,
@@ -22,9 +22,9 @@ function CreateVideoModal({ show, onHide }) {
   const selectedCameraId = useSelector(cameraSelectors.selectedCameraId);
 
   const formik = useFormik({
-    initialValues: videoInitialValues,
+    initialValues: videoSettingsInitialValues,
     onSubmit: (values, { resetForm, setSubmitting, setFieldError }) => {
-      dispatch(taskActions.createVideoFile({ cameraId: selectedCameraId, payload: values }))
+      dispatch(taskActions.createVideoFile({ cameraId: selectedCameraId, payload: { videoSettings: values } }))
         .then((resp) => {
           unwrapResult(resp);
           resetForm();
@@ -50,13 +50,13 @@ function CreateVideoModal({ show, onHide }) {
       startDate: formik.values.startDateTime,
       endDate: formik.values.endDateTime,
       type: 'screenshotByTime',
-      count: true,
     };
 
     // !!!
 
-    fileManagerService.getAll(selectedCameraId, query)
+    fileManagerService.getCount(selectedCameraId, query)
       .then((resp) => {
+        console.log(1111111111111111, resp);
         setFilesCount(resp.data.count);
       });
   }, [formik.values.startTime, formik.values.stopTime]);

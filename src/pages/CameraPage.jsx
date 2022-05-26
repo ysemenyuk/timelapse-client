@@ -7,7 +7,7 @@ import FileManager from '../components/FileManager/FileManager.jsx';
 import Screenshot from '../components/Screenshot/Screenshot.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
-import { cameraActions, cameraSelectors } from '../redux/slices/cameraSlice.js';
+import { cameraActions, cameraSelectors } from '../redux/camera/cameraSlice.js';
 import CameraTasks from '../components/CameraTasks/CameraTasks.jsx';
 import CameraInfo from '../components/CameraInfo/CameraInfo.jsx';
 

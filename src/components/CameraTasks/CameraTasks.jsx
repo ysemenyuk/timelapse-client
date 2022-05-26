@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 // import cn from 'classnames';
+import _ from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import { Badge, Card, Col } from 'react-bootstrap';
 import Heading from '../UI/Heading.jsx';
 import ScreenshotsByTime from './ScreenshotsByTime/ScreenshotsByTime';
 import VideosByTime from './VideosByTime/VideosByTime';
 // import useThunkStatus from '../../hooks/useThunkStatus';
-import { taskActions, taskSelectors } from '../../redux/slices/taskSlice';
+import { taskActions, taskSelectors } from '../../redux/task/taskSlice';
 
 function CameraTasks({ selectedCamera }) {
   const dispatch = useDispatch();
@@ -15,10 +16,10 @@ function CameraTasks({ selectedCamera }) {
   const screenshotsByTimeTask = useSelector(taskSelectors.screenshotsByTimeTask);
   const videosByTimeTask = useSelector(taskSelectors.videosByTimeTask);
   // const fetchStatus = useThunkStatus(taskActions.fetchAll);
-  // console.log(44444, cameraTasks);
+  console.log(44444, cameraTasks);
 
   useEffect(() => {
-    if (selectedCamera._id && !cameraTasks) {
+    if (selectedCamera._id && _.isEmpty(cameraTasks)) {
       dispatch(
         taskActions.fetchAll({ cameraId: selectedCamera._id }),
       );

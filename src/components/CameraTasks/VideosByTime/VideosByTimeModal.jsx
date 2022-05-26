@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 // import * as Yup from 'yup';
 import { Modal, Button, Form, Row, Col, ProgressBar, Spinner } from 'react-bootstrap';
-import { taskActions, taskSelectors } from '../../../redux/slices/taskSlice';
+import { taskActions, taskSelectors } from '../../../redux/task/taskSlice';
 import useThunkStatus from '../../../hooks/useThunkStatus';
 
 // const validationSchema = Yup.object({

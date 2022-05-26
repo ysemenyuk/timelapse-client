@@ -1,23 +1,23 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
-import { fileManagerActions } from '../../redux/slices/fileManagerSlice.js';
 import useThunkStatus from '../../hooks/useThunkStatus.js';
-import { cameraActions } from '../../redux/slices/cameraSlice.js';
+import { cameraActions } from '../../redux/camera/cameraSlice.js';
+import { fileManagerSelectors, fileManagerActions } from '../../redux/fileManager/fileManagerSlice.js';
 
 export default function useFileManager(selectedCamera) {
   const dispatch = useDispatch();
 
-  const { files } = useSelector((state) => state.fileManager);
   const fetchStatus = useThunkStatus(fileManagerActions.fetchFiles);
 
-  const [selectedIndexes, setSelectedIndexes] = useState([]);
-  const [multiSelect, setMultiSelect] = useState(false);
   const [show, setShow] = useState(false);
   const [stack, setStack] = useState([selectedCamera.mainFolder]);
+  const [multiSelect, setMultiSelect] = useState(false);
+  const [selectedIndexes, setSelectedIndexes] = useState([]);
 
+  const filesByParent = useSelector(fileManagerSelectors.filesByParent);
   const currentFolder = useMemo(() => _.last(stack), [stack]);
-  const currentFiles = useMemo(() => files[currentFolder._id], [currentFolder, files]);
+  const currentFiles = useMemo(() => filesByParent[currentFolder._id], [currentFolder, filesByParent]);
 
   useEffect(() => {
     setStack([selectedCamera.mainFolder]);

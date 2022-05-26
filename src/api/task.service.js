@@ -37,14 +37,14 @@ const createScreenshotTask = async (cameraId, data = {}) => {
   return response;
 };
 
-const updateScreenshotsByTimeTask = async (cameraId, taskId, data) => {
-  const response = await instance
-    .put(`/${cameraId}/tasks/${taskId}/screenshotsByTime`, data, { headers: getAuthHeader() });
+const createVideoFileTask = async (cameraId, data) => {
+  const response = await instance.post(`/${cameraId}/tasks/video`, data, { headers: getAuthHeader() });
   return response;
 };
 
-const createVideoFileTask = async (cameraId, data) => {
-  const response = await instance.post(`/${cameraId}/tasks/video`, data, { headers: getAuthHeader() });
+const updateScreenshotsByTimeTask = async (cameraId, taskId, data) => {
+  const response = await instance
+    .put(`/${cameraId}/tasks/${taskId}/screenshotsByTime`, data, { headers: getAuthHeader() });
   return response;
 };
 

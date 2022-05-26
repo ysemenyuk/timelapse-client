@@ -3,7 +3,7 @@ import { Col, ListGroup, Badge, Card } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import Heading from '../../UI/Heading.jsx';
 import { calculateFilesPerDay } from '../../../utils/utils.js';
-import { modalActions } from '../../../redux/slices/modalSlice.js';
+import { modalActions } from '../../../redux/modalSlice.js';
 import { SCREENSHOTSBYTIME_TASK } from '../../../utils/constants.js';
 
 function ScreenshotsByTime({ task, compact }) {

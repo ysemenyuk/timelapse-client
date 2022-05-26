@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col, ListGroup, Badge, Card } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
-import { modalActions } from '../../../redux/slices/modalSlice.js';
+import { modalActions } from '../../../redux/modalSlice.js';
 import Heading from '../../UI/Heading.jsx';
 import { VIDEOSBYTIME_TASK } from '../../../utils/constants.js';
 

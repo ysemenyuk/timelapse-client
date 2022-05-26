@@ -4,9 +4,9 @@ import { useDispatch } from 'react-redux';
 import { useNavigate, useMatch } from 'react-router-dom';
 import { Col, ListGroup, Button } from 'react-bootstrap';
 import Heading from '../UI/Heading.jsx';
-import { cameraActions } from '../../redux/slices/cameraSlice.js';
+import { cameraActions } from '../../redux/camera/cameraSlice.js';
 import { CREATE_CAMERA } from '../../utils/constants.js';
-import { modalActions } from '../../redux/slices/modalSlice.js';
+import { modalActions } from '../../redux/modalSlice.js';
 import CreateCameraModal from '../Modals/CreateCameraModal.jsx';
 
 function CamerasList({ cameras, selectedCamera }) {

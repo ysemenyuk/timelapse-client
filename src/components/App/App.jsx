@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
-import { userActions } from '../../redux/slices/userSlice';
+import { userActions } from '../../redux/user/userSlice.js';
 import Spinner from '../UI/Spinner.jsx';
 import LoginPage from '../../pages/LoginPage.jsx';
 import SignupPage from '../../pages/SignupPage.jsx';

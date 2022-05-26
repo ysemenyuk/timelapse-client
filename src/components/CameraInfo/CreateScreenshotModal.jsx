@@ -1,8 +1,8 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Modal, Spinner } from 'react-bootstrap';
-import { taskActions } from '../../redux/slices/taskSlice.js';
-import { cameraSelectors } from '../../redux/slices/cameraSlice.js';
+import { taskActions } from '../../redux/task/taskSlice.js';
+import { cameraSelectors } from '../../redux/camera/cameraSlice.js';
 import useThunkStatus from '../../hooks/useThunkStatus.js';
 
 function CreateScreenshotModal({ show, onHide }) {

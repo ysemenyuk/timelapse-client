@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Container, Row, Col, Form, Button, Spinner, Alert, Stack } from 'react-bootstrap';
 import Heading from '../components/UI/Heading.jsx';
-import { userActions } from '../redux/slices/userSlice.js';
+import { userActions } from '../redux/user/userSlice.js';
 
 function LoginPage() {
   const dispatch = useDispatch();

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Col, Row } from 'react-bootstrap';
-import { cameraActions, cameraSelectors } from '../redux/slices/cameraSlice.js';
+import { cameraActions, cameraSelectors } from '../redux/camera/cameraSlice.js';
 import useThunkStatus from '../hooks/useThunkStatus.js';
 import CamerasList from '../components/CamerasList/CamerasList.jsx';
 import Screenshot from '../components/Screenshot/Screenshot.jsx';

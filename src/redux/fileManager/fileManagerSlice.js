@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import fileManagerAsyncActions from '../asyncActions/fileManagerAsyncActions.js';
+import fileManagerAsyncActions from './fileManagerAsyncActions.js';
 
 const { fetchFiles, deleteOneFile } = fileManagerAsyncActions;
 
@@ -7,7 +7,7 @@ const fileManagerSlice = createSlice({
   name: 'fileManager',
   initialState: {
     files: {},
-    // folders: {},
+    // currentFolderId: null,
     // stack: [],
   },
   reducers: {
@@ -35,6 +35,10 @@ const fileManagerSlice = createSlice({
     },
   },
 });
+
+const filesByParent = (state) => state.fileManager.files;
+
+export const fileManagerSelectors = { filesByParent };
 
 export const fileManagerActions = { ...fileManagerSlice.actions, ...fileManagerAsyncActions };
 

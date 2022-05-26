@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import userAsyncActions from '../asyncActions/userAsyncActions.js';
+import userAsyncActions from './userAsyncActions.js';
 
 const { singup, login, tokenVerification, uploadAvatar, deleteAvatar, updateOne } = userAsyncActions;
 

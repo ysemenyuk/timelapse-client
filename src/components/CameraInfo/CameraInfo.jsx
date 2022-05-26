@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { Col, Button, ListGroup, ButtonGroup, Dropdown, DropdownButton, Card, Badge } from 'react-bootstrap';
 import Heading from '../UI/Heading.jsx';
 import { EDIT_CAMERA, DELETE_CAMERA, CREATE_SCREENSHOT, CREATE_VIDEO } from '../../utils/constants.js';
-import { modalActions } from '../../redux/slices/modalSlice.js';
+import { modalActions } from '../../redux/modalSlice.js';
 
 function CameraInfo({ selectedCamera, compact }) {
   const dispatch = useDispatch();

@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Container, Navbar, Nav, Button } from 'react-bootstrap';
-import { userActions } from '../../redux/slices/userSlice.js';
+import { userActions } from '../../redux/user/userSlice.js';
 
 function NavBar() {
   const dispatch = useDispatch();

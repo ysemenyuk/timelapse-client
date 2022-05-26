@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import cameraReducer from './slices/cameraSlice.js';
-import thunkReducer from './slices/thunkSlice.js';
-import userReducer from './slices/userSlice.js';
-import fileManagerReducer from './slices/fileManagerSlice.js';
-import modalReducer from './slices/modalSlice.js';
-import taskReducer from './slices/taskSlice.js';
+import cameraReducer from './camera/cameraSlice.js';
+import thunkReducer from './thunkSlice.js';
+import userReducer from './user/userSlice.js';
+import fileManagerReducer from './fileManager/fileManagerSlice.js';
+import modalReducer from './modalSlice.js';
+import taskReducer from './task/taskSlice.js';
 
 export default () => configureStore({
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({

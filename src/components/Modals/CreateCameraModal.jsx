@@ -3,8 +3,7 @@ import { useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Modal } from 'react-bootstrap';
 import CameraForm from './CameraForm.jsx';
-
-import { cameraActions } from '../../redux/slices/cameraSlice.js';
+import { cameraActions } from '../../redux/camera/cameraSlice.js';
 
 function CreateCameraModal({ show, onHide }) {
   const dispatch = useDispatch();

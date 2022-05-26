@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 // import * as Yup from 'yup';
 import { Modal, Button, Form, Row, Col, Spinner, ProgressBar } from 'react-bootstrap';
 import { calculateFilesPerDay } from '../../../utils/utils.js';
-import { taskActions, taskSelectors } from '../../../redux/slices/taskSlice.js';
+import { taskActions, taskSelectors } from '../../../redux/task/taskSlice.js';
 import useThunkStatus from '../../../hooks/useThunkStatus';
 
 // const validationSchema = Yup.object({
