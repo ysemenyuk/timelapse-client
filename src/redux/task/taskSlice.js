@@ -15,32 +15,32 @@ const taskSlice = createSlice({
   reducers: {},
   extraReducers: {
     [fetchAll.fulfilled]: (state, action) => {
-      console.log('fetchAll.fulfilled action -', action);
+      // console.log('fetchAll.fulfilled action -', action);
 
       const { data } = action.payload;
       state.tasks.push(...data);
     },
     [createScreenshot.fulfilled]: (state, action) => {
-      console.log('createScreenshot.fulfilled action -', action);
+      // console.log('createScreenshot.fulfilled action -', action);
 
       const { data } = action.payload;
       state.tasks.push(data);
     },
     [createVideoFile.fulfilled]: (state, action) => {
-      console.log('createScreenshot.fulfilled action -', action);
+      // console.log('createScreenshot.fulfilled action -', action);
 
       const { data } = action.payload;
       state.tasks.push(data);
     },
     [updateScreenshotsByTime.fulfilled]: (state, action) => {
-      console.log('updateScreenshotByTime.fulfilled action -', action);
+      // console.log('updateScreenshotByTime.fulfilled action -', action);
 
       const { taskId, data } = action.payload;
       const index = state.tasks.findIndex((task) => task._id === taskId);
       state.tasks[index] = data;
     },
     [updateVideosByTime.fulfilled]: (state, action) => {
-      console.log('updateVideosByTime.fulfilled action -', action);
+      // console.log('updateVideosByTime.fulfilled action -', action);
 
       const { taskId, data } = action.payload;
       const index = state.tasks.findIndex((task) => task._id === taskId);

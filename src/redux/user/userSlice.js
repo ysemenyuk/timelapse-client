@@ -4,14 +4,17 @@ import userAsyncActions from './userAsyncActions.js';
 const { singup, login, tokenVerification, uploadAvatar, deleteAvatar, updateOne } = userAsyncActions;
 
 const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-
-const initialState = userInfo && userInfo.userId && userInfo.token
-  ? { tokenVerification: true, isLoggedIn: false, user: null }
-  : { tokenVerification: false, isLoggedIn: false, user: null };
+const verification = userInfo && userInfo.userId && userInfo.token;
 
 const userSlice = createSlice({
   name: 'user',
-  initialState,
+  initialState: {
+    tokenVerification: verification,
+    isLoggedIn: false,
+    user: null,
+    userId: null,
+    token: null,
+  },
   reducers: {
     logout: (state) => {
       localStorage.removeItem('userInfo'); // TODO: remove from reducer
@@ -42,6 +45,8 @@ const userSlice = createSlice({
       state.tokenVerification = false;
       state.isLoggedIn = true;
       state.user = action.payload.user;
+      state.userId = action.payload.user._id;
+      state.token = action.payload.token;
     },
     [tokenVerification.rejected]: (state) => {
       state.tokenVerification = false;

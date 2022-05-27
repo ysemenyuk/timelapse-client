@@ -16,7 +16,7 @@ function CameraTasks({ selectedCamera }) {
   const screenshotsByTimeTask = useSelector(taskSelectors.screenshotsByTimeTask);
   const videosByTimeTask = useSelector(taskSelectors.videosByTimeTask);
   // const fetchStatus = useThunkStatus(taskActions.fetchAll);
-  console.log(44444, cameraTasks);
+  // console.log(44444, cameraTasks);
 
   useEffect(() => {
     if (selectedCamera._id && _.isEmpty(cameraTasks)) {

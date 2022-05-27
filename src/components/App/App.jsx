@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
@@ -11,6 +11,7 @@ import CamerasListPage from '../../pages/CamerasListPage.jsx';
 import CameraPage from '../../pages/CameraPage.jsx';
 import HomePage from '../../pages/HomePage.jsx';
 import MainLayout from '../../layouts/MainLayout.jsx';
+import SocketContext from '../../context/SocketContext.js';
 
 function RequireAuth({ children }) {
   const user = useSelector((state) => state.user);
@@ -27,11 +28,24 @@ function RequireAuth({ children }) {
 
 function App() {
   const dispatch = useDispatch();
+  const { connectSocket, disconnectSocket } = useContext(SocketContext);
   const user = useSelector((state) => state.user);
 
   useEffect(() => {
-    // eslint-disable-next-line no-unused-expressions
-    user.tokenVerification && dispatch(userActions.tokenVerification());
+    console.log(11111, 'useEffect connectSocket');
+
+    if (user.isLoggedIn) {
+      connectSocket(user);
+    }
+    return () => {
+      disconnectSocket();
+    };
+  }, [user.isLoggedIn]);
+
+  useEffect(() => {
+    if (user.tokenVerification) {
+      dispatch(userActions.tokenVerification());
+    }
   }, []);
 
   return (
