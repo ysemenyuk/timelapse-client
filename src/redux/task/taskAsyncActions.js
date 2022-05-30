@@ -87,11 +87,13 @@ const createScreenshot = createAsyncThunk('task/createScreenshot', async ({ came
     const { data } = await taskService.createScreenshotTask(cameraId, payload);
 
     console.log('task/createScreenshot response -', data);
-    toast('task/createScreenshot');
+    toast('task/createScreenshot successed');
 
     return { cameraId, data };
   } catch (e) {
     console.log('task/createScreenshot error -', e.message);
+    toast('task/createScreenshot failed');
+
     throw e;
   }
 });

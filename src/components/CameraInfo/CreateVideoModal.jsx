@@ -10,8 +10,8 @@ import { taskActions } from '../../redux/task/taskSlice.js';
 import useThunkStatus from '../../hooks/useThunkStatus.js';
 
 const videoSettingsInitialValues = {
-  startDateTime: '2022-05-01',
-  endDateTime: '2022-06-01',
+  startDate: '2022-05-01',
+  endDate: '2022-06-01',
   duration: 60,
   fps: 20,
 };
@@ -24,7 +24,13 @@ function CreateVideoModal({ show, onHide }) {
   const formik = useFormik({
     initialValues: videoSettingsInitialValues,
     onSubmit: (values, { resetForm, setSubmitting, setFieldError }) => {
-      dispatch(taskActions.createVideoFile({ cameraId: selectedCameraId, payload: { videoSettings: values } }))
+      dispatch(taskActions.createVideoFile({
+        cameraId: selectedCameraId,
+        payload: {
+          name: 'CreateVideo',
+          type: 'OneTime',
+          videoSettings: values,
+        } }))
         .then((resp) => {
           unwrapResult(resp);
           resetForm();

@@ -11,12 +11,21 @@ function CreateScreenshotModal({ show, onHide }) {
   const selectedCamera = useSelector(cameraSelectors.selectedCamera);
 
   const handleSubmit = () => {
-    dispatch(taskActions.createScreenshot({ cameraId: selectedCamera._id }))
+    dispatch(taskActions.createScreenshot({
+      cameraId: selectedCamera._id,
+      payload: {
+        name: 'CreatePhoto',
+        type: 'OneTime',
+        photoSettings: {
+          httpUrl: '',
+        },
+      },
+    }))
       .then(() => {
         onHide();
       })
       .catch((e) => {
-        console.log('catch err -', e);
+        console.log('- catch error -', e);
       });
   };
 

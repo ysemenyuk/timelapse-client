@@ -12,7 +12,15 @@ const taskSlice = createSlice({
     tasks: [],
     selectedTaskId: null,
   },
-  reducers: {},
+  reducers: {
+    updateTask: (state, action) => {
+      console.log('updateTask action -', action);
+
+      const updatedTask = action.payload;
+      const index = state.tasks.findIndex((task) => task._id === updatedTask._id);
+      state.tasks[index] = updatedTask;
+    },
+  },
   extraReducers: {
     [fetchAll.fulfilled]: (state, action) => {
       // console.log('fetchAll.fulfilled action -', action);
