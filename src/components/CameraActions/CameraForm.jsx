@@ -8,20 +8,20 @@ import Error from '../UI/Error.jsx';
 const validationSchema = Yup.object({
   name: Yup.string().required().min(3).max(20),
   description: Yup.string().required().min(3).max(30),
-  screenshotLink: Yup.string().url(),
-  rtspLink: Yup.string(),
+  photoUrl: Yup.string().url(),
+  rtspUrl: Yup.string(),
 });
 
 const values = {
   name: '',
   description: '',
-  screenshotLink: '',
-  rtspLink: '',
+  photoUrl: '',
+  rtspUrl: '',
 };
 
 function CameraForm({ initialValues = values, onCancel, onSubmit }) {
   const formik = useFormik({
-    initialValues: _.pick(initialValues, ['name', 'description', 'screenshotLink', 'rtspLink']),
+    initialValues: _.pick(initialValues, ['name', 'description', 'photoUrl', 'rtspUrl']),
     validationSchema,
     onSubmit,
   });
@@ -65,21 +65,35 @@ function CameraForm({ initialValues = values, onCancel, onSubmit }) {
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label htmlFor="screenshotLink">Screenshot Link</Form.Label>
+            <Form.Label htmlFor="photoUrl">Photo Url</Form.Label>
             <InputGroup hasValidation className="mb-3">
               <Form.Control
                 onChange={formik.handleChange}
-                value={formik.values.screenshotLink}
-                name="screenshotLink"
-                id="screenshotLink"
+                value={formik.values.photoUrl}
+                name="photoUrl"
+                id="photoUrl"
                 type="url"
-                isInvalid={formik.errors && formik.errors.screenshotLink}
+                isInvalid={formik.errors && formik.errors.photoUrl}
               />
-              {/* <Button variant="outline-secondary" id="button-addon1">
-              Check
-            </Button> */}
               <Form.Control.Feedback type="invalid">
-                {formik.errors && formik.errors.screenshotLink}
+                {formik.errors && formik.errors.photoUrl}
+              </Form.Control.Feedback>
+            </InputGroup>
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label htmlFor="rtspUrl">Rtsp Url</Form.Label>
+            <InputGroup hasValidation className="mb-3">
+              <Form.Control
+                onChange={formik.handleChange}
+                value={formik.values.rtspUrl}
+                name="rtspUrl"
+                id="rtspUrl"
+                type="url"
+                isInvalid={formik.errors && formik.errors.rtspUrl}
+              />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors && formik.errors.rtspUrl}
               </Form.Control.Feedback>
             </InputGroup>
           </Form.Group>

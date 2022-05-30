@@ -1,23 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Modal, Spinner } from 'react-bootstrap';
+import { Button, Form, Modal, Spinner } from 'react-bootstrap';
 import { taskActions } from '../../redux/task/taskSlice.js';
 import { cameraSelectors } from '../../redux/camera/cameraSlice.js';
 import useThunkStatus from '../../hooks/useThunkStatus.js';
+import { taskName, taskType } from '../../utils/constants.js';
 
-function CreateScreenshotModal({ show, onHide }) {
+function CreatePhotoModal({ show, onHide }) {
   const dispatch = useDispatch();
   const fetchStatus = useThunkStatus(taskActions.createScreenshot);
   const selectedCamera = useSelector(cameraSelectors.selectedCamera);
 
+  const [link, setLink] = useState(selectedCamera.photoUrl);
+
   const handleSubmit = () => {
-    dispatch(taskActions.createScreenshot({
+    dispatch(taskActions.createOne({
       cameraId: selectedCamera._id,
       payload: {
-        name: 'CreatePhoto',
-        type: 'OneTime',
-        photoSettings: {
-          httpUrl: '',
+        name: taskName.CREATE_PHOTO,
+        type: taskType.ONE_TIME,
+        settings: {
+          httpUrl: link,
         },
       },
     }))
@@ -39,9 +42,20 @@ function CreateScreenshotModal({ show, onHide }) {
       </Modal.Header>
 
       <Modal.Body>
-        <div>Create screenshot from camera by http request</div>
-        <div className="text-truncate">{`"${selectedCamera.screenshotLink}"`}</div>
+        <div className="mb-2">Create photo from camera by http request</div>
+        <Form.Group className="mb-3">
+          <Form.Label htmlFor="description">Http url</Form.Label>
+          <Form.Control
+            disabled
+            onChange={(e) => setLink(e.target.value)}
+            value={link}
+            name="photoUrl"
+            id="photoUrl"
+            type="text"
+          />
+        </Form.Group>
       </Modal.Body>
+
       <Modal.Footer>
         {fetchStatus.isLoading && <Spinner as="span" animation="border" size="sm" />}
 
@@ -65,4 +79,4 @@ function CreateScreenshotModal({ show, onHide }) {
   );
 }
 
-export default CreateScreenshotModal;
+export default CreatePhotoModal;

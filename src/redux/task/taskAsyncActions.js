@@ -17,117 +17,57 @@ const fetchOne = createAsyncThunk('task/fetchOne', async ({ cameraId, taskId }) 
   try {
     const { data } = await taskService.getOne(cameraId, taskId);
     console.log('task/fetchOne response.data -', data);
-    return data;
+    return { cameraId, data };
   } catch (e) {
     console.log('task/fetchOne error -', e.message);
     throw e;
   }
 });
 
-// const createOne = createAsyncThunk('task/createOne', async (values) => {
-//   try {
-//     console.log('task/createOne values -', values);
-
-//     const { data } = await taskService.createOne(values);
-
-//     console.log('createOne response.data -', data);
-//     return data;
-//   } catch (e) {
-//     console.log('task/createOne error -', e.message);
-//     throw e;
-//   }
-// });
-
-// const updateOne = createAsyncThunk('task/updateOne', async (values) => {
-//   try {
-//     console.log('task/updateOne values -', values);
-
-//     const { data } = await taskService.updateOne(values._id, values);
-
-//     console.log('task/updateOne response.data -', data);
-//     return data;
-//   } catch (e) {
-//     console.log('task/updateOne error -', e.message);
-//     throw e;
-//   }
-// });
-
-// const deleteOne = createAsyncThunk('task/deleteOne', async (task) => {
-//   try {
-//     console.log('task/deleteOne camera -', task);
-
-//     const { data } = await taskService.deleteOne(task._id);
-
-//     console.log('task/deleteOne response -', data);
-//     return task;
-//   } catch (e) {
-//     console.log('task/deleteOne error -', e.message);
-//     throw e;
-//   }
-// });
-
-const createVideoFile = createAsyncThunk('task/createVideoFile', async ({ cameraId, payload }) => {
+const createOne = createAsyncThunk('task/createOne', async ({ cameraId, payload }) => {
   try {
-    console.log('task/createVideoFile cameraId -', cameraId);
+    console.log('task/createOne payload -', payload);
 
-    const { data } = await taskService.createVideoFileTask(cameraId, payload);
+    const { data } = await taskService.createOne(cameraId, payload);
 
-    console.log('task/createVideoFile response -', data);
+    console.log('createOne response.data -', data);
+    toast('task/createOne successed');
     return { cameraId, data };
   } catch (e) {
-    console.log('task/createVideoFile error -', e.message);
+    console.log('task/createOne error -', e.message);
+    toast('task/createOne error');
     throw e;
   }
 });
 
-const createScreenshot = createAsyncThunk('task/createScreenshot', async ({ cameraId, payload }) => {
+const updateOne = createAsyncThunk('task/updateOne', async ({ cameraId, taskId, payload }) => {
   try {
-    console.log('task/createScreenshot cameraId -', cameraId);
+    console.log('task/updateOne payload -', payload);
 
-    const { data } = await taskService.createScreenshotTask(cameraId, payload);
+    const { data } = await taskService.updateOne(cameraId, taskId, payload);
 
-    console.log('task/createScreenshot response -', data);
-    toast('task/createScreenshot successed');
-
-    return { cameraId, data };
-  } catch (e) {
-    console.log('task/createScreenshot error -', e.message);
-    toast('task/createScreenshot failed');
-
-    throw e;
-  }
-});
-
-// eslint-disable-next-line max-len
-const updateScreenshotsByTime = createAsyncThunk('task/updateScreenshotsByTime', async ({ cameraId, taskId, payload }) => {
-  try {
-    console.log('task/updateScreenshotsByTime cameraId -', cameraId);
-
-    const { data } = await taskService.updateScreenshotsByTimeTask(cameraId, taskId, payload);
-
-    console.log('task/updateScreenshotsByTime response -', data);
+    console.log('task/updateOne response.data -', data);
     return { cameraId, taskId, data };
   } catch (e) {
-    console.log('task/updateScreenshotsByTime error -', e.message);
+    console.log('task/updateOne error -', e.message);
     throw e;
   }
 });
 
-const updateVideosByTime = createAsyncThunk('task/updateVideosByTime', async ({ cameraId, taskId, payload }) => {
+const deleteOne = createAsyncThunk('task/deleteOne', async ({ cameraId, taskId }) => {
   try {
-    console.log('task/updateVideosByTime cameraId -', cameraId);
+    console.log('task/deleteOne taskId -', taskId);
 
-    const { data } = await taskService.updateVideosByTimeTask(cameraId, taskId, payload);
+    const response = await taskService.deleteOne(cameraId, taskId);
 
-    console.log('task/updateVideosByTime response -', data);
-    return { cameraId, taskId, data };
+    console.log('task/deleteOne response -', response);
+    return { cameraId, taskId };
   } catch (e) {
-    console.log('task/updateVideosByTime error -', e.message);
+    console.log('task/deleteOne error -', e.message);
     throw e;
   }
 });
 
 export default {
-  //  createOne, updateOne, deleteOne,
-  fetchAll, fetchOne, createVideoFile, createScreenshot, updateScreenshotsByTime, updateVideosByTime,
+  createOne, updateOne, deleteOne, fetchAll, fetchOne,
 };

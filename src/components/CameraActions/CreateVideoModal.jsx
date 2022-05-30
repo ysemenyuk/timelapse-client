@@ -8,6 +8,7 @@ import fileManagerService from '../../api/fileManager.service.js'; //
 import { cameraSelectors } from '../../redux/camera/cameraSlice.js';
 import { taskActions } from '../../redux/task/taskSlice.js';
 import useThunkStatus from '../../hooks/useThunkStatus.js';
+import { taskName, taskType } from '../../utils/constants.js';
 
 const videoSettingsInitialValues = {
   startDate: '2022-05-01',
@@ -27,9 +28,9 @@ function CreateVideoModal({ show, onHide }) {
       dispatch(taskActions.createVideoFile({
         cameraId: selectedCameraId,
         payload: {
-          name: 'CreateVideo',
-          type: 'OneTime',
-          videoSettings: values,
+          name: taskName.CREATE_VIDEO,
+          type: taskType.ONE_TIME,
+          setings: values,
         } }))
         .then((resp) => {
           unwrapResult(resp);

@@ -1,10 +1,29 @@
-export const SCREENSHOTSBYTIME_TASK = 'SCREENSHOTSBYTIME_TASK';
-export const VIDEOSBYTIME_TASK = 'VIDEOSBYTIME_TASK';
-
-export const CREATE_SCREENSHOT = 'CREATE_SCREENSHOT';
-export const CREATE_VIDEO = 'CREATE_VIDEO';
 export const IMAGE_VIEWER = 'IMAGE_VIEWER';
 
-export const CREATE_CAMERA = 'CREATE_CAMERA';
+export const ADD_CAMERA = 'ADD_CAMERA';
 export const EDIT_CAMERA = 'EDIT_CAMERA';
 export const DELETE_CAMERA = 'DELETE_CAMERA';
+
+// tasks
+export const taskName = {
+  CREATE_PHOTO: 'CreatePhoto',
+  CREATE_VIDEO: 'CreateVideo',
+  CREATE_PHOTOS_BY_TIME: 'CreatePhotosByTime',
+  CREATE_VIDEOS_BY_TIME: 'CreateVideosByTime',
+};
+
+export const taskType = {
+  ONE_TIME: 'OneTime',
+  REPEAT_EVERY: 'RepeatEvery',
+  REPEAT_AT: 'RepeatAt',
+};
+
+export const taskStatus = {
+  CREATED: 'Created',
+  READY: 'Ready',
+  RUNNING: 'Running',
+  STOPPED: 'Stopped',
+  SUCCESSED: 'Successed',
+  FAILED: 'Failed',
+  CANCELED: 'Canceled',
+};

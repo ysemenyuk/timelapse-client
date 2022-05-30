@@ -19,11 +19,9 @@ export default (store) => {
     console.log('onAny', { event, args });
   });
 
-  socket.on('updateTask', (data) => {
+  socket.on('update-task', (data) => {
     store.dispatch(taskActions.updateTask(data));
   });
-
-  // socket.emit('connect');
 
   const connectSocket = (user) => {
     socket.auth = { userId: user.userId, token: user.token };

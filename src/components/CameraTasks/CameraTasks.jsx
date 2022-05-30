@@ -2,21 +2,33 @@ import React, { useEffect } from 'react';
 // import cn from 'classnames';
 import _ from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
-import { Badge, Card, Col } from 'react-bootstrap';
+import { Badge, Button, Card, Col } from 'react-bootstrap';
 import Heading from '../UI/Heading.jsx';
-import ScreenshotsByTime from './ScreenshotsByTime/ScreenshotsByTime';
-import VideosByTime from './VideosByTime/VideosByTime';
+// import PhotosByTime from './PhotosByTime/PhotosByTime';
+// import VideosByTime from './VideosByTime/VideosByTime';
 // import useThunkStatus from '../../hooks/useThunkStatus';
 import { taskActions, taskSelectors } from '../../redux/task/taskSlice';
+import { modalActions } from '../../redux/modalSlice.js';
 
 function CameraTasks({ selectedCamera }) {
   const dispatch = useDispatch();
 
   const cameraTasks = useSelector(taskSelectors.cameraTasks);
-  const screenshotsByTimeTask = useSelector(taskSelectors.screenshotsByTimeTask);
-  const videosByTimeTask = useSelector(taskSelectors.videosByTimeTask);
+  // const photosByTimeTask = useSelector(taskSelectors.screenshotsByTimeTask);
+  // const videosByTimeTask = useSelector(taskSelectors.videosByTimeTask);
   // const fetchStatus = useThunkStatus(taskActions.fetchAll);
   // console.log(44444, cameraTasks);
+
+  const handleClickTask = (task) => {
+    dispatch(modalActions.openModal(task.name));
+  };
+
+  const handleDeleteTask = (task) => {
+    dispatch(taskActions.deleteOne({
+      cameraId: selectedCamera._id,
+      taskId: task._id,
+    }));
+  };
 
   useEffect(() => {
     if (selectedCamera._id && _.isEmpty(cameraTasks)) {
@@ -30,7 +42,7 @@ function CameraTasks({ selectedCamera }) {
     return null;
   }
 
-  const runningTasks = cameraTasks.filter((task) => task.status === 'Running');
+  // const runningTasks = cameraTasks.filter((task) => task.status === 'Running');
 
   return (
     <Col md={12} className="mb-4">
@@ -38,17 +50,21 @@ function CameraTasks({ selectedCamera }) {
         Tasks
       </Heading>
 
-      <ScreenshotsByTime task={screenshotsByTimeTask} compact />
-      <VideosByTime task={videosByTimeTask} compact />
+      {/* <PhotosByTime task={photosByTimeTask} compact />
+      <VideosByTime task={videosByTimeTask} compact /> */}
 
-      {runningTasks.map((task) => (
-        <Card key={task._id} bsPrefix="card mb-3">
+      {cameraTasks.map((task) => (
+        <Card onClick={() => handleClickTask(task)} key={task._id} bsPrefix="card mb-3">
           <Card.Header bsPrefix="card-header d-flex justify-content-between align-items-start">
             {task.name}
             <Badge bg="success">{task.status}</Badge>
           </Card.Header>
           <Card.Body bsPrefix="card-body text-truncate pt-2 pb-2">
             {`CreatedAt: ${task.createdAt}`}
+
+            <Button onClick={() => handleDeleteTask(task)} variant="primary" size="sm" className="me-2">
+              Delete
+            </Button>
           </Card.Body>
         </Card>
       ))}

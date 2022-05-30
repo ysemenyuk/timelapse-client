@@ -7,7 +7,7 @@ import Heading from '../UI/Heading.jsx';
 import { cameraActions } from '../../redux/camera/cameraSlice.js';
 import { CREATE_CAMERA } from '../../utils/constants.js';
 import { modalActions } from '../../redux/modalSlice.js';
-import CreateCameraModal from '../Modals/CreateCameraModal.jsx';
+import CreateCameraModal from '../CameraActions/CreateCameraModal.jsx';
 
 function CamerasList({ cameras, selectedCamera }) {
   const dispatch = useDispatch();

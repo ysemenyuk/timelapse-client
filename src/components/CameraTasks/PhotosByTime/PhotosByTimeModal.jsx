@@ -13,7 +13,7 @@ import useThunkStatus from '../../../hooks/useThunkStatus';
 //   interval: Yup.number().required(),
 // });
 
-function ScreenshotsByTimeModal({ show, onHide }) {
+function PhotosByTimeModal({ show, onHide }) {
   const dispatch = useDispatch();
   const fetchStatus = useThunkStatus(taskActions.updateScreenshotsByTime);
   const task = useSelector(taskSelectors.screenshotsByTimeTask);
@@ -184,4 +184,4 @@ function ScreenshotsByTimeModal({ show, onHide }) {
   );
 }
 
-export default ScreenshotsByTimeModal;
+export default PhotosByTimeModal;

@@ -2,19 +2,19 @@ import { createSlice, createSelector } from '@reduxjs/toolkit';
 import { cameraSelectors } from '../camera/cameraSlice.js';
 import taskAsyncActions from './taskAsyncActions.js';
 
-const { fetchAll, createScreenshot, createVideoFile, updateScreenshotsByTime, updateVideosByTime } = taskAsyncActions;
+const { fetchAll, createOne, updateOne, deleteOne } = taskAsyncActions;
 
 // console.log("cameraSlice");
 
 const taskSlice = createSlice({
   name: 'task',
   initialState: {
-    tasks: [],
+    tasks: {},
     selectedTaskId: null,
   },
   reducers: {
     updateTask: (state, action) => {
-      console.log('updateTask action -', action);
+      // console.log('updateTask action -', action);
 
       const updatedTask = action.payload;
       const index = state.tasks.findIndex((task) => task._id === updatedTask._id);
@@ -24,35 +24,24 @@ const taskSlice = createSlice({
   extraReducers: {
     [fetchAll.fulfilled]: (state, action) => {
       // console.log('fetchAll.fulfilled action -', action);
-
-      const { data } = action.payload;
-      state.tasks.push(...data);
+      const { cameraId, data } = action.payload;
+      state.tasks[cameraId] = data;
     },
-    [createScreenshot.fulfilled]: (state, action) => {
-      // console.log('createScreenshot.fulfilled action -', action);
-
-      const { data } = action.payload;
-      state.tasks.push(data);
+    [createOne.fulfilled]: (state, action) => {
+      // console.log('createOne.fulfilled action -', action);
+      const { cameraId, data } = action.payload;
+      state.tasks[cameraId].push(data);
     },
-    [createVideoFile.fulfilled]: (state, action) => {
-      // console.log('createScreenshot.fulfilled action -', action);
-
-      const { data } = action.payload;
-      state.tasks.push(data);
+    [updateOne.fulfilled]: (state, action) => {
+      // console.log('updateOne.fulfilled action -', action);
+      const { cameraId, taskId, data } = action.payload;
+      const index = state.tasks[cameraId].findIndex((task) => task._id === taskId);
+      state.tasks[cameraId][index] = data;
     },
-    [updateScreenshotsByTime.fulfilled]: (state, action) => {
-      // console.log('updateScreenshotByTime.fulfilled action -', action);
-
-      const { taskId, data } = action.payload;
-      const index = state.tasks.findIndex((task) => task._id === taskId);
-      state.tasks[index] = data;
-    },
-    [updateVideosByTime.fulfilled]: (state, action) => {
-      // console.log('updateVideosByTime.fulfilled action -', action);
-
-      const { taskId, data } = action.payload;
-      const index = state.tasks.findIndex((task) => task._id === taskId);
-      state.tasks[index] = data;
+    [deleteOne.fulfilled]: (state, action) => {
+      // console.log('updateOne.fulfilled action -', action);
+      const { cameraId, taskId } = action.payload;
+      state.tasks[cameraId] = state.tasks[cameraId].filter((task) => task._id !== taskId);
     },
   },
 });
@@ -62,19 +51,19 @@ const allTasks = (state) => state.task.tasks;
 const cameraTasks = createSelector(
   allTasks,
   cameraSelectors.selectedCameraId,
-  (tasks, cameraId) => tasks.filter((item) => item.camera === cameraId) || null,
+  (tasks, cameraId) => tasks[cameraId] || null,
 );
 
 const screenshotsByTimeTask = createSelector(
-  allTasks,
+  cameraTasks,
   cameraSelectors.selectedCamera,
-  (tasks, camera) => tasks.find((task) => task._id === camera.screenshotsByTimeTask) || null,
+  (tasks, camera) => (tasks && tasks.find((task) => task._id === camera.photosByTimeTask)) || null,
 );
 
 const videosByTimeTask = createSelector(
-  allTasks,
+  cameraTasks,
   cameraSelectors.selectedCamera,
-  (tasks, camera) => tasks.find((task) => task._id === camera.videosByTimeTask) || null,
+  (tasks, camera) => (tasks && tasks.find((task) => task._id === camera.videosByTimeTask)) || null,
 );
 
 export const taskSelectors = { cameraTasks, screenshotsByTimeTask, videosByTimeTask };

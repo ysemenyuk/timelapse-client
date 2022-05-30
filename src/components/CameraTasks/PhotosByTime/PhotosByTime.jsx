@@ -4,13 +4,13 @@ import { useDispatch } from 'react-redux';
 import Heading from '../../UI/Heading.jsx';
 import { calculateFilesPerDay } from '../../../utils/utils.js';
 import { modalActions } from '../../../redux/modalSlice.js';
-import { SCREENSHOTSBYTIME_TASK } from '../../../utils/constants.js';
+import { PHOTOSBYTIME_TASK } from '../../../utils/constants.js';
 
-function ScreenshotsByTime({ task, compact }) {
+function PhotosByTime({ task, compact }) {
   const dispatch = useDispatch();
 
   const handleOpenEditModal = () => {
-    dispatch(modalActions.openModal(SCREENSHOTSBYTIME_TASK));
+    dispatch(modalActions.openModal(PHOTOSBYTIME_TASK));
   };
 
   if (!task) {
@@ -36,10 +36,11 @@ function ScreenshotsByTime({ task, compact }) {
           </Card.Body>
         </Card>
       </When>
+
       <Otherwise>
         <Col md={12} className="mb-4">
           <Heading lvl={6} className="mb-3">
-            Screenshots by time
+            Photos by time
           </Heading>
 
           <ListGroup className="mb-3" role="button" onClick={handleOpenEditModal}>
@@ -70,4 +71,4 @@ function ScreenshotsByTime({ task, compact }) {
   );
 }
 
-export default ScreenshotsByTime;
+export default PhotosByTime;
