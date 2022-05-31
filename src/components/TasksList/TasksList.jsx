@@ -19,9 +19,8 @@ function CameraTasks({ selectedCamera }) {
   // console.log(44444, cameraTasks);
 
   const handleClickTask = (task) => {
-    console.log(11111, `Edit${task.name}`);
-    dispatch(taskActions.selectTask(task._id));
-    dispatch(modalActions.openModal(`Edit${task.name}`));
+    console.log('handleClickTask', `Edit${task.name}`);
+    dispatch(modalActions.openModal({ type: `Edit${task.name}`, data: { taskId: task._id } }));
   };
 
   const handleDeleteTask = (task) => {
@@ -71,7 +70,7 @@ function CameraTasks({ selectedCamera }) {
             <Badge status={task.status} />
           </Card.Header>
           <Card.Body bsPrefix="card-body text-truncate pt-2 pb-2">
-            {renderText(task)}
+            <div>{renderText(task)}</div>
             <Button onClick={() => handleDeleteTask(task)} variant="outline-secondary" size="sm" className="me-2">
               Delete
             </Button>

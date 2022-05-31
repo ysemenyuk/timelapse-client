@@ -32,8 +32,6 @@ function App() {
   const user = useSelector((state) => state.user);
 
   useEffect(() => {
-    console.log(11111, 'useEffect connectSocket');
-
     if (user.isLoggedIn) {
       connectSocket(user);
     }

@@ -31,13 +31,13 @@ const modalsMap = {
 
 function ModalWrapper() {
   const dispatch = useDispatch();
-  const { show, type } = useSelector((state) => state.modal);
-
-  console.log(222, { show, type });
+  const { show, type, data } = useSelector((state) => state.modal);
 
   if (!show || !Object.keys(modalsMap).includes(type)) {
     return null;
   }
+
+  console.log('ModalWrapper', { show, type, data });
 
   const CurrentModalBody = modalsMap[type];
 
@@ -49,7 +49,7 @@ function ModalWrapper() {
 
   return (
     <Modal show={show} onHide={handleClose}>
-      <CurrentModalBody onHide={handleClose} />
+      <CurrentModalBody onHide={handleClose} data={data} />
     </Modal>
   );
 }

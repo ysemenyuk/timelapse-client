@@ -20,7 +20,7 @@ function AddCreatePhotoModal({ onHide }) {
         name: taskName.CREATE_PHOTO,
         type: taskType.ONE_TIME,
         settings: {
-          httpUrl: link,
+          photoUrl: link,
         },
       },
     }))

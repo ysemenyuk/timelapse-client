@@ -10,10 +10,10 @@ export default (store) => {
     console.log(7777, 'connect - socket.connected', socket.connected);
   });
 
-  socket.on('connect_error', (err) => {
-    console.log(8888, 'connect_error = err', { err: err.message });
-    console.log(8888, 'connect_error = socket.connected', socket.connected);
-  });
+  // socket.on('connect_error', (err) => {
+  //   console.log(8888, 'connect_error = err', { err: err.message });
+  //   console.log(8888, 'connect_error = socket.connected', socket.connected);
+  // });
 
   socket.onAny((event, ...args) => {
     console.log('onAny', { event, args });

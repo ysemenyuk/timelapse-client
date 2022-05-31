@@ -14,12 +14,10 @@ const validationSchema = Yup.object({
   interval: Yup.number().required(),
 });
 
-function EditCreatePhotosByTimeModal({ onHide }) {
+function EditCreatePhotosByTimeModal({ onHide, data: { taskId } }) {
   const dispatch = useDispatch();
   const fetchStatus = useThunkStatus(taskActions.updateOne);
-  const task = useSelector(taskSelectors.selectedTask);
-
-  console.log(4444, task);
+  const task = useSelector(taskSelectors.selectTaskById(taskId));
 
   const { status, settings, ...rest } = task;
   const { startTime, stopTime, interval } = settings;

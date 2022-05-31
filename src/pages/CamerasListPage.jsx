@@ -20,8 +20,6 @@ function CameraListPage() {
   const fetchStatus = useThunkStatus(cameraActions.fetchAll);
 
   useEffect(() => {
-    console.log(22222, 'useEffect CameraListPage');
-
     if (allCameras.length < 2) {
       dispatch(cameraActions.fetchAll());
     }

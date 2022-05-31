@@ -10,7 +10,6 @@ const taskSlice = createSlice({
   name: 'task',
   initialState: {
     tasks: {},
-    selectedTaskId: null,
   },
   reducers: {
     selectTask: (state, action) => {
@@ -50,13 +49,11 @@ const taskSlice = createSlice({
 });
 
 const allTasks = (state) => state.task.tasks;
-const selectedTaskId = (state) => state.task.selectedTaskId;
 
-const selectedTask = createSelector(
+const selectTaskById = (id) => createSelector(
   allTasks,
   cameraSelectors.selectedCameraId,
-  selectedTaskId,
-  (tasks, cameraId, taskId) => tasks[cameraId].find((item) => item._id === taskId) || null,
+  (tasks, cameraId) => tasks[cameraId].find((i) => i._id === id) || null,
 );
 
 const cameraTasks = createSelector(
@@ -65,7 +62,7 @@ const cameraTasks = createSelector(
   (tasks, cameraId) => tasks[cameraId] || null,
 );
 
-export const taskSelectors = { cameraTasks, selectedTask };
+export const taskSelectors = { cameraTasks, selectTaskById };
 
 export const taskActions = { ...taskSlice.actions, ...taskAsyncActions };
 

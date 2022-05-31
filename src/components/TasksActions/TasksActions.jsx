@@ -9,19 +9,19 @@ function TasksActions() {
   const dispatch = useDispatch();
 
   const createPhotoHandler = () => {
-    dispatch(modalActions.openModal(modals.ADD_CREATE_PHOTO));
+    dispatch(modalActions.openModal({ type: modals.ADD_CREATE_PHOTO }));
   };
 
   const createVideoHandler = () => {
-    dispatch(modalActions.openModal(modals.ADD_CREATE_VIDEO));
+    dispatch(modalActions.openModal({ type: modals.ADD_CREATE_VIDEO }));
   };
 
   const createPhotosByTimeHandler = () => {
-    dispatch(modalActions.openModal(modals.ADD_CREATE_PHOTOS_BY_TIME));
+    dispatch(modalActions.openModal({ type: modals.ADD_CREATE_PHOTOS_BY_TIME }));
   };
 
   const createVideosByTimeHandler = () => {
-    dispatch(modalActions.openModal(modals.ADD_CREATE_VIDEOS_BY_TIME));
+    dispatch(modalActions.openModal({ type: modals.ADD_CREATE_VIDEOS_BY_TIME }));
   };
 
   return (
