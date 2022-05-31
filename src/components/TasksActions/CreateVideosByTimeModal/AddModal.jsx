@@ -12,22 +12,22 @@ import useThunkStatus from '../../../hooks/useThunkStatus';
 //   fps: Yup.number().required(),
 // });
 
-function VideosByTimeModal({ show, onHide }) {
+function AddCreateVideosByTimeModal({ onHide }) {
   const dispatch = useDispatch();
-  const fetchStatus = useThunkStatus(taskActions.updateVideosByTime);
+  const fetchStatus = useThunkStatus(taskActions.updateOne);
   const task = useSelector(taskSelectors.videosByTimeTask);
 
-  const { status, videosByTimeSettings } = task;
-  const { startTime, duration, fps } = videosByTimeSettings;
+  const { status, settings } = task;
+  const { startTime, duration, fps } = settings;
 
   const handleStartVideosByTime = (values) => {
     console.log('handleStart');
-    dispatch(taskActions.updateVideosByTime({
+    dispatch(taskActions.updateOne({
       cameraId: task.camera,
       taskId: task._id,
       payload: {
         status: 'Running',
-        videosByTimeSettings: values,
+        settings: values,
       },
     }))
       .then(() => {
@@ -40,12 +40,12 @@ function VideosByTimeModal({ show, onHide }) {
 
   const handleStopVideosByTime = () => {
     console.log('handleStop');
-    dispatch(taskActions.updateVideosByTime({
+    dispatch(taskActions.updateOne({
       cameraId: task.camera,
       taskId: task._id,
       payload: {
         status: 'Stopped',
-        videosByTimeSettings,
+        settings,
       },
     }));
   };
@@ -63,10 +63,7 @@ function VideosByTimeModal({ show, onHide }) {
   // console.log('formik.values -', formik.values);
 
   return (
-    <Modal
-      show={show}
-      onHide={onHide}
-    >
+    <>
       <Modal.Header closeButton>
         <Modal.Title bsPrefix="modal-title h5">
           VideosByTimeTask
@@ -167,8 +164,8 @@ function VideosByTimeModal({ show, onHide }) {
           Start
         </Button>
       </Modal.Footer>
-    </Modal>
+    </>
   );
 }
 
-export default VideosByTimeModal;
+export default AddCreateVideosByTimeModal;

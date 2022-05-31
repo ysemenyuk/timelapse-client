@@ -4,11 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
 import { Modal, Button, Form, Row, Col, Spinner } from 'react-bootstrap';
-import fileManagerService from '../../api/fileManager.service.js'; //
-import { cameraSelectors } from '../../redux/camera/cameraSlice.js';
-import { taskActions } from '../../redux/task/taskSlice.js';
-import useThunkStatus from '../../hooks/useThunkStatus.js';
-import { taskName, taskType } from '../../utils/constants.js';
+import fileManagerService from '../../../api/fileManager.service.js'; //
+import { cameraSelectors } from '../../../redux/camera/cameraSlice.js';
+import { taskActions } from '../../../redux/task/taskSlice.js';
+import useThunkStatus from '../../../hooks/useThunkStatus.js';
+import { taskName, taskType } from '../../../utils/constants.js';
 
 const videoSettingsInitialValues = {
   startDate: '2022-05-01',
@@ -17,7 +17,7 @@ const videoSettingsInitialValues = {
   fps: 20,
 };
 
-function CreateVideoModal({ show, onHide }) {
+function EditCreateVideoModal({ onHide }) {
   const dispatch = useDispatch();
   const fetchStatus = useThunkStatus(taskActions.createVideoFile);
   const selectedCameraId = useSelector(cameraSelectors.selectedCameraId);
@@ -69,10 +69,7 @@ function CreateVideoModal({ show, onHide }) {
   }, [formik.values.startTime, formik.values.stopTime]);
 
   return (
-    <Modal
-      show={show}
-      onHide={onHide}
-    >
+    <>
       <Modal.Header closeButton>
         <Modal.Title>Create video</Modal.Title>
       </Modal.Header>
@@ -177,8 +174,8 @@ function CreateVideoModal({ show, onHide }) {
           Submit
         </Button>
       </Modal.Footer>
-    </Modal>
+    </>
   );
 }
 
-export default CreateVideoModal;
+export default EditCreateVideoModal;

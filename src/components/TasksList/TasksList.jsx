@@ -1,26 +1,27 @@
+/* eslint-disable max-len */
 import React, { useEffect } from 'react';
 // import cn from 'classnames';
 import _ from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
-import { Badge, Button, Card, Col } from 'react-bootstrap';
+import { Button, Card, Col } from 'react-bootstrap';
 import Heading from '../UI/Heading.jsx';
-// import PhotosByTime from './PhotosByTime/PhotosByTime';
-// import VideosByTime from './VideosByTime/VideosByTime';
 // import useThunkStatus from '../../hooks/useThunkStatus';
 import { taskActions, taskSelectors } from '../../redux/task/taskSlice';
 import { modalActions } from '../../redux/modalSlice.js';
+import Badge from '../UI/Badge.jsx';
+import { taskName } from '../../utils/constants.js';
 
 function CameraTasks({ selectedCamera }) {
   const dispatch = useDispatch();
 
   const cameraTasks = useSelector(taskSelectors.cameraTasks);
-  // const photosByTimeTask = useSelector(taskSelectors.screenshotsByTimeTask);
-  // const videosByTimeTask = useSelector(taskSelectors.videosByTimeTask);
   // const fetchStatus = useThunkStatus(taskActions.fetchAll);
   // console.log(44444, cameraTasks);
 
   const handleClickTask = (task) => {
-    dispatch(modalActions.openModal(task.name));
+    console.log(11111, `Edit${task.name}`);
+    dispatch(taskActions.selectTask(task._id));
+    dispatch(modalActions.openModal(`Edit${task.name}`));
   };
 
   const handleDeleteTask = (task) => {
@@ -28,6 +29,19 @@ function CameraTasks({ selectedCamera }) {
       cameraId: selectedCamera._id,
       taskId: task._id,
     }));
+  };
+
+  const renderText = (task) => {
+    const { name, settings } = task;
+
+    const mapping = {
+      [taskName.CREATE_PHOTO]: `HttpUrl: ${settings.photoUrl}`,
+      [taskName.CREATE_PHOTOS_BY_TIME]: `StartAt: ${settings.startTime}, StopAt: ${settings.stopTime}, Interval: ${settings.interval} sec`,
+      [taskName.CREATE_VIDEO]: `From: ${settings.startDate}, to: ${settings.endDate}, Duration: ${settings.duration}, Fps: ${settings.fps}`,
+      [taskName.CREATE_VIDEOS_BY_TIME]: `StartAt: ${settings.startTime}, Duration: ${settings.duration}, Fps: ${settings.fps}`,
+    };
+
+    return mapping[name];
   };
 
   useEffect(() => {
@@ -50,19 +64,15 @@ function CameraTasks({ selectedCamera }) {
         Tasks
       </Heading>
 
-      {/* <PhotosByTime task={photosByTimeTask} compact />
-      <VideosByTime task={videosByTimeTask} compact /> */}
-
       {cameraTasks.map((task) => (
         <Card onClick={() => handleClickTask(task)} key={task._id} bsPrefix="card mb-3">
           <Card.Header bsPrefix="card-header d-flex justify-content-between align-items-start">
             {task.name}
-            <Badge bg="success">{task.status}</Badge>
+            <Badge status={task.status} />
           </Card.Header>
           <Card.Body bsPrefix="card-body text-truncate pt-2 pb-2">
-            {`CreatedAt: ${task.createdAt}`}
-
-            <Button onClick={() => handleDeleteTask(task)} variant="primary" size="sm" className="me-2">
+            {renderText(task)}
+            <Button onClick={() => handleDeleteTask(task)} variant="outline-secondary" size="sm" className="me-2">
               Delete
             </Button>
           </Card.Body>

@@ -8,7 +8,7 @@ import Screenshot from '../components/Screenshot/Screenshot.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
 import { cameraActions, cameraSelectors } from '../redux/camera/cameraSlice.js';
-import CameraTasks from '../components/CameraTasks/CameraTasks.jsx';
+import TasksList from '../components/TasksList/TasksList.jsx';
 import CameraInfo from '../components/CameraInfo/CameraInfo.jsx';
 
 function CameraPage() {
@@ -33,7 +33,7 @@ function CameraPage() {
           <Col sm={3}>
             <Screenshot selectedCamera={selectedCamera} />
             <CameraInfo selectedCamera={selectedCamera} compact />
-            <CameraTasks selectedCamera={selectedCamera} />
+            <TasksList selectedCamera={selectedCamera} />
           </Col>
           <Col sm={9}>
             <FileManager selectedCamera={selectedCamera} />

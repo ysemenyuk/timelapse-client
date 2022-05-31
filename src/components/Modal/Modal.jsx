@@ -1,44 +1,57 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Modal } from 'react-bootstrap';
 import { modalActions } from '../../redux/modalSlice';
-import CreatePhotoModal from '../CameraActions/CreatePhotoModal';
-import CreateVideoModal from '../CameraActions/CreateVideoModal';
-import CreateCameraModal from '../CameraActions/CreateCameraModal';
-import EditCameraModal from '../CameraActions/EditCameraModal';
-import DeleteCameraModal from '../CameraActions/DeleteCameraModal';
-import VideosByTimeModal from '../CameraTasks/VideosByTime/VideosByTimeModal';
-import PhotosByTimeModal from '../CameraTasks/PhotosByTime/PhotosByTimeModal';
-import { ADD_CAMERA, EDIT_CAMERA, DELETE_CAMERA, taskName } from '../../utils/constants';
+import { modals } from '../../utils/constants';
+import AddCameraModal from '../CameraInfo/CameraModal/AddCameraModal';
+import EditCameraModal from '../CameraInfo/CameraModal/EditCameraModal';
+import DeleteCameraModal from '../CameraInfo/CameraModal/DeleteCameraModal';
+import AddCreatePhotoModal from '../TasksActions/CreatePhotoModal/AddModal';
+import EditCreatePhotoModal from '../TasksActions/CreatePhotoModal/EditModal';
+import AddCreateVideoModal from '../TasksActions/CreateVideoModal/AddModal';
+import EditCreateVideoModal from '../TasksActions/CreateVideoModal/EditModal';
+import AddCreatePhotosByTimeModal from '../TasksActions/CreatePhotosByTimeModal/AddModal';
+import EditCreatePhotosByTimeModal from '../TasksActions/CreatePhotosByTimeModal/EditModal';
+import AddCreateVideosByTimeModal from '../TasksActions/CreateVideosByTimeModal/AddModal';
+import EditCreateVideosByTimeModal from '../TasksActions/CreateVideosByTimeModal/EditModal';
 
-const { CREATE_PHOTO, CREATE_VIDEO, CREATE_PHOTOS_BY_TIME, CREATE_VIDEOS_BY_TIME } = taskName;
-
-const modals = {
-  [ADD_CAMERA]: CreateCameraModal,
-  [EDIT_CAMERA]: EditCameraModal,
-  [DELETE_CAMERA]: DeleteCameraModal,
-  [CREATE_PHOTO]: CreatePhotoModal,
-  [CREATE_VIDEO]: CreateVideoModal,
-  [CREATE_PHOTOS_BY_TIME]: PhotosByTimeModal,
-  [CREATE_VIDEOS_BY_TIME]: VideosByTimeModal,
+const modalsMap = {
+  [modals.ADD_CAMERA]: AddCameraModal,
+  [modals.EDIT_CAMERA]: EditCameraModal,
+  [modals.DELETE_CAMERA]: DeleteCameraModal,
+  [modals.ADD_CREATE_PHOTO]: AddCreatePhotoModal,
+  [modals.EDIT_CREATE_PHOTO]: EditCreatePhotoModal,
+  [modals.ADD_CREATE_VIDEO]: AddCreateVideoModal,
+  [modals.EDIT_CREATE_VIDEO]: EditCreateVideoModal,
+  [modals.ADD_CREATE_PHOTOS_BY_TIME]: AddCreatePhotosByTimeModal,
+  [modals.EDIT_CREATE_PHOTOS_BY_TIME]: EditCreatePhotosByTimeModal,
+  [modals.ADD_CREATE_VIDEOS_BY_TIME]: AddCreateVideosByTimeModal,
+  [modals.EDIT_CREATE_VIDEOS_BY_TIME]: EditCreateVideosByTimeModal,
 };
 
-function Modal() {
+function ModalWrapper() {
   const dispatch = useDispatch();
   const { show, type } = useSelector((state) => state.modal);
 
-  if (!show || !Object.keys(modals).includes(type)) {
+  console.log(222, { show, type });
+
+  if (!show || !Object.keys(modalsMap).includes(type)) {
     return null;
   }
 
-  const CurrentModal = modals[type];
+  const CurrentModalBody = modalsMap[type];
 
   const handleClose = () => {
     dispatch(modalActions.closeModal());
   };
 
+  console.log(3333, { show, type });
+
   return (
-    <CurrentModal show={show} onHide={handleClose} />
+    <Modal show={show} onHide={handleClose}>
+      <CurrentModalBody onHide={handleClose} />
+    </Modal>
   );
 }
 
-export default Modal;
+export default ModalWrapper;

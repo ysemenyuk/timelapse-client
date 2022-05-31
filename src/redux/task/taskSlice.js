@@ -13,9 +13,12 @@ const taskSlice = createSlice({
     selectedTaskId: null,
   },
   reducers: {
+    selectTask: (state, action) => {
+      // console.log('updateTask action -', action);
+      state.selectedTaskId = action.payload;
+    },
     updateTask: (state, action) => {
       // console.log('updateTask action -', action);
-
       const updatedTask = action.payload;
       const index = state.tasks.findIndex((task) => task._id === updatedTask._id);
       state.tasks[index] = updatedTask;
@@ -47,6 +50,14 @@ const taskSlice = createSlice({
 });
 
 const allTasks = (state) => state.task.tasks;
+const selectedTaskId = (state) => state.task.selectedTaskId;
+
+const selectedTask = createSelector(
+  allTasks,
+  cameraSelectors.selectedCameraId,
+  selectedTaskId,
+  (tasks, cameraId, taskId) => tasks[cameraId].find((item) => item._id === taskId) || null,
+);
 
 const cameraTasks = createSelector(
   allTasks,
@@ -54,19 +65,7 @@ const cameraTasks = createSelector(
   (tasks, cameraId) => tasks[cameraId] || null,
 );
 
-const screenshotsByTimeTask = createSelector(
-  cameraTasks,
-  cameraSelectors.selectedCamera,
-  (tasks, camera) => (tasks && tasks.find((task) => task._id === camera.photosByTimeTask)) || null,
-);
-
-const videosByTimeTask = createSelector(
-  cameraTasks,
-  cameraSelectors.selectedCamera,
-  (tasks, camera) => (tasks && tasks.find((task) => task._id === camera.videosByTimeTask)) || null,
-);
-
-export const taskSelectors = { cameraTasks, screenshotsByTimeTask, videosByTimeTask };
+export const taskSelectors = { cameraTasks, selectedTask };
 
 export const taskActions = { ...taskSlice.actions, ...taskAsyncActions };
 

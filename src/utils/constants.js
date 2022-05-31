@@ -1,8 +1,23 @@
 export const IMAGE_VIEWER = 'IMAGE_VIEWER';
 
-export const ADD_CAMERA = 'ADD_CAMERA';
-export const EDIT_CAMERA = 'EDIT_CAMERA';
-export const DELETE_CAMERA = 'DELETE_CAMERA';
+// modals
+export const modals = {
+  ADD_CAMERA: 'ADD_CAMERA',
+  EDIT_CAMERA: 'EDIT_CAMERA',
+  DELETE_CAMERA: 'DELETE_CAMERA',
+
+  ADD_CREATE_PHOTO: 'AddCreatePhoto',
+  EDIT_CREATE_PHOTO: 'EditAddCreatePhoto',
+
+  ADD_CREATE_VIDEO: 'AddCreateVideo',
+  EDIT_CREATE_VIDEO: 'EditCreateVideo',
+
+  ADD_CREATE_PHOTOS_BY_TIME: 'AddCreatePhotosByTime',
+  EDIT_CREATE_PHOTOS_BY_TIME: 'EditCreatePhotosByTime',
+
+  ADD_CREATE_VIDEOS_BY_TIME: 'AddCreateVideosByTime',
+  EDIT_CREATE_VIDEOS_BY_TIME: 'EditCreateVideosByTime',
+};
 
 // tasks
 export const taskName = {

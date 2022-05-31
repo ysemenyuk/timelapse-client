@@ -5,9 +5,8 @@ import { useNavigate, useMatch } from 'react-router-dom';
 import { Col, ListGroup, Button } from 'react-bootstrap';
 import Heading from '../UI/Heading.jsx';
 import { cameraActions } from '../../redux/camera/cameraSlice.js';
-import { CREATE_CAMERA } from '../../utils/constants.js';
+import { modals } from '../../utils/constants.js';
 import { modalActions } from '../../redux/modalSlice.js';
-import CreateCameraModal from '../CameraActions/CreateCameraModal.jsx';
 
 function CamerasList({ cameras, selectedCamera }) {
   const dispatch = useDispatch();
@@ -22,7 +21,7 @@ function CamerasList({ cameras, selectedCamera }) {
   };
 
   const handleAddCamera = () => {
-    dispatch(modalActions.openModal(CREATE_CAMERA));
+    dispatch(modalActions.openModal(modals.ADD_CAMERA));
   };
 
   const renderCamerasList = () => cameras.map((camera) => (
@@ -45,29 +44,25 @@ function CamerasList({ cameras, selectedCamera }) {
   ));
 
   return (
-    <>
-      <Col md={12} className="mb-4">
-        <Heading lvl={6} className="mb-3">
-          Cameras
-        </Heading>
+    <Col md={12} className="mb-4">
+      <Heading lvl={6} className="mb-3">
+        Cameras
+      </Heading>
 
-        <Choose>
-          <When condition={!cameras.length}>
-            <div>No cameras.</div>
-          </When>
-          <Otherwise>
-            <ListGroup className="mb-3">
-              {renderCamerasList()}
-            </ListGroup>
-          </Otherwise>
-        </Choose>
-        <Button onClick={handleAddCamera} size="sm">
-          AddCamera
-        </Button>
-      </Col>
-
-      <CreateCameraModal />
-    </>
+      <Choose>
+        <When condition={!cameras.length}>
+          <div>No cameras.</div>
+        </When>
+        <Otherwise>
+          <ListGroup className="mb-3">
+            {renderCamerasList()}
+          </ListGroup>
+        </Otherwise>
+      </Choose>
+      <Button onClick={handleAddCamera} size="sm">
+        AddCamera
+      </Button>
+    </Col>
   );
 }
 

@@ -1,17 +1,21 @@
 import React from 'react';
 // import cn from 'classnames';
 import { useDispatch } from 'react-redux';
-import { Col, ListGroup, Card, Badge } from 'react-bootstrap';
+import { Col, ListGroup, Card, Badge, Button } from 'react-bootstrap';
 import Heading from '../UI/Heading.jsx';
-import CameraActions from '../CameraActions/CameraActions.jsx';
-import { EDIT_CAMERA } from '../../utils/constants.js';
+import TasksActions from '../TasksActions/TasksActions.jsx';
+import { modals } from '../../utils/constants.js';
 import { modalActions } from '../../redux/modalSlice.js';
 
 function CameraInfo({ selectedCamera, compact }) {
   const dispatch = useDispatch();
 
   const openEditCameraModal = () => {
-    dispatch(modalActions.openModal(EDIT_CAMERA));
+    dispatch(modalActions.openModal(modals.EDIT_CAMERA));
+  };
+
+  const openDeleteCameraModal = async () => {
+    dispatch(modalActions.openModal(modals.DELETE_CAMERA));
   };
 
   if (selectedCamera === null) {
@@ -59,7 +63,19 @@ function CameraInfo({ selectedCamera, compact }) {
         </Otherwise>
       </Choose>
 
-      <CameraActions />
+      <div className="mb-3 d-flex justify-content-between">
+        <div>
+          <Button onClick={openEditCameraModal} variant="primary" size="sm" className="me-2">
+            Settings
+          </Button>
+          <Button onClick={openDeleteCameraModal} variant="primary" size="sm" className="me-2">
+            Delete
+          </Button>
+        </div>
+
+        <TasksActions />
+
+      </div>
 
     </Col>
   );

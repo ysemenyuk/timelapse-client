@@ -9,7 +9,7 @@ import CameraInfo from '../components/CameraInfo/CameraInfo.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
 import FoldersList from '../components/FoldersList/FoldersList.jsx';
-import CameraTasks from '../components/CameraTasks/CameraTasks.jsx';
+import TasksList from '../components/TasksList/TasksList.jsx';
 
 function CameraListPage() {
   const dispatch = useDispatch();
@@ -41,7 +41,7 @@ function CameraListPage() {
               </When>
               <Otherwise>
                 <CameraInfo selectedCamera={selectedCamera} />
-                <CameraTasks selectedCamera={selectedCamera} />
+                <TasksList selectedCamera={selectedCamera} />
               </Otherwise>
             </Choose>
           </Col>

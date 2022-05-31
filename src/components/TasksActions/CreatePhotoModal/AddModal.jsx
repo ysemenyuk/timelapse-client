@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Form, Modal, Spinner } from 'react-bootstrap';
-import { taskActions } from '../../redux/task/taskSlice.js';
-import { cameraSelectors } from '../../redux/camera/cameraSlice.js';
-import useThunkStatus from '../../hooks/useThunkStatus.js';
-import { taskName, taskType } from '../../utils/constants.js';
+import { taskActions } from '../../../redux/task/taskSlice.js';
+import { cameraSelectors } from '../../../redux/camera/cameraSlice.js';
+import useThunkStatus from '../../../hooks/useThunkStatus.js';
+import { taskName, taskType } from '../../../utils/constants.js';
 
-function CreatePhotoModal({ show, onHide }) {
+function AddCreatePhotoModal({ onHide }) {
   const dispatch = useDispatch();
-  const fetchStatus = useThunkStatus(taskActions.createScreenshot);
+  const fetchStatus = useThunkStatus(taskActions.createOne);
   const selectedCamera = useSelector(cameraSelectors.selectedCamera);
 
   const [link, setLink] = useState(selectedCamera.photoUrl);
@@ -33,12 +33,9 @@ function CreatePhotoModal({ show, onHide }) {
   };
 
   return (
-    <Modal
-      show={show}
-      onHide={onHide}
-    >
+    <>
       <Modal.Header closeButton>
-        <Modal.Title>Create screenshot</Modal.Title>
+        Create photo
       </Modal.Header>
 
       <Modal.Body>
@@ -61,22 +58,22 @@ function CreatePhotoModal({ show, onHide }) {
 
         <Button
           key="close"
-          onClick={onHide}
           size="sm"
+          onClick={onHide}
         >
           Cancel
         </Button>
         <Button
           key="submit"
-          onClick={handleSubmit}
           size="sm"
+          onClick={handleSubmit}
         >
           Submit
         </Button>
       </Modal.Footer>
 
-    </Modal>
+    </>
   );
 }
 
-export default CreatePhotoModal;
+export default AddCreatePhotoModal;
