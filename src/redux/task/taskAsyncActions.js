@@ -1,4 +1,4 @@
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import taskService from '../../api/task.service.js';
 
@@ -17,7 +17,7 @@ const fetchOne = createAsyncThunk('task/fetchOne', async ({ cameraId, taskId }) 
   try {
     const { data } = await taskService.getOne(cameraId, taskId);
     console.log('task/fetchOne response.data -', data);
-    return { cameraId, data };
+    return { cameraId, taskId, data };
   } catch (e) {
     console.log('task/fetchOne error -', e.message);
     throw e;
@@ -31,11 +31,11 @@ const createOne = createAsyncThunk('task/createOne', async ({ cameraId, payload 
     const { data } = await taskService.createOne(cameraId, payload);
 
     console.log('createOne response.data -', data);
-    toast('task/createOne successed');
+    // toast('task/createOne successed');
     return { cameraId, data };
   } catch (e) {
     console.log('task/createOne error -', e.message);
-    toast('task/createOne error');
+    // toast('task/createOne error');
     throw e;
   }
 });

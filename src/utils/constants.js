@@ -7,7 +7,7 @@ export const modals = {
   DELETE_CAMERA: 'DELETE_CAMERA',
 
   ADD_CREATE_PHOTO: 'AddCreatePhoto',
-  EDIT_CREATE_PHOTO: 'EditAddCreatePhoto',
+  EDIT_CREATE_PHOTO: 'EditCreatePhoto',
 
   ADD_CREATE_VIDEO: 'AddCreateVideo',
   EDIT_CREATE_VIDEO: 'EditCreateVideo',

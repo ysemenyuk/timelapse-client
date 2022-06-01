@@ -2,7 +2,7 @@ import { createSlice, createSelector } from '@reduxjs/toolkit';
 import { cameraSelectors } from '../camera/cameraSlice.js';
 import taskAsyncActions from './taskAsyncActions.js';
 
-const { fetchAll, createOne, updateOne, deleteOne } = taskAsyncActions;
+const { fetchAll, fetchOne, createOne, updateOne, deleteOne } = taskAsyncActions;
 
 // console.log("cameraSlice");
 
@@ -19,8 +19,9 @@ const taskSlice = createSlice({
     updateTask: (state, action) => {
       // console.log('updateTask action -', action);
       const updatedTask = action.payload;
-      const index = state.tasks.findIndex((task) => task._id === updatedTask._id);
-      state.tasks[index] = updatedTask;
+      const cameraId = updatedTask.camera;
+      const index = state.tasks[cameraId].findIndex((task) => task._id === updatedTask._id);
+      state.tasks[cameraId][index] = updatedTask;
     },
   },
   extraReducers: {
@@ -28,6 +29,14 @@ const taskSlice = createSlice({
       // console.log('fetchAll.fulfilled action -', action);
       const { cameraId, data } = action.payload;
       state.tasks[cameraId] = data;
+    },
+    [fetchOne.fulfilled]: (state, action) => {
+      // console.log('updateOne.fulfilled action -', action);
+      const { cameraId, taskId, data } = action.payload;
+      const index = state.tasks[cameraId].findIndex((task) => task._id === taskId);
+      if (index) {
+        state.tasks[cameraId][index] = data;
+      }
     },
     [createOne.fulfilled]: (state, action) => {
       // console.log('createOne.fulfilled action -', action);

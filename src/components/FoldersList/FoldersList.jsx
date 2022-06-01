@@ -28,10 +28,10 @@ function FoldersList({ selectedCamera }) {
           <div className="w-75 text-truncate">MainFolder</div>
         </ListGroup.Item>
         <ListGroup.Item>
-          <div className="ms-3 w-75 text-truncate">Screenshots</div>
+          <div className="ms-3 w-75 text-truncate">Photos</div>
         </ListGroup.Item>
         <ListGroup.Item>
-          <div className="ms-3 w-75 text-truncate">ScreenshotsByTime</div>
+          <div className="ms-3 w-75 text-truncate">PhotosByTime</div>
         </ListGroup.Item>
         <ListGroup.Item>
           <div className="ms-3 w-75 text-truncate">Videos</div>

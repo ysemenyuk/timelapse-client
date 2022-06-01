@@ -37,15 +37,11 @@ function ModalWrapper() {
     return null;
   }
 
-  console.log('ModalWrapper', { show, type, data });
-
   const CurrentModalBody = modalsMap[type];
 
   const handleClose = () => {
     dispatch(modalActions.closeModal());
   };
-
-  console.log(3333, { show, type });
 
   return (
     <Modal show={show} onHide={handleClose}>

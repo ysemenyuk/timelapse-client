@@ -20,7 +20,19 @@ export default (store) => {
   });
 
   socket.on('update-task', (data) => {
-    store.dispatch(taskActions.updateTask(data));
+    console.log('update-task data -', data);
+
+    const { cameraId, taskId } = data;
+    const allTasks = store.getState().task.tasks;
+
+    if (allTasks[cameraId]) {
+      const task = allTasks[cameraId] && allTasks[cameraId].find((item) => item._id === taskId);
+      if (task) {
+        store.dispatch(taskActions.fetchOne({ cameraId, taskId }));
+      } else {
+        store.dispatch(taskActions.fetchAll({ cameraId }));
+      }
+    }
   });
 
   const connectSocket = (user) => {

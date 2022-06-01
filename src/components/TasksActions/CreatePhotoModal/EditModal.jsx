@@ -1,26 +1,43 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Form, Modal, Spinner } from 'react-bootstrap';
-import { taskActions } from '../../../redux/task/taskSlice.js';
+import { Button, Form, Modal, ProgressBar, Spinner } from 'react-bootstrap';
+import { taskActions, taskSelectors } from '../../../redux/task/taskSlice.js';
 import { cameraSelectors } from '../../../redux/camera/cameraSlice.js';
 import useThunkStatus from '../../../hooks/useThunkStatus.js';
-import { taskName, taskType } from '../../../utils/constants.js';
+import { taskStatus } from '../../../utils/constants.js';
 
-function EditCreatePhotoModal({ onHide }) {
+function EditCreatePhotoModal({ onHide, data: { taskId } }) {
   const dispatch = useDispatch();
   const fetchStatus = useThunkStatus(taskActions.createOne);
   const selectedCamera = useSelector(cameraSelectors.selectedCamera);
+  const task = useSelector(taskSelectors.selectTaskById(taskId));
 
-  const [link, setLink] = useState(selectedCamera.photoUrl);
+  const { status, message, settings, ...rest } = task;
+  const isRunning = status === taskStatus.RUNNING;
 
-  const handleSubmit = () => {
-    dispatch(taskActions.createOne({
+  const [link, setLink] = useState(settings.photoUrl);
+
+  const handleDelete = () => {
+    dispatch(taskActions.deleteOne({
       cameraId: selectedCamera._id,
+      taskId: task._id,
+    }))
+      .then(() => {
+        onHide();
+      })
+      .catch((e) => {
+        console.log('- catch error -', e);
+      });
+  };
+
+  const handleRepeat = () => {
+    dispatch(taskActions.updateOne({
+      cameraId: selectedCamera._id,
+      taskId: task._id,
       payload: {
-        name: taskName.CREATE_PHOTO,
-        type: taskType.ONE_TIME,
+        ...rest,
         settings: {
-          httpUrl: link,
+          photoUrl: link,
         },
       },
     }))
@@ -39,9 +56,12 @@ function EditCreatePhotoModal({ onHide }) {
       </Modal.Header>
 
       <Modal.Body>
-        <div className="mb-2">Create photo from camera by http request</div>
+        <div className="mb-3">
+          Create one photo from camera by http request
+        </div>
+
         <Form.Group className="mb-3">
-          <Form.Label htmlFor="description">Http url</Form.Label>
+          <Form.Label htmlFor="description">url</Form.Label>
           <Form.Control
             disabled
             onChange={(e) => setLink(e.target.value)}
@@ -51,25 +71,57 @@ function EditCreatePhotoModal({ onHide }) {
             type="text"
           />
         </Form.Group>
+
+        <div className="mb-3">
+          {`Status - ${status}`}
+        </div>
+        <div className="mb-3">
+          {message && message}
+        </div>
+        <If condition={isRunning}>
+          <ProgressBar animated now={100} />
+        </If>
+
       </Modal.Body>
 
-      <Modal.Footer>
-        {fetchStatus.isLoading && <Spinner as="span" animation="border" size="sm" />}
+      <Modal.Footer bsPrefix="modal-footer justify-content-between">
+        <div className="d-flex align-items-center gap-2">
+          <Button
+            key="delete"
+            size="sm"
+            onClick={handleDelete}
+            disabled={isRunning}
+          >
+            Delete
+          </Button>
+          <If condition={isRunning}>
+            <Button
+              key="cancel"
+              size="sm"
+            >
+              Cancel
+            </Button>
+          </If>
+        </div>
+        <div className="d-flex align-items-center gap-2">
+          {fetchStatus.isLoading && <Spinner as="span" animation="border" size="sm" />}
+          <Button
+            key="close"
+            size="sm"
+            onClick={onHide}
+          >
+            Close
+          </Button>
+          <Button
+            key="repeat"
+            size="sm"
+            onClick={handleRepeat}
+            disabled={isRunning}
+          >
+            Repeat
+          </Button>
+        </div>
 
-        <Button
-          key="close"
-          size="sm"
-          onClick={onHide}
-        >
-          Cancel
-        </Button>
-        <Button
-          key="submit"
-          size="sm"
-          onClick={handleSubmit}
-        >
-          Submit
-        </Button>
       </Modal.Footer>
 
     </>

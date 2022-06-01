@@ -12,11 +12,9 @@ function CreatePhotosByTimeForm({ formik, status }) {
 
   return (
     <>
-      <Row className="mb-3">
-        <Col>
-          {`Create photos by time - ${status}`}
-        </Col>
-      </Row>
+      <div className="mb-3">
+        {`Create photos by time - ${status}`}
+      </div>
 
       <Form className="mb-3">
         <Row className="mb-3">
@@ -68,25 +66,21 @@ function CreatePhotosByTimeForm({ formik, status }) {
         </Row>
       </Form>
 
-      <Row className="mb-3">
-        <Col>
-          <span className="fw-bold">
-            {`${files} files`}
-          </span>
-          {' '}
-          per day
-        </Col>
-      </Row>
+      <div className="mb-3">
+        <span className="fw-bold">
+          {`${files} files`}
+        </span>
+        {' '}
+        per day
+      </div>
 
-      <Row className="mb-3">
-        <Col>
-          <span className="fw-bold">
-            {`${Math.round(files / 25)} seconds`}
-          </span>
-          {' '}
-          (25 fps) video of the day
-        </Col>
-      </Row>
+      <div className="mb-3">
+        <span className="fw-bold">
+          {`${Math.round(files / 25)} seconds`}
+        </span>
+        {' '}
+        (25 fps) video of the day
+      </div>
 
       <If condition={isRunning}>
         <ProgressBar animated now={100} />

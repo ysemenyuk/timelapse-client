@@ -16,14 +16,23 @@ function CameraTasks({ selectedCamera }) {
 
   const cameraTasks = useSelector(taskSelectors.cameraTasks);
   // const fetchStatus = useThunkStatus(taskActions.fetchAll);
-  // console.log(44444, cameraTasks);
 
   const handleClickTask = (task) => {
     console.log('handleClickTask', `Edit${task.name}`);
     dispatch(modalActions.openModal({ type: `Edit${task.name}`, data: { taskId: task._id } }));
   };
 
-  const handleDeleteTask = (task) => {
+  const handleHideTask = (e, task) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('handleHideTask', task);
+  };
+
+  const handleDeleteTask = (e, task) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('handleDeleteTask', task);
+
     dispatch(taskActions.deleteOne({
       cameraId: selectedCamera._id,
       taskId: task._id,
@@ -33,14 +42,18 @@ function CameraTasks({ selectedCamera }) {
   const renderText = (task) => {
     const { name, settings } = task;
 
-    const mapping = {
-      [taskName.CREATE_PHOTO]: `HttpUrl: ${settings.photoUrl}`,
-      [taskName.CREATE_PHOTOS_BY_TIME]: `StartAt: ${settings.startTime}, StopAt: ${settings.stopTime}, Interval: ${settings.interval} sec`,
-      [taskName.CREATE_VIDEO]: `From: ${settings.startDate}, to: ${settings.endDate}, Duration: ${settings.duration}, Fps: ${settings.fps}`,
-      [taskName.CREATE_VIDEOS_BY_TIME]: `StartAt: ${settings.startTime}, Duration: ${settings.duration}, Fps: ${settings.fps}`,
-    };
+    if (settings) {
+      const mapping = {
+        [taskName.CREATE_PHOTO]: `Url: ${settings?.photoUrl}`,
+        [taskName.CREATE_PHOTOS_BY_TIME]: `StartAt: ${settings.startTime}, StopAt: ${settings.stopTime}, Interval: ${settings.interval} sec`,
+        [taskName.CREATE_VIDEO]: `From: ${settings.startDate}, to: ${settings.endDate}, Duration: ${settings.duration}, Fps: ${settings.fps}`,
+        [taskName.CREATE_VIDEOS_BY_TIME]: `StartAt: ${settings.startTime}, Duration: ${settings.duration}, Fps: ${settings.fps}`,
+      };
 
-    return mapping[name];
+      return mapping[name];
+    }
+
+    return task._id.toString();
   };
 
   useEffect(() => {
@@ -55,8 +68,6 @@ function CameraTasks({ selectedCamera }) {
     return null;
   }
 
-  // const runningTasks = cameraTasks.filter((task) => task.status === 'Running');
-
   return (
     <Col md={12} className="mb-4">
       <Heading lvl={6} className="mb-3">
@@ -65,15 +76,20 @@ function CameraTasks({ selectedCamera }) {
 
       {cameraTasks.map((task) => (
         <Card onClick={() => handleClickTask(task)} key={task._id} bsPrefix="card mb-3">
-          <Card.Header bsPrefix="card-header d-flex justify-content-between align-items-start">
+          <Card.Header bsPrefix="card-header d-flex justify-content-between align-items-center">
             {task.name}
             <Badge status={task.status} />
           </Card.Header>
-          <Card.Body bsPrefix="card-body text-truncate pt-2 pb-2">
-            <div>{renderText(task)}</div>
-            <Button onClick={() => handleDeleteTask(task)} variant="outline-secondary" size="sm" className="me-2">
-              Delete
-            </Button>
+          <Card.Body bsPrefix="card-body d-flex justify-content-between align-items-center pt-2 pb-2">
+            <div className="text-truncate">{renderText(task)}</div>
+            <div className="d-flex align-items-center ms-2">
+              <Button onClick={(e) => handleHideTask(e, task)} variant="link" size="sm">
+                Hide
+              </Button>
+              <Button onClick={(e) => handleDeleteTask(e, task)} variant="link" size="sm">
+                Delete
+              </Button>
+            </div>
           </Card.Body>
         </Card>
       ))}
