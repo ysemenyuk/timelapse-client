@@ -11,11 +11,11 @@ function CameraInfo({ selectedCamera, compact }) {
   const dispatch = useDispatch();
 
   const openEditCameraModal = () => {
-    dispatch(modalActions.openModal(modals.EDIT_CAMERA));
+    dispatch(modalActions.openModal({ type: modals.EDIT_CAMERA }));
   };
 
   const openDeleteCameraModal = async () => {
-    dispatch(modalActions.openModal(modals.DELETE_CAMERA));
+    dispatch(modalActions.openModal({ type: modals.DELETE_CAMERA }));
   };
 
   if (selectedCamera === null) {

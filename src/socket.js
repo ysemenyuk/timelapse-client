@@ -1,4 +1,5 @@
 import io from 'socket.io-client';
+import { fileManagerActions } from './redux/fileManager/fileManagerSlice.js';
 import { taskActions } from './redux/task/taskSlice.js';
 
 const SERVER_URL = 'http://localhost:4000';
@@ -6,14 +7,26 @@ const SERVER_URL = 'http://localhost:4000';
 export default (store) => {
   const socket = io(SERVER_URL, { autoConnect: false });
 
+  const connectSocket = (user) => {
+    socket.auth = { userId: user.userId, token: user.token };
+    socket.connect();
+    console.log('connectSocket');
+  };
+
+  const disconnectSocket = () => {
+    if (socket && socket.connected) {
+      socket.disconnect();
+      console.log('disconnectSocket');
+    }
+  };
+
   socket.on('connect', () => {
-    console.log(7777, 'connect - socket.connected', socket.connected);
+    console.log('connect - socket.connected', socket.connected);
   });
 
-  // socket.on('connect_error', (err) => {
-  //   console.log(8888, 'connect_error = err', { err: err.message });
-  //   console.log(8888, 'connect_error = socket.connected', socket.connected);
-  // });
+  socket.on('connect_error', (err) => {
+    console.log('connect_error', { err: err.message });
+  });
 
   socket.onAny((event, ...args) => {
     console.log('onAny', { event, args });
@@ -26,7 +39,7 @@ export default (store) => {
     const allTasks = store.getState().task.tasks;
 
     if (allTasks[cameraId]) {
-      const task = allTasks[cameraId] && allTasks[cameraId].find((item) => item._id === taskId);
+      const task = allTasks[cameraId].find((item) => item._id === taskId);
       if (task) {
         store.dispatch(taskActions.fetchOne({ cameraId, taskId }));
       } else {
@@ -35,18 +48,16 @@ export default (store) => {
     }
   });
 
-  const connectSocket = (user) => {
-    socket.auth = { userId: user.userId, token: user.token };
-    socket.connect();
-    console.log(1111, 'connectSocket');
-  };
+  socket.on('add-file', (data) => {
+    console.log('update-task data -', data);
 
-  const disconnectSocket = () => {
-    if (socket && socket.connected) {
-      socket.disconnect();
-      console.log(2222, 'disconnectSocket');
+    const { cameraId, fileId, parentId } = data;
+    const filesByParent = store.getState().fileManager.files;
+
+    if (filesByParent[parentId]) {
+      store.dispatch(fileManagerActions.fetchOne({ cameraId, parentId, fileId }));
     }
-  };
+  });
 
   const isSocketConnected = () => socket && socket.connected;
 

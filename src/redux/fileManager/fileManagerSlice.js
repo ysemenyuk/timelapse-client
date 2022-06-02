@@ -1,33 +1,25 @@
 import { createSlice } from '@reduxjs/toolkit';
 import fileManagerAsyncActions from './fileManagerAsyncActions.js';
 
-const { fetchFiles, deleteOneFile } = fileManagerAsyncActions;
+const { fetchFiles, fetchOne, deleteOneFile } = fileManagerAsyncActions;
 
 const fileManagerSlice = createSlice({
   name: 'fileManager',
   initialState: {
     files: {},
-    // currentFolderId: null,
-    // stack: [],
   },
-  reducers: {
-    // selectFolderFromStack: (state, action) => {
-    //   const folder = action.payload;
-    //   const index = state.stack.findIndex((item) => item._id === folder._id);
-    //   state.stack = state.stack.slice(0, index + 1);
-    // },
-    // pushFolderToStack: (state, action) => {
-    //   const folder = action.payload;
-    //   state.stack.push(folder);
-    // },
-    // popFolderFromStack: (state) => {
-    //   state.stack.pop();
-    // },
-  },
+  reducers: { },
   extraReducers: {
     [fetchFiles.fulfilled]: (state, action) => {
       const { parentId, data } = action.payload;
       state.files[parentId] = data;
+    },
+    [fetchOne.fulfilled]: (state, action) => {
+      const { parentId, data } = action.payload;
+      const isExist = state.files[parentId].find((item) => item._id === data._id);
+      if (!isExist) {
+        state.files[parentId].push(data);
+      }
     },
     [deleteOneFile.fulfilled]: (state, action) => {
       const deleted = action.payload;

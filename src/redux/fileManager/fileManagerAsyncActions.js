@@ -16,6 +16,21 @@ const fetchFiles = createAsyncThunk('file/fetchFiles', async ({ cameraId, parent
   }
 });
 
+const fetchOne = createAsyncThunk('file/fetchOne', async ({ cameraId, parentId, fileId }) => {
+  try {
+    console.log('file/fetchOne cameraId, fileId -', { cameraId, fileId });
+
+    const response = await fileManagerService.getOneById(cameraId, fileId);
+
+    console.log('file/fetchOne response.data -', response.data);
+
+    return { cameraId, parentId, data: response.data };
+  } catch (e) {
+    console.log('file/fetchOne error -', e.message);
+    throw e;
+  }
+});
+
 const deleteOneFile = createAsyncThunk('file/deleteOneFile', async ({ cameraId, file }, { rejectWithValue }) => {
   try {
     console.log('file/deleteOneFile cameraId file -', file);
@@ -35,4 +50,4 @@ const deleteOneFile = createAsyncThunk('file/deleteOneFile', async ({ cameraId, 
   }
 });
 
-export default { fetchFiles, deleteOneFile };
+export default { fetchFiles, fetchOne, deleteOneFile };

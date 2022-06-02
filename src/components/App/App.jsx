@@ -55,12 +55,12 @@ function App() {
         <Otherwise>
           <BrowserRouter>
             <Routes>
-              <Route element={<MainLayout />}>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/signup" element={<SignupPage />} />
+              <Route path="/" element={<MainLayout />}>
+                <Route index element={<HomePage />} />
+                <Route path="login" element={<LoginPage />} />
+                <Route path="signup" element={<SignupPage />} />
                 <Route
-                  path="/user"
+                  path="user"
                   element={(
                     <RequireAuth>
                       <ProfilePage />
@@ -68,7 +68,7 @@ function App() {
                   )}
                 />
                 <Route
-                  path="/cameras"
+                  path="cameras"
                   element={(
                     <RequireAuth>
                       <CamerasListPage />
@@ -76,7 +76,7 @@ function App() {
                   )}
                 />
                 <Route
-                  path="/cameras/:id"
+                  path="cameras/:cameraId/files"
                   element={(
                     <RequireAuth>
                       <CameraPage />

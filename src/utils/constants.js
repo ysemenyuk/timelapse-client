@@ -19,6 +19,11 @@ export const modals = {
   EDIT_CREATE_VIDEOS_BY_TIME: 'EditCreateVideosByTime',
 };
 
+// files
+export const fileType = {
+  FOLDER: 'folder',
+};
+
 // tasks
 export const taskName = {
   CREATE_PHOTO: 'CreatePhoto',

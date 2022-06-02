@@ -8,7 +8,7 @@ import { taskStatus } from '../../../utils/constants.js';
 
 function EditCreatePhotoModal({ onHide, data: { taskId } }) {
   const dispatch = useDispatch();
-  const fetchStatus = useThunkStatus(taskActions.createOne);
+  const fetchStatus = useThunkStatus(taskActions.updateOne); // !!!
   const selectedCamera = useSelector(cameraSelectors.selectedCamera);
   const task = useSelector(taskSelectors.selectTaskById(taskId));
 
@@ -20,7 +20,7 @@ function EditCreatePhotoModal({ onHide, data: { taskId } }) {
   const handleDelete = () => {
     dispatch(taskActions.deleteOne({
       cameraId: selectedCamera._id,
-      taskId: task._id,
+      taskId,
     }))
       .then(() => {
         onHide();
@@ -121,7 +121,6 @@ function EditCreatePhotoModal({ onHide, data: { taskId } }) {
             Repeat
           </Button>
         </div>
-
       </Modal.Footer>
 
     </>

@@ -11,15 +11,15 @@ import useThunkStatus from '../../../hooks/useThunkStatus.js';
 import { taskName, taskType } from '../../../utils/constants.js';
 
 const videoSettingsInitialValues = {
-  startDate: '2022-05-01',
-  endDate: '2022-06-01',
+  startDate: '2022-06-01', // today - week
+  endDate: '2022-07-31', // today
   duration: 60,
   fps: 20,
 };
 
 function AddCreateVideoModal({ onHide }) {
   const dispatch = useDispatch();
-  const fetchStatus = useThunkStatus(taskActions.createVideoFile);
+  const fetchStatus = useThunkStatus(taskActions.createOne);
   const selectedCameraId = useSelector(cameraSelectors.selectedCameraId);
 
   const formik = useFormik({
@@ -54,60 +54,56 @@ function AddCreateVideoModal({ onHide }) {
 
   useEffect(() => {
     const query = {
-      startDate: formik.values.startDateTime,
-      endDate: formik.values.endDateTime,
-      type: 'screenshotByTime',
+      startDate: formik.values.startDate,
+      endDate: formik.values.endDate,
+      type: 'photoByTime',
     };
-
-    // !!!
 
     fileManagerService.getCount(selectedCameraId, query)
       .then((resp) => {
-        console.log(1111111111111111, resp);
         setFilesCount(resp.data.count);
       });
-  }, [formik.values.startTime, formik.values.stopTime]);
+  }, [formik.values.startDate, formik.values.endDate]);
 
   return (
     <>
       <Modal.Header closeButton>
         <Modal.Title>Create video</Modal.Title>
       </Modal.Header>
+
       <Modal.Body>
-        <Row className="mb-3">
-          <Col>
-            Create video file from screenshots
-          </Col>
-        </Row>
+        <div className="mb-3">
+          Create video file from screenshots
+        </div>
 
         <Form className="mb-3">
           <Row className="mb-3">
             <Form.Group as={Col}>
-              <Form.Label htmlFor="startDateTime">Start time</Form.Label>
+              <Form.Label htmlFor="startDate">Start date</Form.Label>
               <Form.Control
                 onChange={formik.handleChange}
-                value={formik.values.startDateTime}
-                name="startDateTime"
-                id="startDateTime"
+                value={formik.values.startDate}
+                name="startDate"
+                id="startDate"
                 type="date"
-                isInvalid={formik.errors && formik.errors.startDateTime}
+                isInvalid={formik.errors && formik.errors.startDate}
               />
               <Form.Control.Feedback type="invalid">
-                {formik.errors && formik.errors.startDateTime}
+                {formik.errors && formik.errors.startDate}
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group as={Col}>
-              <Form.Label htmlFor="endDateTime">End time</Form.Label>
+              <Form.Label htmlFor="endDate">End date</Form.Label>
               <Form.Control
                 onChange={formik.handleChange}
-                value={formik.values.endDateTime}
-                name="endDateTime"
-                id="endDateTime"
+                value={formik.values.endDate}
+                name="endDate"
+                id="endDate"
                 type="date"
-                isInvalid={formik.errors && formik.errors.endDateTime}
+                isInvalid={formik.errors && formik.errors.endDate}
               />
               <Form.Control.Feedback type="invalid">
-                {formik.errors && formik.errors.endDateTime}
+                {formik.errors && formik.errors.endDate}
               </Form.Control.Feedback>
             </Form.Group>
           </Row>
@@ -143,19 +139,15 @@ function AddCreateVideoModal({ onHide }) {
           </Row>
         </Form>
 
-        <Row className="mb-3">
-          <Col>
-            {`Total: ${filesCount} files -- ${Math.round(filesCount / formik.values.fps)} seconds video (${formik.values.fps} fps)`}
-          </Col>
-        </Row>
+        <div className="mb-3">
+          {`Total: ${filesCount} files -- ${Math.round(filesCount / formik.values.fps)} seconds video (${formik.values.fps} fps)`}
+        </div>
 
-        <Row className="mb-3">
-          <Col>
-            {`Required: ${formik.values.duration * formik.values.fps} files -- ${formik.values.duration} seconds video (${formik.values.fps} fps)`}
-          </Col>
-        </Row>
-
+        <div className="mb-3">
+          {`Required: ${formik.values.duration * formik.values.fps} files -- ${formik.values.duration} seconds video (${formik.values.fps} fps)`}
+        </div>
       </Modal.Body>
+
       <Modal.Footer>
         {fetchStatus.isLoading && <Spinner as="span" animation="border" size="sm" />}
 

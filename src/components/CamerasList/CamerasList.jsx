@@ -21,7 +21,7 @@ function CamerasList({ cameras, selectedCamera }) {
   };
 
   const handleAddCamera = () => {
-    dispatch(modalActions.openModal(modals.ADD_CAMERA));
+    dispatch(modalActions.openModal({ type: modals.ADD_CAMERA }));
   };
 
   const renderCamerasList = () => cameras.map((camera) => (

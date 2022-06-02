@@ -13,14 +13,14 @@ import CameraInfo from '../components/CameraInfo/CameraInfo.jsx';
 
 function CameraPage() {
   const dispatch = useDispatch();
-  const { id } = useParams();
+  const { cameraId } = useParams();
 
   const fetchStatus = useThunkStatus(cameraActions.fetchOne);
   const selectedCamera = useSelector(cameraSelectors.selectedCamera);
 
   useEffect(() => {
     if (selectedCamera === null) {
-      dispatch(cameraActions.fetchOne(id));
+      dispatch(cameraActions.fetchOne(cameraId));
     }
   }, []);
 

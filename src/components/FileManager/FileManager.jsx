@@ -13,13 +13,11 @@ import ImageViewer from './ImageViewer';
 function CameraFileManager({ selectedCamera }) {
   const {
     fetchStatus,
-    currentFolder,
     currentFiles,
     navigationStack,
     selectedIndexes,
     multiSelect,
     showImageViewer,
-
     onRefreshClick,
     onBackButtonClick,
     onBreadCrumbClick,
@@ -28,7 +26,6 @@ function CameraFileManager({ selectedCamera }) {
     onMultiSelectClick,
     onFileClick,
     onFileDoubleClick,
-
     onCloseImageViewer,
     setSelectedIndexes,
     setMultiSelect,
@@ -109,6 +106,9 @@ function CameraFileManager({ selectedCamera }) {
             >
               Refresh
             </Button>
+            <div>
+              {currentFiles && `Files: ${currentFiles.length}`}
+            </div>
           </div>
           <If condition={navigationStack.length > 1}>
             <div className={styles.deleteBtns}>
@@ -142,43 +142,42 @@ function CameraFileManager({ selectedCamera }) {
         </div>
       </Col>
 
-      <Choose>
-        <When condition={!currentFolder || !navigationStack}>
-          <Spinner animation="border" />
-        </When>
-
-        <Otherwise>
-          <Col md={12} className="mb-4">
+      <Col md={12} className="mb-4">
+        <Choose>
+          <When condition={!navigationStack}>
+            <Spinner animation="border" />
+          </When>
+          <Otherwise>
             <Breadcrumb>
               {renderBreadcrumbs()}
             </Breadcrumb>
-          </Col>
+          </Otherwise>
+        </Choose>
+      </Col>
 
-          <Col md={12} className="mb-4">
-            <Choose>
-              <When condition={fetchStatus.isError}>
-                <Error message="Fetch files. Network error " type="error" />
-              </When>
+      <Col md={12} className="mb-4">
+        <Choose>
+          <When condition={fetchStatus.isError}>
+            <Error message="Fetch files. Network error " type="error" />
+          </When>
 
-              <When condition={!currentFiles || fetchStatus.isLoading}>
-                <Spinner animation="border" />
-              </When>
+          <When condition={!currentFiles || fetchStatus.isLoading}>
+            <Spinner animation="border" />
+          </When>
 
-              <When condition={currentFiles.length === 0}>
-                <div className={styles.container}>No files or folders..</div>
-              </When>
+          <When condition={currentFiles.length === 0}>
+            <div className={styles.container}>No files or folders..</div>
+          </When>
 
-              <When condition={currentFiles}>
-                <div className={styles.overflowContainer}>
-                  <div className={styles.filesContainer}>
-                    {renderCurrentFiles()}
-                  </div>
-                </div>
-              </When>
-            </Choose>
-          </Col>
-        </Otherwise>
-      </Choose>
+          <When condition={currentFiles.length > 0}>
+            <div className={styles.overflowContainer}>
+              <div className={styles.filesContainer}>
+                {renderCurrentFiles()}
+              </div>
+            </div>
+          </When>
+        </Choose>
+      </Col>
 
       <If condition={showImageViewer}>
         <ImageViewer

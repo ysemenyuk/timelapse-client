@@ -10,7 +10,11 @@ function FoldersList({ selectedCamera }) {
 
   const handleCameraPage = (event) => {
     event.preventDefault();
-    navigate(`/cameras/${selectedCamera._id}`);
+    const mainFolderId = selectedCamera.mainFolder._id;
+    navigate(
+      `/cameras/${selectedCamera._id}/files/?parentId=${mainFolderId}`,
+      { state: { stack: [selectedCamera.mainFolder] } },
+    );
   };
 
   if (selectedCamera === null) {
@@ -31,13 +35,13 @@ function FoldersList({ selectedCamera }) {
           <div className="ms-3 w-75 text-truncate">Photos</div>
         </ListGroup.Item>
         <ListGroup.Item>
-          <div className="ms-3 w-75 text-truncate">PhotosByTime</div>
-        </ListGroup.Item>
-        <ListGroup.Item>
           <div className="ms-3 w-75 text-truncate">Videos</div>
         </ListGroup.Item>
         <ListGroup.Item>
           <div className="ms-3 w-75 text-truncate">VideosByTime</div>
+        </ListGroup.Item>
+        <ListGroup.Item>
+          <div className="ms-3 w-75 text-truncate">PhotosByTime</div>
         </ListGroup.Item>
       </ListGroup>
 

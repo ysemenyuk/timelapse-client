@@ -6,9 +6,9 @@ import { useFormik } from 'formik';
 import { Modal, Button, Form, Row, Col, Spinner } from 'react-bootstrap';
 import fileManagerService from '../../../api/fileManager.service.js'; //
 import { cameraSelectors } from '../../../redux/camera/cameraSlice.js';
-import { taskActions } from '../../../redux/task/taskSlice.js';
+import { taskActions, taskSelectors } from '../../../redux/task/taskSlice.js';
 import useThunkStatus from '../../../hooks/useThunkStatus.js';
-import { taskName, taskType } from '../../../utils/constants.js';
+import { taskStatus } from '../../../utils/constants.js';
 
 const videoSettingsInitialValues = {
   startDate: '2022-05-01',
@@ -17,19 +17,36 @@ const videoSettingsInitialValues = {
   fps: 20,
 };
 
-function EditCreateVideoModal({ onHide }) {
+function EditCreateVideoModal({ onHide, data: { taskId } }) {
   const dispatch = useDispatch();
-  const fetchStatus = useThunkStatus(taskActions.createVideoFile);
+  const fetchStatus = useThunkStatus(taskActions.updateOne); // !!!
   const selectedCameraId = useSelector(cameraSelectors.selectedCameraId);
+  const task = useSelector(taskSelectors.selectTaskById(taskId));
+
+  const { status, message, settings, ...rest } = task;
+  const isRunning = status === taskStatus.RUNNING;
+
+  const handleDelete = () => {
+    dispatch(taskActions.deleteOne({
+      cameraId: selectedCameraId,
+      taskId,
+    }))
+      .then(() => {
+        onHide();
+      })
+      .catch((e) => {
+        console.log('- catch error -', e);
+      });
+  };
 
   const formik = useFormik({
     initialValues: videoSettingsInitialValues,
     onSubmit: (values, { resetForm, setSubmitting, setFieldError }) => {
-      dispatch(taskActions.createVideoFile({
+      dispatch(taskActions.updateOne({
         cameraId: selectedCameraId,
+        taskId: task._id,
         payload: {
-          name: taskName.CREATE_VIDEO,
-          type: taskType.ONE_TIME,
+          ...rest,
           setings: values,
         } }))
         .then((resp) => {
@@ -53,61 +70,61 @@ function EditCreateVideoModal({ onHide }) {
   const [filesCount, setFilesCount] = useState(0);
 
   useEffect(() => {
-    const query = {
-      startDate: formik.values.startDateTime,
-      endDate: formik.values.endDateTime,
-      type: 'screenshotByTime',
-    };
+    if (!isRunning) {
+      const query = {
+        startDate: formik.values.startDate,
+        endDate: formik.values.endDate,
+        type: 'photoByTime',
+      };
 
-    // !!!
-
-    fileManagerService.getCount(selectedCameraId, query)
-      .then((resp) => {
-        console.log(1111111111111111, resp);
-        setFilesCount(resp.data.count);
-      });
-  }, [formik.values.startTime, formik.values.stopTime]);
+      fileManagerService.getCount(selectedCameraId, query)
+        .then((resp) => {
+          setFilesCount(resp.data.count);
+        });
+    }
+  }, [formik.values.startDate, formik.values.endDate]);
 
   return (
     <>
       <Modal.Header closeButton>
         <Modal.Title>Create video</Modal.Title>
       </Modal.Header>
+
       <Modal.Body>
-        <Row className="mb-3">
-          <Col>
-            Create video file from screenshots
-          </Col>
-        </Row>
+        <div className="mb-3">
+          Create video file from screenshots
+        </div>
 
         <Form className="mb-3">
           <Row className="mb-3">
             <Form.Group as={Col}>
-              <Form.Label htmlFor="startDateTime">Start time</Form.Label>
+              <Form.Label htmlFor="startDate">Start date</Form.Label>
               <Form.Control
                 onChange={formik.handleChange}
-                value={formik.values.startDateTime}
-                name="startDateTime"
-                id="startDateTime"
+                value={formik.values.startDate}
+                name="startDate"
+                id="startDate"
                 type="date"
-                isInvalid={formik.errors && formik.errors.startDateTime}
+                disabled={isRunning}
+                isInvalid={formik.errors && formik.errors.startDate}
               />
               <Form.Control.Feedback type="invalid">
-                {formik.errors && formik.errors.startDateTime}
+                {formik.errors && formik.errors.startDate}
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group as={Col}>
-              <Form.Label htmlFor="endDateTime">End time</Form.Label>
+              <Form.Label htmlFor="endDate">End date</Form.Label>
               <Form.Control
                 onChange={formik.handleChange}
-                value={formik.values.endDateTime}
-                name="endDateTime"
-                id="endDateTime"
+                value={formik.values.endDate}
+                name="endDate"
+                id="endDate"
                 type="date"
-                isInvalid={formik.errors && formik.errors.endDateTime}
+                disabled={isRunning}
+                isInvalid={formik.errors && formik.errors.endDate}
               />
               <Form.Control.Feedback type="invalid">
-                {formik.errors && formik.errors.endDateTime}
+                {formik.errors && formik.errors.endDate}
               </Form.Control.Feedback>
             </Form.Group>
           </Row>
@@ -120,6 +137,7 @@ function EditCreateVideoModal({ onHide }) {
                 name="duration"
                 id="duration"
                 type="number"
+                disabled={isRunning}
                 isInvalid={formik.errors && formik.errors.duration}
               />
               <Form.Control.Feedback type="invalid">
@@ -134,6 +152,7 @@ function EditCreateVideoModal({ onHide }) {
                 name="fps"
                 id="fps"
                 type="number"
+                disabled={isRunning}
                 isInvalid={formik.errors && formik.errors.fps}
               />
               <Form.Control.Feedback type="invalid">
@@ -143,36 +162,52 @@ function EditCreateVideoModal({ onHide }) {
           </Row>
         </Form>
 
-        <Row className="mb-3">
-          <Col>
-            {`Total: ${filesCount} files -- ${Math.round(filesCount / formik.values.fps)} seconds video (${formik.values.fps} fps)`}
-          </Col>
-        </Row>
+        <div className="mb-3">
+          {`Total: ${filesCount} files -- ${Math.round(filesCount / formik.values.fps)} seconds video (${formik.values.fps} fps)`}
+        </div>
 
-        <Row className="mb-3">
-          <Col>
-            {`Required: ${formik.values.duration * formik.values.fps} files -- ${formik.values.duration} seconds video (${formik.values.fps} fps)`}
-          </Col>
-        </Row>
-
+        <div className="mb-3">
+          {`Required: ${formik.values.duration * formik.values.fps} files -- ${formik.values.duration} seconds video (${formik.values.fps} fps)`}
+        </div>
       </Modal.Body>
-      <Modal.Footer>
-        {fetchStatus.isLoading && <Spinner as="span" animation="border" size="sm" />}
 
-        <Button
-          key="close"
-          onClick={onHide}
-          size="sm"
-        >
-          Cancel
-        </Button>
-        <Button
-          key="submit"
-          onClick={formik.handleSubmit}
-          size="sm"
-        >
-          Submit
-        </Button>
+      <Modal.Footer>
+        <div className="d-flex align-items-center gap-2">
+          <Button
+            key="delete"
+            size="sm"
+            onClick={handleDelete}
+            disabled={isRunning}
+          >
+            Delete
+          </Button>
+          <If condition={isRunning}>
+            <Button
+              key="cancel"
+              size="sm"
+            >
+              Cancel
+            </Button>
+          </If>
+        </div>
+        <div className="d-flex align-items-center gap-2">
+          {fetchStatus.isLoading && <Spinner as="span" animation="border" size="sm" />}
+          <Button
+            key="close"
+            size="sm"
+            onClick={onHide}
+          >
+            Close
+          </Button>
+          <Button
+            key="repeat"
+            size="sm"
+            onClick={formik.handleSubmit}
+            disabled={isRunning}
+          >
+            Repeat
+          </Button>
+        </div>
       </Modal.Footer>
     </>
   );
