@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
 import { useLocation, useSearchParams } from 'react-router-dom';
@@ -10,15 +10,19 @@ import { fileType } from '../../utils/constants.js';
 export default function useFileManager(selectedCamera) {
   const dispatch = useDispatch();
   const { state } = useLocation();
+  const cameraId = selectedCamera._id;
 
   const [searchParams, setSearchParams] = useSearchParams();
 
+  console.log(1111, searchParams.toString());
+  // &startDate=2022-06-01&endDate=2022-06-02
+
   const parentId = searchParams.get('parentId');
-  const cameraId = selectedCamera._id;
+  const startDate = searchParams.get('startDate');
+  const endDate = searchParams.get('endDate');
 
   const fetchStatus = useThunkStatus(fileManagerActions.fetchFiles);
-  const filesByParent = useSelector(fileManagerSelectors.filesByParent);
-  const currentFiles = useMemo(() => filesByParent[parentId], [parentId, filesByParent]);
+  const currentFiles = useSelector(fileManagerSelectors.currentFiles);
 
   const [show, setShow] = useState(false);
   const [multiSelect, setMultiSelect] = useState(false);
@@ -34,15 +38,9 @@ export default function useFileManager(selectedCamera) {
   }, [parentId]);
 
   useEffect(() => {
-    if (cameraId && parentId && !currentFiles) {
-      dispatch(
-        fileManagerActions.fetchFiles({
-          cameraId,
-          parentId,
-        }),
-      );
-    }
-  }, [parentId]);
+    const query = _.pickBy({ parentId, startDate, endDate }, _.identity);
+    dispatch(fileManagerActions.fetchFiles({ cameraId, query }));
+  }, [parentId, startDate, endDate]);
 
   useEffect(() => {
     if (currentFiles) {
@@ -61,12 +59,8 @@ export default function useFileManager(selectedCamera) {
 
   const onRefreshClick = () => {
     setSelectedIndexes([]);
-    if (cameraId && parentId) {
-      dispatch(fileManagerActions.fetchFiles({
-        cameraId,
-        parentId,
-      }));
-    }
+    const query = _.pickBy({ parentId, startDate, endDate }, _.identity);
+    dispatch(fileManagerActions.fetchFiles({ cameraId, query }));
   };
 
   const onBackButtonClick = () => {
@@ -82,11 +76,6 @@ export default function useFileManager(selectedCamera) {
     const newStask = _.slice(stack, 0, index + 1);
     const lastId = _.last(newStask)._id;
     setSearchParams({ parentId: lastId }, { state: { stack: newStask } });
-
-    // setStack((currentStack) => {
-    //   const index = _.findIndex(currentStack, (item) => item._id === folder._id);
-    //   return _.slice(currentStack, 0, index + 1);
-    // });
   };
 
   //

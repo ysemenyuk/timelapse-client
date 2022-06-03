@@ -1,15 +1,15 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import fileManagerService from '../../api/fileManager.service.js';
 
-const fetchFiles = createAsyncThunk('file/fetchFiles', async ({ cameraId, parentId }) => {
+const fetchFiles = createAsyncThunk('file/fetchFiles', async ({ cameraId, query }) => {
   try {
-    console.log('file/fetchFiles cameraId, parentId -', { cameraId, parentId });
+    console.log('file/fetchFiles cameraId, parentId -', { cameraId, query });
 
-    const response = await fileManagerService.getAll(cameraId, { parentId });
+    const response = await fileManagerService.getAll(cameraId, query);
 
     console.log('file/fetchFiles response.data -', response.data);
 
-    return { cameraId, parentId, data: response.data };
+    return { cameraId, query, data: response.data };
   } catch (e) {
     console.log('file/fetchFiles error -', e.message);
     throw e;

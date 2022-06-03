@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
-import { Modal, Button, Form, Row, Col, Spinner } from 'react-bootstrap';
+import { Modal, Button, Form, Spinner } from 'react-bootstrap';
 import fileManagerService from '../../../api/fileManager.service.js'; //
 import { cameraSelectors } from '../../../redux/camera/cameraSlice.js';
 import { taskActions } from '../../../redux/task/taskSlice.js';
@@ -77,8 +77,8 @@ function AddCreateVideoModal({ onHide }) {
         </div>
 
         <Form className="mb-3">
-          <Row className="mb-3">
-            <Form.Group as={Col}>
+          <div className="mb-3 d-flex gap-3">
+            <Form.Group className="flex-grow-1">
               <Form.Label htmlFor="startDate">Start date</Form.Label>
               <Form.Control
                 onChange={formik.handleChange}
@@ -92,7 +92,7 @@ function AddCreateVideoModal({ onHide }) {
                 {formik.errors && formik.errors.startDate}
               </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group as={Col}>
+            <Form.Group className="flex-grow-1">
               <Form.Label htmlFor="endDate">End date</Form.Label>
               <Form.Control
                 onChange={formik.handleChange}
@@ -106,9 +106,9 @@ function AddCreateVideoModal({ onHide }) {
                 {formik.errors && formik.errors.endDate}
               </Form.Control.Feedback>
             </Form.Group>
-          </Row>
-          <Row className="mb-3">
-            <Form.Group as={Col}>
+          </div>
+          <div className="mb-3 d-flex gap-3">
+            <Form.Group className="flex-grow-1">
               <Form.Label htmlFor="duration">Duration (seconds)</Form.Label>
               <Form.Control
                 onChange={formik.handleChange}
@@ -122,7 +122,7 @@ function AddCreateVideoModal({ onHide }) {
                 {formik.errors && formik.errors.duration}
               </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group as={Col}>
+            <Form.Group className="flex-grow-1">
               <Form.Label htmlFor="fps">Frames per second (fps)</Form.Label>
               <Form.Control
                 onChange={formik.handleChange}
@@ -136,7 +136,7 @@ function AddCreateVideoModal({ onHide }) {
                 {formik.errors && formik.errors.fps}
               </Form.Control.Feedback>
             </Form.Group>
-          </Row>
+          </div>
         </Form>
 
         <div className="mb-4">

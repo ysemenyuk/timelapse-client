@@ -9,6 +9,7 @@ import Heading from '../UI/Heading';
 import Error from '../UI/Error';
 import useFileManager from './useFileManager';
 import ImageViewer from './ImageViewer';
+import SelectDate from './SelectDate';
 
 function CameraFileManager({ selectedCamera }) {
   const {
@@ -98,17 +99,23 @@ function CameraFileManager({ selectedCamera }) {
             >
               Back
             </Button>
-            <Button
+            {/* <Button
               type="primary"
               size="sm"
               onClick={onRefreshClick}
               disabled={fetchStatus.isLoading}
             >
               Refresh
-            </Button>
+            </Button> */}
+
+            <If condition={navigationStack.length > 1}>
+              <SelectDate />
+            </If>
+
             <div>
               {currentFiles && `Files: ${currentFiles.length}`}
             </div>
+
           </div>
           <If condition={navigationStack.length > 1}>
             <div className={styles.deleteBtns}>
