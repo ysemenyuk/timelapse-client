@@ -1,11 +1,12 @@
-import { useEffect, useState, useMemo } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import _ from 'lodash';
 import { useLocation, useSearchParams } from 'react-router-dom';
-import useThunkStatus from '../../hooks/useThunkStatus.js';
+// import useThunkStatus from '../../hooks/useThunkStatus.js';
 import { cameraActions } from '../../redux/camera/cameraSlice.js';
-import { fileManagerSelectors, fileManagerActions } from '../../redux/fileManager/fileManagerSlice.js';
+// import { fileManagerSelectors, fileManagerActions } from '../../redux/fileManager/fileManagerSlice.js';
 import { fileType } from '../../utils/constants.js';
+import { useGetFilesQuery, useDeleteFileMutation } from '../../redux/fileManager/fileManagerApi.js';
 
 export default function useFileManager(selectedCamera) {
   const dispatch = useDispatch();
@@ -16,9 +17,16 @@ export default function useFileManager(selectedCamera) {
   const parentId = searchParams.get('parentId');
   const cameraId = selectedCamera._id;
 
-  const fetchStatus = useThunkStatus(fileManagerActions.fetchFiles);
-  const filesByParent = useSelector(fileManagerSelectors.filesByParent);
-  const currentFiles = useMemo(() => filesByParent[parentId], [parentId, filesByParent]);
+  const queryString = `?${searchParams.toString()}`;
+
+  const { data: currentFiles, isLoading, isSuccess, isError, refetch } = useGetFilesQuery({ cameraId, queryString });
+  const fetchStatus = { isLoading, isSuccess, isError };
+
+  const [deleteOneFile] = useDeleteFileMutation();
+
+  // const fetchStatus = useThunkStatus(fileManagerActions.fetchFiles);
+  // const filesByParent = useSelector(fileManagerSelectors.filesByParent);
+  // const currentFiles = useMemo(() => filesByParent[parentId], [parentId, filesByParent]);
 
   const [show, setShow] = useState(false);
   const [multiSelect, setMultiSelect] = useState(false);
@@ -30,17 +38,6 @@ export default function useFileManager(selectedCamera) {
       setStack(state.stack);
     } else {
       // fetch parent folder and make stack
-    }
-  }, [parentId]);
-
-  useEffect(() => {
-    if (cameraId && parentId && !currentFiles) {
-      dispatch(
-        fileManagerActions.fetchFiles({
-          cameraId,
-          parentId,
-        }),
-      );
     }
   }, [parentId]);
 
@@ -61,12 +58,7 @@ export default function useFileManager(selectedCamera) {
 
   const onRefreshClick = () => {
     setSelectedIndexes([]);
-    if (cameraId && parentId) {
-      dispatch(fileManagerActions.fetchFiles({
-        cameraId,
-        parentId,
-      }));
-    }
+    refetch();
   };
 
   const onBackButtonClick = () => {
@@ -97,12 +89,11 @@ export default function useFileManager(selectedCamera) {
     }
 
     setSelectedIndexes((prew) => ([_.head(prew)]));
-    Promise.all(selectedItems.map((item) => dispatch(
-      fileManagerActions.deleteOneFile({
-        cameraId: item.camera,
-        file: item,
-      }),
-    )));
+
+    Promise.all(selectedItems.map((item) => deleteOneFile({
+      cameraId: item.camera,
+      fileId: item._id,
+    })));
   };
 
   const onMultiSelectClick = () => {
