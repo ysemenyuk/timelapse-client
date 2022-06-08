@@ -13,9 +13,9 @@ const getAll = async (cameraId, query) => {
   return response;
 };
 
-const getCount = async (cameraId, query) => {
-  const queryString = Object.entries(query).map(([key, value]) => `${key}=${value}`).join('&');
-  const response = await instance.get(`/${cameraId}/files/count?${queryString}`, { headers: getAuthHeader() });
+const getCount = async (cameraId, queryString) => {
+  // const queryString = Object.entries(query).map(([key, value]) => `${key}=${value}`).join('&');
+  const response = await instance.get(`/${cameraId}/files/count${queryString}`, { headers: getAuthHeader() });
   return response;
 };
 

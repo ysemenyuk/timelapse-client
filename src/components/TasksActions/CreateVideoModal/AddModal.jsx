@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
 import { Modal, Button, Form, Row, Col, Spinner } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import fileManagerService from '../../../api/fileManager.service.js'; //
 import { cameraSelectors } from '../../../redux/camera/cameraSlice.js';
 import { taskActions } from '../../../redux/task/taskSlice.js';
@@ -19,6 +20,7 @@ const videoSettingsInitialValues = {
 
 function AddCreateVideoModal({ onHide }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const fetchStatus = useThunkStatus(taskActions.createOne);
   const selectedCameraId = useSelector(cameraSelectors.selectedCameraId);
 
@@ -64,6 +66,14 @@ function AddCreateVideoModal({ onHide }) {
         setFilesCount(resp.data.count);
       });
   }, [formik.values.startDate, formik.values.endDate]);
+
+  const handleShowFiles = (event) => {
+    event.preventDefault();
+    onHide();
+    navigate(
+      `/cameras/${selectedCameraId}/create-video/?type=photoByTime&startDate=${formik.values.startDate}&endDate=${formik.values.endDate}`,
+    );
+  };
 
   return (
     <>
@@ -157,6 +167,13 @@ function AddCreateVideoModal({ onHide }) {
           size="sm"
         >
           Cancel
+        </Button>
+        <Button
+          key="show"
+          onClick={handleShowFiles}
+          size="sm"
+        >
+          ShowFiles
         </Button>
         <Button
           key="submit"
