@@ -12,6 +12,7 @@ import CameraPage from '../../pages/CameraPage.jsx';
 import HomePage from '../../pages/HomePage.jsx';
 import MainLayout from '../../layouts/MainLayout.jsx';
 import SocketContext from '../../context/SocketContext.js';
+import CreateVideoPage from '../../pages/CreateVideoPage.jsx';
 
 function RequireAuth({ children }) {
   const user = useSelector((state) => state.user);
@@ -80,6 +81,15 @@ function App() {
                   element={(
                     <RequireAuth>
                       <CameraPage />
+                    </RequireAuth>
+                  )}
+                />
+
+                <Route
+                  path="cameras/:cameraId/create-video"
+                  element={(
+                    <RequireAuth>
+                      <CreateVideoPage />
                     </RequireAuth>
                   )}
                 />

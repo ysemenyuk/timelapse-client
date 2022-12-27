@@ -45,6 +45,12 @@ module.exports = {
         use: 'babel-loader',
       },
       {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false,
+        },
+      },
+      {
         test: /\.less$/i,
         use: [{ loader: 'less-loader' }],
       },
