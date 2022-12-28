@@ -99,14 +99,14 @@ function CameraFileManager({ selectedCamera }) {
             >
               Back
             </Button>
-            {/* <Button
+            <Button
               type="primary"
               size="sm"
               onClick={onRefreshClick}
               disabled={fetchStatus.isLoading}
             >
               Refresh
-            </Button> */}
+            </Button>
 
             <If condition={navigationStack.length > 1}>
               <SelectDate />

@@ -1,21 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
+// import DatePicker from 'react-datepicker';
+
 // import styles from './SelectDate.module.css';
+import 'react-datepicker/dist/react-datepicker.css';
 
 function SelectDate() {
-  const [startDate, setStartDate] = useState('2022-06-01');
-  const [endDate, setEndDate] = useState('2022-06-30');
+  // const [dateD, setDateD] = useState();
+
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    searchParams.set('startDate', startDate);
-    searchParams.set('endDate', endDate);
+    if (startDate) {
+      searchParams.set('startDate', startDate);
+    }
+    if (endDate) {
+      searchParams.set('endDate', endDate);
+    }
     setSearchParams(searchParams);
   }, [startDate, endDate]);
 
   return (
     <div className="d-flex gap-2">
+      {/* <DatePicker
+        inline
+        selected={startDate}
+        onChange={(date) => setDateD(date)}
+        dayClassName={(date) => {
+          console.log(date);
+          // date.getDate() < Math.random() * 31 ? 'random' : undefined;
+        }}
+      /> */}
       <Form.Group>
         <Form.Control
           size="sm"

@@ -22,11 +22,11 @@ function CameraTasks({ selectedCamera }) {
     dispatch(modalActions.openModal({ type: `Edit${task.name}`, data: { taskId: task._id } }));
   };
 
-  const handleHideTask = (e, task) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log('handleHideTask', task);
-  };
+  // const handleHideTask = (e, task) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  //   console.log('handleHideTask', task);
+  // };
 
   const handleDeleteTask = (e, task) => {
     e.preventDefault();
@@ -64,7 +64,7 @@ function CameraTasks({ selectedCamera }) {
     }
   }, [selectedCamera._id]);
 
-  if (!cameraTasks) {
+  if (!cameraTasks || cameraTasks.length === 0) {
     return null;
   }
 
@@ -83,9 +83,9 @@ function CameraTasks({ selectedCamera }) {
           <Card.Body bsPrefix="card-body d-flex justify-content-between align-items-center pt-2 pb-2">
             <div className="text-truncate">{renderText(task)}</div>
             <div className="d-flex align-items-center ms-2">
-              <Button onClick={(e) => handleHideTask(e, task)} variant="link" size="sm">
+              {/* <Button onClick={(e) => handleHideTask(e, task)} variant="link" size="sm">
                 Hide
-              </Button>
+              </Button> */}
               <Button onClick={(e) => handleDeleteTask(e, task)} variant="link" size="sm">
                 Delete
               </Button>

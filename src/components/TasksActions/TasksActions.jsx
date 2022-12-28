@@ -30,8 +30,8 @@ function TasksActions() {
       <Dropdown.Item onClick={createVideoHandler}>CreateVideo</Dropdown.Item>
       <Dropdown.Item onClick={createPhotosByTimeHandler}>CreatePhotosByTime</Dropdown.Item>
       <Dropdown.Item onClick={createVideosByTimeHandler}>CreateVideosByTime</Dropdown.Item>
-      <Dropdown.Item>ConcatVideos</Dropdown.Item>
-      <Dropdown.Item>SpeedUpVideo</Dropdown.Item>
+      {/* <Dropdown.Item>ConcatVideos</Dropdown.Item>
+      <Dropdown.Item>SpeedUpVideo</Dropdown.Item> */}
     </DropdownButton>
   );
 }

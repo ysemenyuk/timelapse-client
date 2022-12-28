@@ -14,7 +14,7 @@ export default function useFileManager(selectedCamera) {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  console.log(1111, searchParams.toString());
+  // console.log(1111, searchParams.toString());
   // &startDate=2022-06-01&endDate=2022-06-02
 
   const parentId = searchParams.get('parentId');
