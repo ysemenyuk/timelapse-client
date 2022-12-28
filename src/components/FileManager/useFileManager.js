@@ -18,7 +18,7 @@ export default function useFileManager(selectedCamera) {
   const parentId = searchParams.get('parentId');
   const startDate = searchParams.get('startDate') || '2022-06-01';
   const endDate = searchParams.get('endDate') || '2022-06-30';
-  const fileType = searchParams.get('type');
+  // const fileType = searchParams.get('type');
 
   const queryString = `?${searchParams.toString()}`;
 
@@ -70,9 +70,9 @@ export default function useFileManager(selectedCamera) {
 
   const onSearch = () => {
     // setSelectedIndexes([]);
-    const { startDate, endDate } = date;
-    searchParams.set('startDate', startDate);
-    searchParams.set('endDate', endDate);
+    // const { startDate, endDate } = date;
+    searchParams.set('startDate', date.startDate);
+    searchParams.set('endDate', date.endDate);
 
     setSearchParams(searchParams);
     // refetch();
@@ -125,7 +125,7 @@ export default function useFileManager(selectedCamera) {
       setSelectedIndexes([]);
       setSearchParams({ parentId: file._id }, { state: { stack: [...stack, file] } });
     } else {
-    // if file is image
+      // if file is image
       setSelectedIndexes([index]);
       setShow(true);
     }
