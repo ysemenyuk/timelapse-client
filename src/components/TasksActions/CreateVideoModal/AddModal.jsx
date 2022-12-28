@@ -149,13 +149,14 @@ function AddCreateVideoModal({ onHide }) {
           </Row>
         </Form>
 
-        <div className="mb-3">
-          {`Total: ${filesCount} files -- ${Math.round(filesCount / formik.values.fps)} seconds video (${formik.values.fps} fps)`}
+        <div className="mb-4">
+          {`Required ${formik.values.duration * formik.values.fps} files for ${formik.values.duration} seconds video (${formik.values.fps} fps)`}
         </div>
 
         <div className="mb-3">
-          {`Required: ${formik.values.duration * formik.values.fps} files -- ${formik.values.duration} seconds video (${formik.values.fps} fps)`}
+          {`Count in DB: ${filesCount} files (${Math.round(filesCount / formik.values.fps)} seconds)`}
         </div>
+
       </Modal.Body>
 
       <Modal.Footer>
