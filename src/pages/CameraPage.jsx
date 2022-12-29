@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Col, Row } from 'react-bootstrap';
 import useThunkStatus from '../hooks/useThunkStatus.js';
 import FileManager from '../components/FileManager/FileManager.jsx';
-import Screenshot from '../components/Screenshot/Screenshot.jsx';
+// import Screenshot from '../components/Screenshot/Screenshot.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
 import { cameraActions, cameraSelectors } from '../redux/camera/cameraSlice.js';
@@ -29,7 +29,7 @@ function CameraPage() {
       <When condition={!fetchStatus.isLoading && !fetchStatus.isError && selectedCamera}>
         <Row>
           <Col sm={3}>
-            <Screenshot selectedCamera={selectedCamera} />
+            {/* <Screenshot selectedCamera={selectedCamera} /> */}
             <CameraInfo selectedCamera={selectedCamera} compact />
             <TasksList selectedCamera={selectedCamera} />
           </Col>

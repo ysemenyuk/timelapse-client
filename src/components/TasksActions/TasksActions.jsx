@@ -26,12 +26,12 @@ function TasksActions() {
 
   return (
     <DropdownButton as={ButtonGroup} title="CreateTask" size="sm">
-      <Dropdown.Item onClick={createPhotoHandler}>CreatePhoto</Dropdown.Item>
-      <Dropdown.Item onClick={createVideoHandler}>CreateVideo</Dropdown.Item>
+      <Dropdown.Item onClick={createPhotoHandler}>CreateOnePhoto</Dropdown.Item>
+      <Dropdown.Item onClick={createVideoHandler}>CreateOneVideo</Dropdown.Item>
       <Dropdown.Item onClick={createPhotosByTimeHandler}>CreatePhotosByTime</Dropdown.Item>
       <Dropdown.Item onClick={createVideosByTimeHandler}>CreateVideosByTime</Dropdown.Item>
-      <Dropdown.Item>ConcatVideos</Dropdown.Item>
-      <Dropdown.Item>SpeedUpVideo</Dropdown.Item>
+      {/* <Dropdown.Item>ConcatVideos</Dropdown.Item>
+      <Dropdown.Item>SpeedUpVideo</Dropdown.Item> */}
     </DropdownButton>
   );
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 // import cn from 'classnames';
 import { useDispatch } from 'react-redux';
-import { Col, ListGroup, Card, Badge, Button } from 'react-bootstrap';
+import { Col, ListGroup, Card, Button } from 'react-bootstrap';
 import Heading from '../UI/Heading.jsx';
 import TasksActions from '../TasksActions/TasksActions.jsx';
 import { modals } from '../../utils/constants.js';
@@ -24,24 +24,29 @@ function CameraInfo({ selectedCamera, compact }) {
 
   return (
     <Col md={12} className="mb-4">
-      <Heading lvl={6} className="mb-3">
-        Info
-      </Heading>
 
       <Choose>
         <When condition={compact}>
           <Card bsPrefix="card mb-3" role="button" onClick={openEditCameraModal}>
-            <Card.Header bsPrefix="card-header d-flex justify-content-between align-items-start fw-bolder">
-              {selectedCamera.name}
-              <Badge bg="success">Online</Badge>
+            <Card.Img variant="top" src={`/files/${selectedCamera.avatar._id}`} />
+            <Card.Header bsPrefix="card-header text-truncate pt-2 pb-2">
+              <div className="w-75 text-truncate fw-bold">{selectedCamera.name}</div>
+              <div className="w-75 text-truncate">{selectedCamera.description}</div>
             </Card.Header>
             <Card.Body bsPrefix="card-body text-truncate pt-2 pb-2">
-              {selectedCamera.description}
+              <div className="w-75 text-truncate">First photo: 01.01.2022</div>
+              <div className="w-75 text-truncate">Last photo: 01.12.2022</div>
+              <div className="w-75 text-truncate">Total photos: 15000</div>
+              <div className="w-75 text-truncate">Total videos: 50</div>
             </Card.Body>
+
           </Card>
         </When>
 
         <Otherwise>
+          <Heading lvl={6} className="mb-3">
+            Info
+          </Heading>
           <ListGroup className="mb-3" role="button" onClick={openEditCameraModal}>
             <ListGroup.Item>
               <div className="w-50 me-3">Name:</div>

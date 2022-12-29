@@ -3,6 +3,7 @@ import React from 'react';
 // import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Col, ListGroup } from 'react-bootstrap';
+import { makeTodayName } from '../../utils/utils.js';
 
 function FoldersList({ selectedCamera }) {
   // const dispatch = useDispatch();
@@ -10,9 +11,10 @@ function FoldersList({ selectedCamera }) {
 
   const handleCameraPage = (event) => {
     event.preventDefault();
-    const mainFolderId = selectedCamera.mainFolder._id;
+    // const mainFolderId = selectedCamera.mainFolder._id;
+    const todayDate = makeTodayName(new Date());
     navigate(
-      `/cameras/${selectedCamera._id}/files/?parentId=${mainFolderId}`,
+      `/cameras/${selectedCamera._id}/files/?fileType=photo,photoByTime&startDate=${todayDate}&endDate=${todayDate}`,
       { state: { stack: [selectedCamera.mainFolder] } },
     );
   };

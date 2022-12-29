@@ -1,24 +1,24 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import _ from 'lodash';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 // import useThunkStatus from '../../hooks/useThunkStatus.js';
 import { cameraActions } from '../../redux/camera/cameraSlice.js';
 // import { fileManagerSelectors, fileManagerActions } from '../../redux/fileManager/fileManagerSlice.js';
-import { fileType } from '../../utils/constants.js';
+// import { fileType } from '../../utils/constants.js';
 import { useGetFilesQuery, useDeleteFileMutation } from '../../api/fileManagerApi.js';
-import fileManagerService from '../../api/fileManager.service.js';
+// import fileManagerService from '../../api/fileManager.service.js';
 
 export default function useFileManager(selectedCamera) {
   const dispatch = useDispatch();
-  const { state } = useLocation();
+  // const { state } = useLocation();
   const cameraId = selectedCamera._id;
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const parentId = searchParams.get('parentId');
+
+  // const fileType = searchParams.get('fileType');
   const startDate = searchParams.get('startDate') || '2022-06-01';
   const endDate = searchParams.get('endDate') || '2022-06-30';
-  // const fileType = searchParams.get('type');
 
   const queryString = `?${searchParams.toString()}`;
 
@@ -32,16 +32,8 @@ export default function useFileManager(selectedCamera) {
   const [show, setShow] = useState(false);
   const [multiSelect, setMultiSelect] = useState(false);
   const [selectedIndexes, setSelectedIndexes] = useState([]);
-  const [stack, setStack] = useState([]);
+  const [fileType, setFileType] = useState(searchParams.get('fileType'));
   const [date, setDate] = useState({ startDate, endDate });
-
-  useEffect(() => {
-    if (state && state.stack) {
-      setStack(state.stack);
-    } else {
-      // fetch parent folder and make stack
-    }
-  }, [parentId]);
 
   useEffect(() => {
     if (currentFiles) {
@@ -58,47 +50,36 @@ export default function useFileManager(selectedCamera) {
     }
   }, [currentFiles]);
 
-  const [filesCount, setFilesCount] = useState(0);
+  // const [filesCount, setFilesCount] = useState(0);
 
   useEffect(() => {
-    const query = `?type=photoByTime&startDate=${date.startDate}&endDate=${date.endDate}`;
-    fileManagerService.getCount(cameraId, query)
-      .then((resp) => {
-        setFilesCount(resp.data.count);
-      });
-  }, [parentId, date]);
-
-  const onSearch = () => {
-    // setSelectedIndexes([]);
-    // const { startDate, endDate } = date;
+    searchParams.set('fileType', fileType);
     searchParams.set('startDate', date.startDate);
     searchParams.set('endDate', date.endDate);
 
     setSearchParams(searchParams);
-    // refetch();
-  };
 
-  const onRefreshClick = () => {
+    // const query = `?fileType=${fileType}&startDate=${date.startDate}&endDate=${date.endDate}`;
+    // fileManagerService.getCount(cameraId, query)
+    //   .then((resp) => {
+    //     setFilesCount(resp.data.count);
+    //   });
+  }, [fileType, date]);
+
+  // const onSearch = () => {
+  //   // setSelectedIndexes([]);
+  //   // const { startDate, endDate } = date;
+  //   searchParams.set('startDate', date.startDate);
+  //   searchParams.set('endDate', date.endDate);
+
+  //   setSearchParams(searchParams);
+  //   // refetch();
+  // };
+
+  const onRefetchClick = () => {
     setSelectedIndexes([]);
     refetch();
   };
-
-  const onBackButtonClick = () => {
-    setSelectedIndexes([]);
-    const newStask = _.initial(stack);
-    const lastId = _.last(newStask)._id;
-    setSearchParams({ parentId: lastId }, { state: { stack: newStask } });
-  };
-
-  const onBreadCrumbClick = (folder) => {
-    setSelectedIndexes([]);
-    const index = _.findIndex(stack, (item) => item._id === folder._id);
-    const newStask = _.slice(stack, 0, index + 1);
-    const lastId = _.last(newStask)._id;
-    setSearchParams({ parentId: lastId }, { state: { stack: newStask } });
-  };
-
-  //
 
   const onDeleteSelected = (selectedItems) => {
     if (_.isEmpty(selectedIndexes) || !selectedItems) {
@@ -121,14 +102,9 @@ export default function useFileManager(selectedCamera) {
   };
 
   const onFileDoubleClick = (file, index) => {
-    if (file.type === fileType.FOLDER) {
-      setSelectedIndexes([]);
-      setSearchParams({ parentId: file._id }, { state: { stack: [...stack, file] } });
-    } else {
-      // if file is image
-      setSelectedIndexes([index]);
-      setShow(true);
-    }
+    // if file is image
+    setSelectedIndexes([index]);
+    setShow(true);
   };
 
   const onFileClick = (index) => {
@@ -156,16 +132,13 @@ export default function useFileManager(selectedCamera) {
   return {
     fetchStatus,
     currentFiles,
-    navigationStack: stack,
     selectedIndexes,
     multiSelect,
     showImageViewer: show,
 
     onCloseImageViewer,
 
-    onRefreshClick,
-    onBackButtonClick,
-    onBreadCrumbClick,
+    onRefetchClick,
 
     onSetAvatarClick,
     onDeleteSelected,
@@ -179,7 +152,9 @@ export default function useFileManager(selectedCamera) {
 
     date,
     setDate,
-    filesCount,
-    onSearch,
+    fileType,
+    setFileType,
+    // filesCount,
+    // onSearch,
   };
 }

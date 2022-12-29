@@ -1,11 +1,12 @@
 import React from 'react';
-import { Breadcrumb, Col, Button, Spinner, Form } from 'react-bootstrap';
+import { Col, Button, Spinner, Form, Nav } from 'react-bootstrap';
+// import { Link } from 'react-router-dom';
 import cn from 'classnames';
 import _ from 'lodash';
 import styles from './FileManager.module.css';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 import folderImg from '../../assets/folder2.png';
-import Heading from '../UI/Heading';
+// import Heading from '../UI/Heading';
 import Error from '../UI/Error';
 import useFileManager from './useFileManager';
 import ImageViewer from './ImageViewer';
@@ -14,13 +15,10 @@ function CameraFileManager({ selectedCamera }) {
   const {
     fetchStatus,
     currentFiles,
-    navigationStack,
     selectedIndexes,
     multiSelect,
     showImageViewer,
-    onRefreshClick,
-    onBackButtonClick,
-    onBreadCrumbClick,
+    onRefetchClick,
     onSetAvatarClick,
     onDeleteSelected,
     onMultiSelectClick,
@@ -32,8 +30,10 @@ function CameraFileManager({ selectedCamera }) {
 
     date,
     setDate,
-    filesCount,
-    onSearch,
+    fileType,
+    setFileType,
+    // filesCount,
+    // onSearch,
   } = useFileManager(selectedCamera);
 
   const onDeleteBtnClick = () => {
@@ -55,15 +55,6 @@ function CameraFileManager({ selectedCamera }) {
     // TODO: check file is image?
     onSetAvatarClick(currentFile);
   };
-
-  const renderBreadcrumbs = () => navigationStack.map((folder) => (
-    <Breadcrumb.Item
-      onClick={() => onBreadCrumbClick(folder)}
-      key={folder._id}
-    >
-      {folder.name}
-    </Breadcrumb.Item>
-  ));
 
   const renderCurrentFiles = () => currentFiles.map((file, index) => {
     const src = file.type === 'folder' ? folderImg : `/files/${file._id}?size=thumbnail`;
@@ -89,65 +80,27 @@ function CameraFileManager({ selectedCamera }) {
   return (
     <>
       <Col md={12} className="mb-4">
-        <Heading lvl={6} className="mb-3">
-          Files
-        </Heading>
 
-        <div className={styles.btnsContainer}>
-          <div className={styles.defaultBtns}>
-            <Button
-              type="primary"
-              size="sm"
-              onClick={onBackButtonClick}
-              disabled={fetchStatus.isLoading || navigationStack.length < 2}
-            >
-              Back
-            </Button>
-            <Button
-              type="primary"
-              size="sm"
-              onClick={onRefreshClick}
-              disabled={fetchStatus.isLoading}
-            >
-              Refresh
-            </Button>
-            <div>
-              {currentFiles && `Files: ${currentFiles.length}`}
-            </div>
-          </div>
-          <If condition={navigationStack.length > 1}>
-            <div className={styles.deleteBtns}>
-              <Form>
-                <Form.Check
-                  type="switch"
-                  id="switch"
-                  label="MuliSelect"
-                  onChange={onMultiSelectClick}
-                  checked={multiSelect}
-                />
-              </Form>
-              <Button
-                type="primary"
-                size="sm"
-                onClick={onDeleteBtnClick}
-                disabled={fetchStatus.isLoading || _.isEmpty(selectedIndexes)}
-              >
-                {`Delete${selectedIndexes.length > 0 ? ` (${selectedIndexes.length})` : ''}`}
-              </Button>
-              <Button
-                type="primary"
-                size="sm"
-                onClick={onAvatarBtnClick}
-                disabled={fetchStatus.isLoading || _.isEmpty(selectedIndexes) || multiSelect}
-              >
-                AsAvatar
-              </Button>
-            </div>
-          </If>
-        </div>
+        <Nav variant="tabs">
+          <Nav.Item>
+            <Nav.Link active={fileType === 'photo,photoByTime'} onClick={() => setFileType('photo,photoByTime')}>
+              Photos
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link active={fileType === 'video,videoByTime'} onClick={() => setFileType('video,videoByTime')}>
+              Videos
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link>
+              Settings
+            </Nav.Link>
+          </Nav.Item>
+        </Nav>
       </Col>
 
-      <Col md={12} className="mb-4">
+      <Col md={12} className="mb-4 d-flex justify-content-between align-items-start">
         <div className="d-flex gap-2">
           <Form.Group>
             <Form.Control
@@ -169,28 +122,51 @@ function CameraFileManager({ selectedCamera }) {
               type="date"
             />
           </Form.Group>
-          {`Files: ${filesCount}`}
+          {/* {`Total files: ${filesCount}`} */}
+          <div className={styles.btnsContainer}>
+            <div className={styles.defaultBtns}>
+              <Button
+                type="primary"
+                size="sm"
+                onClick={onRefetchClick}
+                disabled={fetchStatus.isLoading}
+              >
+                Refetch
+              </Button>
+              <div>
+                {currentFiles && `Files: ${currentFiles.length}`}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.deleteBtns}>
+          <Form>
+            <Form.Check
+              type="switch"
+              id="switch"
+              label="MultiSelect"
+              onChange={onMultiSelectClick}
+              checked={multiSelect}
+            />
+          </Form>
           <Button
             type="primary"
             size="sm"
-            onClick={onSearch}
+            onClick={onDeleteBtnClick}
+            disabled={fetchStatus.isLoading || _.isEmpty(selectedIndexes)}
           >
-            Search
+            {`Delete${selectedIndexes.length > 0 ? ` (${selectedIndexes.length})` : ''}`}
+          </Button>
+          <Button
+            type="primary"
+            size="sm"
+            onClick={onAvatarBtnClick}
+            disabled={fetchStatus.isLoading || _.isEmpty(selectedIndexes) || multiSelect}
+          >
+            AsAvatar
           </Button>
         </div>
-      </Col>
-
-      <Col md={12} className="mb-4">
-        <Choose>
-          <When condition={!navigationStack}>
-            <Spinner animation="border" />
-          </When>
-          <Otherwise>
-            <Breadcrumb>
-              {renderBreadcrumbs()}
-            </Breadcrumb>
-          </Otherwise>
-        </Choose>
       </Col>
 
       <Col md={12} className="mb-4">
@@ -204,7 +180,7 @@ function CameraFileManager({ selectedCamera }) {
           </When>
 
           <When condition={currentFiles.length === 0}>
-            <div className={styles.container}>No files or folders..</div>
+            <div className={styles.container}>No files..</div>
           </When>
 
           <When condition={currentFiles.length > 0}>
