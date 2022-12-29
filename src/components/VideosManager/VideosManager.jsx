@@ -1,40 +1,37 @@
 import React from 'react';
-import { Col, Button, Spinner, Form, Nav } from 'react-bootstrap';
+import { Col, Button, Spinner, Form } from 'react-bootstrap';
 // import { Link } from 'react-router-dom';
 import cn from 'classnames';
 import _ from 'lodash';
-import styles from './FileManager.module.css';
+import styles from './VideosManager.module.css';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 import folderImg from '../../assets/folder2.png';
 // import Heading from '../UI/Heading';
 import Error from '../UI/Error';
-import useFileManager from './useFileManager';
-import ImageViewer from './ImageViewer';
+import useVideosManager from './useVideosManager';
 
-function CameraFileManager({ selectedCamera }) {
+function CameraVideosManager() {
   const {
     fetchStatus,
     currentFiles,
     selectedIndexes,
     multiSelect,
-    showImageViewer,
     onRefetchClick,
     onSetAvatarClick,
     onDeleteSelected,
     onMultiSelectClick,
     onFileClick,
     onFileDoubleClick,
-    onCloseImageViewer,
-    setSelectedIndexes,
-    setMultiSelect,
+    // setSelectedIndexes,
+    // setMultiSelect,
 
     date,
     setDate,
-    fileType,
-    setFileType,
+    // fileType,
+    // setFileType,
     // filesCount,
     // onSearch,
-  } = useFileManager(selectedCamera);
+  } = useVideosManager();
 
   const onDeleteBtnClick = () => {
     if (_.isEmpty(selectedIndexes)) {
@@ -79,27 +76,6 @@ function CameraFileManager({ selectedCamera }) {
 
   return (
     <>
-      <Col md={12} className="mb-4">
-
-        <Nav variant="tabs">
-          <Nav.Item>
-            <Nav.Link active={fileType === 'photo,photoByTime'} onClick={() => setFileType('photo,photoByTime')}>
-              Photos
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link active={fileType === 'video,videoByTime'} onClick={() => setFileType('video,videoByTime')}>
-              Videos
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link>
-              Settings
-            </Nav.Link>
-          </Nav.Item>
-        </Nav>
-      </Col>
-
       <Col md={12} className="mb-4 d-flex justify-content-between align-items-start">
         <div className="d-flex gap-2">
           <Form.Group>
@@ -112,8 +88,10 @@ function CameraFileManager({ selectedCamera }) {
               type="date"
             />
           </Form.Group>
+          -
           <Form.Group>
             <Form.Control
+              disabled
               size="sm"
               onChange={(e) => setDate((prew) => ({ ...prew, endDate: e.target.value }))}
               value={date.endDate}
@@ -145,7 +123,7 @@ function CameraFileManager({ selectedCamera }) {
             <Form.Check
               type="switch"
               id="switch"
-              label="MultiSelect"
+              label="Select"
               onChange={onMultiSelectClick}
               checked={multiSelect}
             />
@@ -193,21 +171,8 @@ function CameraFileManager({ selectedCamera }) {
         </Choose>
       </Col>
 
-      <If condition={showImageViewer}>
-        <ImageViewer
-          onClose={onCloseImageViewer}
-          currentFiles={currentFiles}
-          selectedIndexes={selectedIndexes}
-          setSelectedIndexes={setSelectedIndexes}
-          multiSelect={multiSelect}
-          setMultiSelect={setMultiSelect}
-          onDeleteSelected={onDeleteSelected}
-          onSetAvatarClick={onSetAvatarClick}
-        />
-      </If>
-
     </>
   );
 }
 
-export default CameraFileManager;
+export default CameraVideosManager;

@@ -14,9 +14,9 @@ function CameraInfo({ selectedCamera, compact }) {
     dispatch(modalActions.openModal({ type: modals.EDIT_CAMERA }));
   };
 
-  const openDeleteCameraModal = async () => {
-    dispatch(modalActions.openModal({ type: modals.DELETE_CAMERA }));
-  };
+  // const openDeleteCameraModal = async () => {
+  //   dispatch(modalActions.openModal({ type: modals.DELETE_CAMERA }));
+  // };
 
   if (selectedCamera === null) {
     return null;
@@ -39,7 +39,6 @@ function CameraInfo({ selectedCamera, compact }) {
               <div className="w-75 text-truncate">Total photos: 15000</div>
               <div className="w-75 text-truncate">Total videos: 50</div>
             </Card.Body>
-
           </Card>
         </When>
 
@@ -73,9 +72,9 @@ function CameraInfo({ selectedCamera, compact }) {
           <Button onClick={openEditCameraModal} variant="primary" size="sm" className="me-2">
             Settings
           </Button>
-          <Button onClick={openDeleteCameraModal} variant="primary" size="sm" className="me-2">
+          {/* <Button onClick={openDeleteCameraModal} variant="primary" size="sm" className="me-2">
             Delete
-          </Button>
+          </Button> */}
         </div>
 
         <TasksActions />

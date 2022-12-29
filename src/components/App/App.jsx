@@ -12,6 +12,9 @@ import CameraPage from '../../pages/CameraPage.jsx';
 import HomePage from '../../pages/HomePage.jsx';
 import MainLayout from '../../layouts/MainLayout.jsx';
 import SocketContext from '../../context/SocketContext.js';
+import CameraPhotosManager from '../PhotosManager/PhotosManager.jsx';
+import CameraSettings from '../CameraSettings/CameraSettings.jsx';
+import CameraVideosManager from '../VideosManager/VideosManager.jsx';
 
 function RequireAuth({ children }) {
   const user = useSelector((state) => state.user);
@@ -76,13 +79,17 @@ function App() {
                   )}
                 />
                 <Route
-                  path="cameras/:cameraId/files"
+                  path="cameras/:cameraId"
                   element={(
                     <RequireAuth>
                       <CameraPage />
                     </RequireAuth>
                   )}
-                />
+                >
+                  <Route path="photos" element={<CameraPhotosManager />} />
+                  <Route path="videos" element={<CameraVideosManager />} />
+                  <Route path="settings" element={<CameraSettings />} />
+                </Route>
               </Route>
             </Routes>
           </BrowserRouter>

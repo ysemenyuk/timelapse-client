@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { Modal, Button, Form } from 'react-bootstrap';
 import cn from 'classnames';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
-import styles from './ImageViewer.module.css';
+import styles from './PhotosViewer.module.css';
 
 const isImage = (file) => file.type !== 'folder';
 // const getImages = (files) => (files ? files.filter(isImage) : []);
