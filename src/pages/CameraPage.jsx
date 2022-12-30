@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { Col, Row, Nav } from 'react-bootstrap';
+import _ from 'lodash';
 import useThunkStatus from '../hooks/useThunkStatus.js';
 // import FileManager from '../components/FileManager/FileManager.jsx';
 // import Screenshot from '../components/Screenshot/Screenshot.jsx';
@@ -10,7 +11,7 @@ import Error from '../components/UI/Error.jsx';
 import { cameraActions, cameraSelectors } from '../redux/camera/cameraSlice.js';
 import TasksList from '../components/TasksList/TasksList.jsx';
 import CameraInfo from '../components/CameraInfo/CameraInfo.jsx';
-import { makeTodayName } from '../utils/utils.js';
+// import { makeTodayName } from '../utils/utils.js';
 
 function CameraPage() {
   const dispatch = useDispatch();
@@ -18,7 +19,7 @@ function CameraPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  console.log('location', location);
+  console.log('location', _.last(_.split(location.pathname, '/')));
 
   const fetchStatus = useThunkStatus(cameraActions.fetchOne);
   const selectedCamera = useSelector(cameraSelectors.selectedCamera);
@@ -29,30 +30,15 @@ function CameraPage() {
     }
   }, []);
 
-  const fileTypeMap = {
-    photos: 'photo,phtoByTime',
-    videos: 'video,videoByTime',
-    settings: 'settings',
-  };
-
-  const [tabName, setTabName] = useState('photos');
-
-  useEffect(() => {
-    if (tabName === 'settings') {
-      navigate(`/cameras/${cameraId}/settings`);
-      return;
-    }
-
-    const todayDate = makeTodayName(new Date());
-    navigate(
-      `/cameras/${cameraId}/${tabName}?fileType=${fileTypeMap[tabName]}&startDate=${todayDate}&endDate=${todayDate}`,
-      // { state: selectedCamera },
-    );
-  }, [tabName]);
+  const [tabName, setTabName] = useState(_.last(_.split(location.pathname, '/')));
 
   const handleClickOnTab = (name) => (event) => {
     event.preventDefault();
+    if (name === tabName) {
+      return;
+    }
     setTabName(name);
+    navigate(`/cameras/${cameraId}/${name}`);
   };
 
   return (

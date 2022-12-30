@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import _ from 'lodash';
+import format from 'date-fns/format';
 import { useOutletContext, useSearchParams } from 'react-router-dom';
 // import useThunkStatus from '../../hooks/useThunkStatus.js';
 import { cameraActions } from '../../redux/camera/cameraSlice.js';
@@ -15,12 +16,7 @@ export default function useFileManager() {
   const [searchParams, setSearchParams] = useSearchParams();
   const cameraId = selectedCamera._id;
 
-  // const fileType = searchParams.get('fileType');
-  const startDate = searchParams.get('startDate') || '2022-06-01';
-  const endDate = searchParams.get('endDate') || '2022-06-30';
-
   const queryString = `?${searchParams.toString()}`;
-
   console.log(1111, queryString);
 
   const { data: currentFiles, isLoading, isSuccess, isError, refetch } = useGetFilesQuery({ cameraId, queryString });
@@ -29,10 +25,15 @@ export default function useFileManager() {
   const [deleteOneFile] = useDeleteFileMutation();
 
   const [show, setShow] = useState(false);
-  const [multiSelect, setMultiSelect] = useState(false);
+  const [select, setSelect] = useState(false);
   const [selectedIndexes, setSelectedIndexes] = useState([]);
   // const [fileType, setFileType] = useState(searchParams.get('fileType'));
-  const [date, setDate] = useState({ startDate, endDate });
+  const [date, setDate] = useState(new Date());
+
+  const onChangeDate = (d) => {
+    setSelectedIndexes([]);
+    setDate(d);
+  };
 
   useEffect(() => {
     if (currentFiles) {
@@ -50,9 +51,8 @@ export default function useFileManager() {
   }, [currentFiles]);
 
   useEffect(() => {
-    // searchParams.set('fileType', fileType);
-    searchParams.set('startDate', date.startDate);
-    searchParams.set('endDate', date.endDate);
+    searchParams.set('fileType', 'photo,phtoByTime');
+    searchParams.set('oneDate', format(date, 'yyyy-MM-dd'));
 
     setSearchParams(searchParams);
   }, [date]);
@@ -75,22 +75,26 @@ export default function useFileManager() {
     })));
   };
 
-  const onMultiSelectClick = () => {
+  const onSelectClick = () => {
     if (!_.isEmpty(selectedIndexes)) {
       setSelectedIndexes((prew) => ([_.head(prew)]));
     }
-    setMultiSelect(!multiSelect);
+    setSelect(!select);
   };
 
   const onFileDoubleClick = (file, index) => {
-    // if file is image
     setSelectedIndexes([index]);
     setShow(true);
   };
 
   const onFileClick = (index) => {
-    if (multiSelect) {
-      setSelectedIndexes((prew) => ([...prew, index]));
+    if (select) {
+      if (!_.includes(selectedIndexes, index)) {
+        setSelectedIndexes((prew) => ([...prew, index]));
+      } else {
+        console.log(selectedIndexes, index, _.filter(selectedIndexes, (i) => i !== index));
+        setSelectedIndexes((prew) => _.filter(prew, (i) => i !== index));
+      }
     } else {
       setSelectedIndexes([index]);
     }
@@ -114,7 +118,7 @@ export default function useFileManager() {
     fetchStatus,
     currentFiles,
     selectedIndexes,
-    multiSelect,
+    select,
     showImageViewer: show,
 
     onCloseImageViewer,
@@ -123,19 +127,15 @@ export default function useFileManager() {
 
     onSetAvatarClick,
     onDeleteSelected,
-    onMultiSelectClick,
+    onSelectClick,
 
-    setMultiSelect,
+    setSelect,
     setSelectedIndexes,
 
     onFileClick,
     onFileDoubleClick,
 
     date,
-    setDate,
-    // fileType,
-    // setFileType,
-    // filesCount,
-    // onSearch,
+    onChangeDate,
   };
 }

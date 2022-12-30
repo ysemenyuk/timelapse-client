@@ -1,8 +1,9 @@
 import React from 'react';
-import { Col, Button, Spinner, Form } from 'react-bootstrap';
+import { Col, Button, Spinner, ToggleButton } from 'react-bootstrap';
 // import { Link } from 'react-router-dom';
 import cn from 'classnames';
 import _ from 'lodash';
+import DatePicker from 'react-datepicker';
 import styles from './PhotosManager.module.css';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 import folderImg from '../../assets/folder2.png';
@@ -10,30 +11,26 @@ import folderImg from '../../assets/folder2.png';
 import Error from '../UI/Error';
 import usePhotosManager from './usePhotosManager';
 import ImageViewer from './PhotosViewer';
+import 'react-datepicker/dist/react-datepicker.css';
 
 function CameraPhotosManager() {
   const {
     fetchStatus,
     currentFiles,
     selectedIndexes,
-    multiSelect,
+    select,
     showImageViewer,
     onRefetchClick,
     onSetAvatarClick,
     onDeleteSelected,
-    onMultiSelectClick,
+    onSelectClick,
     onFileClick,
     onFileDoubleClick,
     onCloseImageViewer,
     setSelectedIndexes,
-    setMultiSelect,
-
+    setSelect,
     date,
-    setDate,
-    // fileType,
-    // setFileType,
-    // filesCount,
-    // onSearch,
+    onChangeDate,
   } = usePhotosManager();
 
   const onDeleteBtnClick = () => {
@@ -42,18 +39,6 @@ function CameraPhotosManager() {
     }
     const selectedItems = selectedIndexes.map((index) => currentFiles[index]);
     onDeleteSelected(selectedItems);
-  };
-
-  const onAvatarBtnClick = () => {
-    if (_.isEmpty(selectedIndexes)) {
-      return;
-    }
-
-    const currentIndex = _.head(selectedIndexes);
-    const currentFile = currentFiles[currentIndex];
-
-    // TODO: check file is image?
-    onSetAvatarClick(currentFile);
   };
 
   const renderCurrentFiles = () => currentFiles.map((file, index) => {
@@ -81,31 +66,15 @@ function CameraPhotosManager() {
     <>
       <Col md={12} className="mb-4 d-flex justify-content-between align-items-start">
         <div className="d-flex gap-2">
-          <Form.Group>
-            <Form.Control
-              size="sm"
-              onChange={(e) => setDate((prew) => ({ ...prew, startDate: e.target.value }))}
-              value={date.startDate}
-              name="startDate"
-              id="startDate"
-              type="date"
-            />
-          </Form.Group>
-          -
-          <Form.Group>
-            <Form.Control
-              disabled
-              size="sm"
-              onChange={(e) => setDate((prew) => ({ ...prew, endDate: e.target.value }))}
-              value={date.endDate}
-              name="endDate"
-              id="endDate"
-              type="date"
-            />
-          </Form.Group>
-          {/* {`Total files: ${filesCount}`} */}
+          <DatePicker
+            selected={date}
+            onChange={onChangeDate}
+          />
           <div className={styles.btnsContainer}>
             <div className={styles.defaultBtns}>
+              <div>
+                {`Files: ${currentFiles ? currentFiles.length : 0}`}
+              </div>
               <Button
                 type="primary"
                 size="sm"
@@ -114,38 +83,29 @@ function CameraPhotosManager() {
               >
                 Refetch
               </Button>
-              <div>
-                {currentFiles && `Files: ${currentFiles.length}`}
-              </div>
             </div>
           </div>
         </div>
 
         <div className={styles.deleteBtns}>
-          <Form>
-            <Form.Check
-              type="switch"
-              id="switch"
-              label="Select"
-              onChange={onMultiSelectClick}
-              checked={multiSelect}
-            />
-          </Form>
+          {(selectedIndexes.length > 0) && `Selected: ${selectedIndexes.length}`}
+          <ToggleButton
+            size="sm"
+            id="toggle-check"
+            type="checkbox"
+            variant="outline-primary"
+            checked={select}
+            onChange={onSelectClick}
+          >
+            SelectMany
+          </ToggleButton>
           <Button
             type="primary"
             size="sm"
             onClick={onDeleteBtnClick}
             disabled={fetchStatus.isLoading || _.isEmpty(selectedIndexes)}
           >
-            {`Delete${selectedIndexes.length > 0 ? ` (${selectedIndexes.length})` : ''}`}
-          </Button>
-          <Button
-            type="primary"
-            size="sm"
-            onClick={onAvatarBtnClick}
-            disabled={fetchStatus.isLoading || _.isEmpty(selectedIndexes) || multiSelect}
-          >
-            AsAvatar
+            Delete
           </Button>
         </div>
       </Col>
@@ -161,7 +121,7 @@ function CameraPhotosManager() {
           </When>
 
           <When condition={currentFiles.length === 0}>
-            <div className={styles.container}>No files..</div>
+            <div className={styles.container}>No files in this date ..</div>
           </When>
 
           <When condition={currentFiles.length > 0}>
@@ -180,8 +140,8 @@ function CameraPhotosManager() {
           currentFiles={currentFiles}
           selectedIndexes={selectedIndexes}
           setSelectedIndexes={setSelectedIndexes}
-          multiSelect={multiSelect}
-          setMultiSelect={setMultiSelect}
+          select={select}
+          setSelect={setSelect}
           onDeleteSelected={onDeleteSelected}
           onSetAvatarClick={onSetAvatarClick}
         />

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, ToggleButton } from 'react-bootstrap';
 import cn from 'classnames';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 import styles from './PhotosViewer.module.css';
@@ -11,7 +11,7 @@ const isImage = (file) => file.type !== 'folder';
 function ImageViewer(props) {
   const {
     onClose, currentFiles, selectedIndexes, setSelectedIndexes,
-    onDeleteSelected, multiSelect, setMultiSelect, onSetAvatarClick,
+    onDeleteSelected, select, setSelect, onSetAvatarClick,
   } = props;
 
   const [images, setImages] = useState(currentFiles.filter(isImage));
@@ -33,7 +33,7 @@ function ImageViewer(props) {
   };
 
   const onFileClick = (index) => {
-    if (multiSelect) {
+    if (select) {
       setSelectedIndexes((prew) => ([...prew, index]));
     } else {
       setSelectedIndexes([index]);
@@ -41,24 +41,24 @@ function ImageViewer(props) {
   };
 
   const onNextClick = () => {
-    if (multiSelect) {
-      setMultiSelect(false);
+    if (select) {
+      setSelect(false);
     }
     setSelectedIndexes((prew) => ([_.head(prew) + 1]));
   };
 
   const onPrewClick = () => {
-    if (multiSelect) {
-      setMultiSelect(false);
+    if (select) {
+      setSelect(false);
     }
     setSelectedIndexes((prew) => ([_.head(prew) - 1]));
   };
 
-  const onMultiSelectClick = () => {
+  const onSelectClick = () => {
     if (!_.isEmpty(selectedIndexes)) {
       setSelectedIndexes((prew) => ([_.head(prew)]));
     }
-    setMultiSelect(!multiSelect);
+    setSelect(!select);
   };
 
   const onDeleteBtnClick = () => {
@@ -153,9 +153,9 @@ function ImageViewer(props) {
               type="primary"
               size="sm"
               onClick={onAvatarBtnClick}
-              disabled={_.isEmpty(selectedIndexes) || multiSelect}
+              disabled={_.isEmpty(selectedIndexes) || select}
             >
-              AsAvatar
+              SetAsAvatar
             </Button>
             <Button
               type="primary"
@@ -163,17 +163,19 @@ function ImageViewer(props) {
               onClick={onDeleteBtnClick}
               disabled={_.isEmpty(selectedIndexes)}
             >
-              {`Delete${selectedIndexes.length > 0 ? ` (${selectedIndexes.length})` : ''}`}
+              Delete
             </Button>
-            <Form>
-              <Form.Check
-                type="switch"
-                id="switch"
-                label="MuliSelect"
-                onChange={onMultiSelectClick}
-                checked={multiSelect}
-              />
-            </Form>
+            <ToggleButton
+              size="sm"
+              id="toggle-check-2"
+              type="checkbox"
+              variant="outline-primary"
+              checked={select}
+              onChange={onSelectClick}
+            >
+              SelectMany
+            </ToggleButton>
+            {(selectedIndexes.length > 0) && `Selected: ${selectedIndexes.length}`}
           </div>
           <div className={styles.defaultBtns}>
             <Button key="prew" size="sm" onClick={onPrewClick} disabled={disabledPrew}>

@@ -1,26 +1,26 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+// import { useDispatch } from 'react-redux';
 import _ from 'lodash';
+import format from 'date-fns/format';
 import { useOutletContext, useSearchParams } from 'react-router-dom';
 // import useThunkStatus from '../../hooks/useThunkStatus.js';
-import { cameraActions } from '../../redux/camera/cameraSlice.js';
+// import { cameraActions } from '../../redux/camera/cameraSlice.js';
 // import { fileManagerSelectors, fileManagerActions } from '../../redux/fileManager/fileManagerSlice.js';
 // import { fileType } from '../../utils/constants.js';
 import { useGetFilesQuery, useDeleteFileMutation } from '../../api/fileManagerApi.js';
 // import fileManagerService from '../../api/fileManager.service.js';
 
 export default function useFileManager() {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const selectedCamera = useOutletContext();
   const [searchParams, setSearchParams] = useSearchParams();
   const cameraId = selectedCamera._id;
 
   // const fileType = searchParams.get('fileType');
-  const startDate = searchParams.get('startDate') || '2022-06-01';
-  const endDate = searchParams.get('endDate') || '2022-06-30';
+  // const startDate = searchParams.get('startDate') || '2022-06-01';
+  // const endDate = searchParams.get('endDate') || '2022-06-30';
 
   const queryString = `?${searchParams.toString()}`;
-
   console.log(1111, queryString);
 
   const { data: currentFiles, isLoading, isSuccess, isError, refetch } = useGetFilesQuery({ cameraId, queryString });
@@ -32,7 +32,8 @@ export default function useFileManager() {
   const [multiSelect, setMultiSelect] = useState(false);
   const [selectedIndexes, setSelectedIndexes] = useState([]);
   // const [fileType, setFileType] = useState(searchParams.get('fileType'));
-  const [date, setDate] = useState({ startDate, endDate });
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
 
   useEffect(() => {
     if (currentFiles) {
@@ -50,12 +51,12 @@ export default function useFileManager() {
   }, [currentFiles]);
 
   useEffect(() => {
-    // searchParams.set('fileType', fileType);
-    searchParams.set('startDate', date.startDate);
-    searchParams.set('endDate', date.endDate);
+    searchParams.set('fileType', 'video,videoByTime');
+    searchParams.set('startDate', format(startDate, 'yyyy-MM-dd'));
+    searchParams.set('endDate', format(endDate, 'yyyy-MM-dd'));
 
     setSearchParams(searchParams);
-  }, [date]);
+  }, [startDate, endDate]);
 
   const onRefetchClick = () => {
     setSelectedIndexes([]);
@@ -83,7 +84,6 @@ export default function useFileManager() {
   };
 
   const onFileDoubleClick = (file, index) => {
-    // if file is image
     setSelectedIndexes([index]);
     setShow(true);
   };
@@ -100,16 +100,6 @@ export default function useFileManager() {
     setShow(false);
   };
 
-  const onSetAvatarClick = (file) => {
-    if (_.isEmpty(selectedIndexes) || !file) {
-      return;
-    }
-    dispatch(cameraActions.updateOne({
-      cameraId: selectedCamera._id,
-      payload: { ...selectedCamera, avatar: file._id },
-    }));
-  };
-
   return {
     fetchStatus,
     currentFiles,
@@ -118,10 +108,7 @@ export default function useFileManager() {
     showImageViewer: show,
 
     onCloseImageViewer,
-
     onRefetchClick,
-
-    onSetAvatarClick,
     onDeleteSelected,
     onMultiSelectClick,
 
@@ -131,11 +118,9 @@ export default function useFileManager() {
     onFileClick,
     onFileDoubleClick,
 
-    date,
-    setDate,
-    // fileType,
-    // setFileType,
-    // filesCount,
-    // onSearch,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
   };
 }
