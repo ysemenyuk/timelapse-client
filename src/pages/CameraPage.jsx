@@ -4,13 +4,14 @@ import { useParams, useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { Col, Row, Nav } from 'react-bootstrap';
 import _ from 'lodash';
 import useThunkStatus from '../hooks/useThunkStatus.js';
-// import FileManager from '../components/FileManager/FileManager.jsx';
 // import Screenshot from '../components/Screenshot/Screenshot.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
 import { cameraActions, cameraSelectors } from '../redux/camera/cameraSlice.js';
 import TasksList from '../components/TasksList/TasksList.jsx';
 import CameraInfo from '../components/CameraInfo/CameraInfo.jsx';
+import { modalActions } from '../redux/modalSlice.js';
+import { modals } from '../utils/constants.js';
 // import { makeTodayName } from '../utils/utils.js';
 
 function CameraPage() {
@@ -19,7 +20,7 @@ function CameraPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  console.log('location', _.last(_.split(location.pathname, '/')));
+  // console.log('location', _.last(_.split(location.pathname, '/')));
 
   const fetchStatus = useThunkStatus(cameraActions.fetchOne);
   const selectedCamera = useSelector(cameraSelectors.selectedCamera);
@@ -41,12 +42,17 @@ function CameraPage() {
     navigate(`/cameras/${cameraId}/${name}`);
   };
 
+  const openEditCameraModal = () => {
+    dispatch(modalActions.openModal({ type: modals.EDIT_CAMERA }));
+  };
+
   return (
     <Choose>
       <When condition={!fetchStatus.isLoading && !fetchStatus.isError && selectedCamera}>
         <Row>
           <Col sm={3}>
-            <CameraInfo selectedCamera={selectedCamera} compact />
+            {/* <Screenshot selectedCamera={selectedCamera} /> */}
+            <CameraInfo selectedCamera={selectedCamera} onClick={openEditCameraModal} compact buttons />
             <TasksList selectedCamera={selectedCamera} />
           </Col>
 
@@ -69,7 +75,7 @@ function CameraPage() {
               </Nav.Item>
             </Nav>
 
-            <Outlet context={selectedCamera} />
+            <Outlet context={{ selectedCamera, tabName }} />
 
           </Col>
         </Row>

@@ -41,7 +41,7 @@ function AddCreatePhotoModal({ onHide }) {
       <Modal.Body>
         <div className="mb-2">Create photo from camera by http request</div>
         <Form.Group className="mb-3">
-          <Form.Label htmlFor="description">Http url</Form.Label>
+          {/* <Form.Label htmlFor="description">Http url</Form.Label> */}
           <Form.Control
             disabled
             onChange={(e) => setLink(e.target.value)}

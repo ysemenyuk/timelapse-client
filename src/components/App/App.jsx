@@ -12,9 +12,9 @@ import CameraPage from '../../pages/CameraPage.jsx';
 import HomePage from '../../pages/HomePage.jsx';
 import MainLayout from '../../layouts/MainLayout.jsx';
 import SocketContext from '../../context/SocketContext.js';
-import CameraPhotosManager from '../PhotosManager/PhotosManager.jsx';
+import CameraPhotosManager from '../FilesManager/PhotosManager.jsx';
 import CameraSettings from '../CameraSettings/CameraSettings.jsx';
-import CameraVideosManager from '../VideosManager/VideosManager.jsx';
+import CameraVideosManager from '../FilesManager/VideosManager.jsx';
 
 function RequireAuth({ children }) {
   const user = useSelector((state) => state.user);

@@ -29,7 +29,7 @@ function NavBar() {
                 </Nav.Item>
               </Nav>
               <Link className="" to="/user">
-                User
+                Profile
               </Link>
               <Button onClick={logoutHandler} variant="link" className="me-2">
                 LogOut

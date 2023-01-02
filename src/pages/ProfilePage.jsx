@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import Message from '../components/UI/Message.jsx';
 import Heading from '../components/UI/Heading.jsx';
-import CamerasList from '../components/CamerasList/CamerasList.jsx';
+// import CamerasList from '../components/CamerasList/CamerasList.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
 import useCamerasList from '../hooks/useCamerasList.js';
@@ -12,7 +12,7 @@ import { userActions } from '../redux/user/userSlice.js';
 function ProfilePage() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-  const { allCameras, fetchStatus } = useCamerasList();
+  const { fetchStatus } = useCamerasList();
 
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
@@ -43,7 +43,7 @@ function ProfilePage() {
       <When condition={fetchStatus.isSuccess}>
         <Row>
           <Col sm={3}>
-            <CamerasList cameras={allCameras} selectedCamera={null} />
+            {/* <CamerasList cameras={allCameras} selectedCamera={null} /> */}
           </Col>
 
           <Col sm={6}>

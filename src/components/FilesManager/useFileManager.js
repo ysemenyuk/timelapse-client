@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import _ from 'lodash';
-import format from 'date-fns/format';
+// import format from 'date-fns/format';
 import { useOutletContext, useSearchParams } from 'react-router-dom';
 // import useThunkStatus from '../../hooks/useThunkStatus.js';
 import { cameraActions } from '../../redux/camera/cameraSlice.js';
@@ -12,8 +12,8 @@ import { useGetFilesQuery, useDeleteFileMutation } from '../../api/fileManagerAp
 
 export default function useFileManager() {
   const dispatch = useDispatch();
-  const selectedCamera = useOutletContext();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { selectedCamera } = useOutletContext();
+  const [searchParams] = useSearchParams();
   const cameraId = selectedCamera._id;
 
   const queryString = `?${searchParams.toString()}`;
@@ -24,16 +24,51 @@ export default function useFileManager() {
 
   const [deleteOneFile] = useDeleteFileMutation();
 
-  const [show, setShow] = useState(false);
-  const [select, setSelect] = useState(false);
+  const [isShowImageViewer, setIsShowImageViewer] = useState(false);
   const [selectedIndexes, setSelectedIndexes] = useState([]);
-  // const [fileType, setFileType] = useState(searchParams.get('fileType'));
-  const [date, setDate] = useState(new Date());
+  const [isSelectFiles, setIsSelectFiles] = useState(false);
 
-  const onChangeDate = (d) => {
-    setSelectedIndexes([]);
-    setDate(d);
-  };
+  // const [fileType, setFileType] = useState(() => {
+  //   if (tabName === 'videos') {
+  //     return 'video,videoByTime';
+  //   }
+  //   return 'photo,photoByTime';
+  // });
+  // const [startDate, setStartDate] = useState(new Date());
+  // const [endDate, setEndDate] = useState(new Date());
+  // const [isRangeDate, setIsRangeDate] = useState(false);
+
+  // const onChangeFileType = (ft) => {
+  //   setFileType(ft);
+  // };
+
+  // const onChangeDateFormat = () => {
+  //   setIsRangeDate(!isRangeDate);
+  // };
+
+  // const onChangeStartDate = (d) => {
+  //   setSelectedIndexes([]);
+  //   setStartDate(d);
+  // };
+
+  // const onChangeEndDate = (d) => {
+  //   setSelectedIndexes([]);
+  //   setEndDate(d);
+  // };
+
+  // useEffect(() => {
+  //   searchParams.set('fileType', fileType);
+  //   if (!isRangeDate) {
+  //     searchParams.set('oneDate', format(startDate, 'yyyy-MM-dd'));
+  //     searchParams.delete('startDate');
+  //     searchParams.delete('endDate');
+  //   } else {
+  //     searchParams.set('startDate', format(startDate, 'yyyy-MM-dd'));
+  //     searchParams.set('endDate', format(endDate, 'yyyy-MM-dd'));
+  //     searchParams.delete('oneDate');
+  //   }
+  //   setSearchParams(searchParams);
+  // }, [fileType, startDate, endDate, isRangeDate]);
 
   useEffect(() => {
     if (currentFiles) {
@@ -49,13 +84,6 @@ export default function useFileManager() {
       }
     }
   }, [currentFiles]);
-
-  useEffect(() => {
-    searchParams.set('fileType', 'photo,phtoByTime');
-    searchParams.set('oneDate', format(date, 'yyyy-MM-dd'));
-
-    setSearchParams(searchParams);
-  }, [date]);
 
   const onRefetchClick = () => {
     setSelectedIndexes([]);
@@ -75,33 +103,29 @@ export default function useFileManager() {
     })));
   };
 
-  const onSelectClick = () => {
+  const onSelectButtonClick = () => {
     if (!_.isEmpty(selectedIndexes)) {
-      setSelectedIndexes((prew) => ([_.head(prew)]));
+      setSelectedIndexes([]);
     }
-    setSelect(!select);
-  };
-
-  const onFileDoubleClick = (file, index) => {
-    setSelectedIndexes([index]);
-    setShow(true);
+    setIsSelectFiles(!isSelectFiles);
   };
 
   const onFileClick = (index) => {
-    if (select) {
+    if (isSelectFiles) {
       if (!_.includes(selectedIndexes, index)) {
         setSelectedIndexes((prew) => ([...prew, index]));
       } else {
-        console.log(selectedIndexes, index, _.filter(selectedIndexes, (i) => i !== index));
         setSelectedIndexes((prew) => _.filter(prew, (i) => i !== index));
       }
     } else {
       setSelectedIndexes([index]);
+      setIsShowImageViewer(true);
     }
   };
 
   const onCloseImageViewer = () => {
-    setShow(false);
+    setSelectedIndexes([]);
+    setIsShowImageViewer(false);
   };
 
   const onSetAvatarClick = (file) => {
@@ -118,24 +142,23 @@ export default function useFileManager() {
     fetchStatus,
     currentFiles,
     selectedIndexes,
-    select,
-    showImageViewer: show,
-
+    isShowImageViewer,
     onCloseImageViewer,
-
     onRefetchClick,
-
+    setSelectedIndexes,
     onSetAvatarClick,
     onDeleteSelected,
-    onSelectClick,
-
-    setSelect,
-    setSelectedIndexes,
-
     onFileClick,
-    onFileDoubleClick,
+    isSelectFiles,
+    onSelectButtonClick,
 
-    date,
-    onChangeDate,
+    // fileType,
+    // onChangeFileType,
+    // isRangeDate,
+    // onChangeDateFormat,
+    // startDate,
+    // onChangeStartDate,
+    // endDate,
+    // onChangeEndDate,
   };
 }

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Form, Modal, ProgressBar, Spinner } from 'react-bootstrap';
+import { Button, Modal, ProgressBar, Spinner } from 'react-bootstrap';
 import { taskActions, taskSelectors } from '../../../redux/task/taskSlice.js';
 import { cameraSelectors } from '../../../redux/camera/cameraSlice.js';
 import useThunkStatus from '../../../hooks/useThunkStatus.js';
@@ -12,10 +12,10 @@ function EditCreatePhotoModal({ onHide, data: { taskId } }) {
   const selectedCamera = useSelector(cameraSelectors.selectedCamera);
   const task = useSelector(taskSelectors.selectTaskById(taskId));
 
-  const { status, message, settings, ...rest } = task;
+  const { status, message } = task;
   const isRunning = status === taskStatus.RUNNING;
 
-  const [link, setLink] = useState(settings.photoUrl);
+  // const [link, setLink] = useState(settings.photoUrl);
 
   const handleDelete = () => {
     dispatch(taskActions.deleteOne({
@@ -30,24 +30,24 @@ function EditCreatePhotoModal({ onHide, data: { taskId } }) {
       });
   };
 
-  const handleRepeat = () => {
-    dispatch(taskActions.updateOne({
-      cameraId: selectedCamera._id,
-      taskId: task._id,
-      payload: {
-        ...rest,
-        settings: {
-          photoUrl: link,
-        },
-      },
-    }))
-      .then(() => {
-        onHide();
-      })
-      .catch((e) => {
-        console.log('- catch error -', e);
-      });
-  };
+  // const handleRepeat = () => {
+  //   dispatch(taskActions.updateOne({
+  //     cameraId: selectedCamera._id,
+  //     taskId: task._id,
+  //     payload: {
+  //       ...rest,
+  //       settings: {
+  //         photoUrl: link,
+  //       },
+  //     },
+  //   }))
+  //     .then(() => {
+  //       onHide();
+  //     })
+  //     .catch((e) => {
+  //       console.log('- catch error -', e);
+  //     });
+  // };
 
   return (
     <>
@@ -60,7 +60,7 @@ function EditCreatePhotoModal({ onHide, data: { taskId } }) {
           Create one photo from camera by http request
         </div>
 
-        <Form.Group className="mb-3">
+        {/* <Form.Group className="mb-3">
           <Form.Label htmlFor="description">url</Form.Label>
           <Form.Control
             disabled
@@ -70,7 +70,7 @@ function EditCreatePhotoModal({ onHide, data: { taskId } }) {
             id="photoUrl"
             type="text"
           />
-        </Form.Group>
+        </Form.Group> */}
 
         <div className="mb-3">
           {`Status - ${status}`}
@@ -112,14 +112,14 @@ function EditCreatePhotoModal({ onHide, data: { taskId } }) {
           >
             Close
           </Button>
-          <Button
+          {/* <Button
             key="repeat"
             size="sm"
             onClick={handleRepeat}
             disabled={isRunning}
           >
             Repeat
-          </Button>
+          </Button> */}
         </div>
       </Modal.Footer>
 
