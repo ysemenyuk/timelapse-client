@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Spinner } from 'react-bootstrap';
+import { Card, Col, Row, Spinner } from 'react-bootstrap';
 // import { Link } from 'react-router-dom';
 import cn from 'classnames';
 // import _ from 'lodash';
@@ -19,40 +19,54 @@ function CameraPhotosManager() {
     currentFiles,
     selectedIndexes,
     isShowImageViewer,
+    onCloseImageViewer,
     onRefetchClick,
+    setSelectedIndexes,
     onSetAvatarClick,
     onDeleteSelected,
     onFileClick,
-    onCloseImageViewer,
-    setSelectedIndexes,
-    isSelectFiles,
     onSelectButtonClick,
 
-    // isRangeDate,
-    // onChangeDateFormat,
-    // startDate,
-    // onChangeStartDate,
-    // endDate,
-    // onChangeEndDate,
+    isSelectFiles,
+    isPhotos,
+    isVideos,
+    isRangeDate,
+    startDate,
+    endDate,
+
+    onChangeFileType,
+    onChangeDateFormat,
+    onChangeStartDate,
+    onChangeEndDate,
   } = useFileManager();
+
+  // console.log(7777, fetchStatus);
 
   const renderCurrentFiles = () => currentFiles.map((file, index) => {
     const src = `/files/${file._id}?size=thumbnail`;
     const classNames = cn(styles.item, { [styles.selectedItem]: selectedIndexes.includes(index) });
+    const [date, time] = file.name.split(' ');
     return (
-      <div
-        role="presentation"
-        className={classNames}
-        key={file._id}
-        onClick={() => onFileClick(index)}
-      >
-        <ImgWrapper
-          width={100}
-          height={0.5625}
-          src={src}
-        />
-        <span>{file.name}</span>
-      </div>
+      <Col key={file._id} className="mb-3">
+        <Card
+          border="light"
+          role="button"
+          className={classNames}
+          onClick={() => onFileClick(index)}
+        >
+          <ImgWrapper
+            width={100}
+            height={0.5625}
+            src={src}
+          />
+          <div className={styles.itemBody}>
+            <If condition={isRangeDate}>
+              <div>{date}</div>
+            </If>
+            <div>{time}</div>
+          </div>
+        </Card>
+      </Col>
     );
   });
 
@@ -62,16 +76,20 @@ function CameraPhotosManager() {
         fetchStatus={fetchStatus}
         currentFiles={currentFiles}
         selectedIndexes={selectedIndexes}
+        setSelectedIndexes={setSelectedIndexes}
         onRefetchClick={onRefetchClick}
         onDeleteSelected={onDeleteSelected}
-        isSelectFiles={isSelectFiles}
         onSelectButtonClick={onSelectButtonClick}
-        // isRangeDate={isRangeDate}
-        // onChangeDateFormat={onChangeDateFormat}
-        // startDate={startDate}
-        // onChangeStartDate={onChangeStartDate}
-        // endDate={endDate}
-        // onChangeEndDate={onChangeEndDate}
+        isSelectFiles={isSelectFiles}
+        isPhotos={isPhotos}
+        isVideos={isVideos}
+        isRangeDate={isRangeDate}
+        startDate={startDate}
+        endDate={endDate}
+        onChangeFileType={onChangeFileType}
+        onChangeDateFormat={onChangeDateFormat}
+        onChangeStartDate={onChangeStartDate}
+        onChangeEndDate={onChangeEndDate}
       />
 
       <Col md={12} className="mb-4">
@@ -90,9 +108,9 @@ function CameraPhotosManager() {
 
           <When condition={currentFiles.length > 0}>
             <div className={styles.overflowContainer}>
-              <div className={styles.filesContainer}>
+              <Row xs={2} sm={4} lg={6} className="mb-3">
                 {renderCurrentFiles()}
-              </div>
+              </Row>
             </div>
           </When>
         </Choose>

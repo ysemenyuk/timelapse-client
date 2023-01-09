@@ -10,6 +10,7 @@ import { taskActions, taskSelectors } from '../../redux/task/taskSlice';
 import { modalActions } from '../../redux/modalSlice.js';
 import Badge from '../UI/Badge.jsx';
 import { taskName } from '../../utils/constants.js';
+import TasksActions from '../TasksActions/TasksActions.jsx';
 
 function CameraTasks({ selectedCamera }) {
   const dispatch = useDispatch();
@@ -71,7 +72,9 @@ function CameraTasks({ selectedCamera }) {
       {cameraTasks.map((task) => (
         <Card onClick={() => handleClickTask(task)} key={task._id} bsPrefix="card mb-3">
           <Card.Header bsPrefix="card-header d-flex justify-content-between align-items-center">
-            {task.name}
+            <div className="text-truncate">
+              {task.name}
+            </div>
             <Button onClick={(e) => handleDeleteTask(e, task)} variant="link" size="sm">
               Delete
             </Button>
@@ -84,6 +87,8 @@ function CameraTasks({ selectedCamera }) {
           </Card.Body>
         </Card>
       ))}
+
+      <TasksActions />
 
     </Col>
   );

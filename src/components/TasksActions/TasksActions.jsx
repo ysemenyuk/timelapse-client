@@ -25,7 +25,7 @@ function TasksActions() {
   };
 
   return (
-    <DropdownButton as={ButtonGroup} title="CreateTask" size="sm">
+    <DropdownButton as={ButtonGroup} title="AddTask" size="sm">
       <Dropdown.Item onClick={createPhotoHandler}>CreateOnePhoto</Dropdown.Item>
       <Dropdown.Item onClick={createVideoHandler}>CreateOneVideo</Dropdown.Item>
       <Dropdown.Item onClick={createPhotosByTimeHandler}>CreatePhotosByTime</Dropdown.Item>

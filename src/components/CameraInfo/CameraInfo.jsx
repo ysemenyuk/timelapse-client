@@ -4,7 +4,8 @@ import React from 'react';
 import format from 'date-fns/format';
 import { ListGroup, Card, Button } from 'react-bootstrap';
 import Heading from '../UI/Heading.jsx';
-import TasksActions from '../TasksActions/TasksActions.jsx';
+import styles from './CameraInfo.module.css';
+// import TasksActions from '../TasksActions/TasksActions.jsx';
 // import { modals } from '../../utils/constants.js';
 // import { modalActions } from '../../redux/modalSlice.js';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
@@ -28,20 +29,20 @@ function CameraInfo({ selectedCamera, onClick, compact, buttons }) {
     <>
       <Choose>
         <When condition={compact}>
-          <Card className="card" role="button" onClick={onClick}>
-            <ImgWrapper className="mb-1" width={100} height={0.5625} src={`/files/${selectedCamera.avatar._id}`} />
-            <Card.Header className="card-header text-truncate pt-2 pb-2">
-              <div className="w-75 text-truncate fw-bold">{selectedCamera.name}</div>
-              <div className="w-75 text-truncate">{selectedCamera.description}</div>
+          <Card className={styles.card} role="button" onClick={onClick}>
+            <ImgWrapper width={100} height={0.5625} src={`/files/${selectedCamera.avatar._id}`} />
+            <Card.Header className={styles.cardHeader}>
+              <div className="text-truncate fw-bold">{selectedCamera.name}</div>
+              <div className="text-truncate">{selectedCamera.description}</div>
             </Card.Header>
-            <Card.Body className="card-body text-truncate pt-2 pb-2">
-              <div className="w-75 text-truncate">
-                {`First photo: ${format(new Date(selectedCamera.firstPhoto.date), 'yyyy-MM-dd')}`}
+            <Card.Body className={styles.cardBody}>
+              <div className="text-truncate">
+                {`First photo: ${format(new Date(selectedCamera.firstPhoto.date), 'dd.MM.yyyy hh:mm:ss')}`}
               </div>
-              <div className="w-75 text-truncate">
-                {`Last photo: ${format(new Date(selectedCamera.lastPhoto.date), 'yyyy-MM-dd')}`}
+              <div className="text-truncate">
+                {`Last photo: ${format(new Date(selectedCamera.lastPhoto.date), 'dd.MM.yyyy hh:mm:ss')}`}
               </div>
-              <div className="w-75 text-truncate">
+              <div className="text-truncate">
                 {`Total photos: ${selectedCamera.photosCount}`}
               </div>
             </Card.Body>
@@ -84,7 +85,7 @@ function CameraInfo({ selectedCamera, onClick, compact, buttons }) {
             </Button> */}
           </div>
 
-          <TasksActions />
+          {/* <TasksActions /> */}
 
         </div>
       </If>

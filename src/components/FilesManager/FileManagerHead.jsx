@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Col, Button, ToggleButton, ButtonGroup } from 'react-bootstrap';
 // import cn from 'classnames';
 import _ from 'lodash';
-import format from 'date-fns/format';
-import { useOutletContext, useSearchParams } from 'react-router-dom';
+// import format from 'date-fns/format';
+// import { useOutletContext, useSearchParams } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
-import styles from './PhotosManager.module.css';
+import styles from './FileManagerHead.module.css';
 import 'react-datepicker/dist/react-datepicker.css';
 
 function FileManagerHead(props) {
@@ -13,23 +13,22 @@ function FileManagerHead(props) {
     fetchStatus,
     currentFiles,
     selectedIndexes,
+    setSelectedIndexes,
     onRefetchClick,
     onDeleteSelected,
-    isSelectFiles,
     onSelectButtonClick,
-    // isRangeDate,
-    // onChangeDateFormat,
-    // startDate,
-    // onChangeStartDate,
-    // endDate,
-    // onChangeEndDate,
+
+    isSelectFiles,
+    isPhotos,
+    isVideos,
+    isRangeDate,
+    startDate,
+    endDate,
+
+    onChangeDateFormat,
+    onChangeStartDate,
+    onChangeEndDate,
   } = props;
-
-  const { selectedCamera, tabName } = useOutletContext();
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const isPhotos = tabName === 'photos';
-  const isVideos = tabName === 'videos';
 
   const onDeleteBtnClick = () => {
     if (_.isEmpty(selectedIndexes)) {
@@ -37,115 +36,13 @@ function FileManagerHead(props) {
     }
     const selectedItems = selectedIndexes.map((index) => currentFiles[index]);
     onDeleteSelected(selectedItems);
+    setSelectedIndexes([]);
   };
-
-  const [fileType, setFileType] = useState(() => {
-    if (searchParams.get('fileType')) {
-      return searchParams.get('fileType');
-    }
-    if (isVideos) {
-      return 'video,videoByTime';
-    }
-    return 'photo,photoByTime';
-  });
-
-  const [startDate, setStartDate] = useState(() => {
-    if (searchParams.get('startDate')) {
-      return new Date(searchParams.get('startDate'));
-    }
-    if (isVideos && selectedCamera.firstVideo) {
-      return new Date(selectedCamera.firstVideo.date);
-    }
-    if (isPhotos && selectedCamera.lastPhoto) {
-      return new Date(selectedCamera.lastPhoto.date);
-    }
-    return new Date();
-  });
-
-  const [endDate, setEndDate] = useState(() => {
-    if (searchParams.get('endDate')) {
-      return new Date(searchParams.get('endDate'));
-    }
-    if (searchParams.get('oneDate')) {
-      return new Date(searchParams.get('oneDate'));
-    }
-    if (isVideos && selectedCamera.lastVideo) {
-      return new Date(selectedCamera.lastVideo.date);
-    }
-    if (isPhotos && selectedCamera.lastPhoto) {
-      return new Date(selectedCamera.lastPhoto.date);
-    }
-    return new Date();
-  });
-
-  const [isRangeDate, setIsRangeDate] = useState(() => {
-    if (isVideos) {
-      return true;
-    }
-    return false;
-  });
-
-  console.log(22222, startDate, endDate);
-
-  const onChangeFileType = (ft) => {
-    setFileType(ft);
-  };
-
-  const onChangeDateFormat = () => {
-    setIsRangeDate(!isRangeDate);
-  };
-
-  const onChangeStartDate = (d) => {
-    setStartDate(d);
-  };
-
-  const onChangeEndDate = (d) => {
-    setEndDate(d);
-  };
-
-  useEffect(() => {
-    searchParams.set('fileType', fileType);
-    if (!isRangeDate) {
-      searchParams.set('oneDate', format(endDate, 'yyyy-MM-dd'));
-      searchParams.delete('startDate');
-      searchParams.delete('endDate');
-    } else {
-      searchParams.set('startDate', format(startDate, 'yyyy-MM-dd'));
-      searchParams.set('endDate', format(endDate, 'yyyy-MM-dd'));
-      searchParams.delete('oneDate');
-    }
-    setSearchParams(searchParams);
-  }, [fileType, startDate, endDate, isRangeDate]);
 
   return (
-    <>
-      <Col md={12} className="mb-4 d-flex justify-content-between align-items-start">
+    <div className="mb-4">
+      <Col md={12} className="mb-3 d-flex justify-content-between align-items-start gap-2">
         <div className="d-flex gap-2">
-          <If condition={isPhotos}>
-            <ButtonGroup>
-              <ToggleButton
-                size="sm"
-                id="onedate-button"
-                type="checkbox"
-                variant="outline-primary"
-                checked={!isRangeDate}
-                onChange={onChangeDateFormat}
-              >
-                OneDay
-              </ToggleButton>
-              <ToggleButton
-                size="sm"
-                id="range-button"
-                type="checkbox"
-                variant="outline-primary"
-                checked={isRangeDate}
-                onChange={onChangeDateFormat}
-              >
-                Range
-              </ToggleButton>
-            </ButtonGroup>
-          </If>
-
           <ButtonGroup>
             <ToggleButton
               size="sm"
@@ -153,7 +50,6 @@ function FileManagerHead(props) {
               type="checkbox"
               variant="outline-primary"
               checked
-              onChange={onChangeFileType}
             >
               All
             </ToggleButton>
@@ -163,7 +59,6 @@ function FileManagerHead(props) {
               type="checkbox"
               variant="outline-primary"
               checked={false}
-              onChange={onChangeFileType}
             >
               byHand
             </ToggleButton>
@@ -173,28 +68,36 @@ function FileManagerHead(props) {
               type="checkbox"
               variant="outline-primary"
               checked={false}
-              onChange={onChangeFileType}
             >
               byTime
             </ToggleButton>
           </ButtonGroup>
 
-          <div className={styles.btnsContainer}>
-            <div className={styles.defaultBtns}>
-              <Button
-                type="primary"
-                size="sm"
-                onClick={onRefetchClick}
-                disabled={fetchStatus.isLoading}
-              >
-                Refetch
-              </Button>
-            </div>
-          </div>
+          {/* <ButtonGroup>
+            <ToggleButton
+              size="sm"
+              id="Small-button"
+              type="checkbox"
+              variant="outline-primary"
+              checked
+            >
+              Small
+            </ToggleButton>
+            <ToggleButton
+              size="sm"
+              id="Medium-button"
+              type="checkbox"
+              variant="outline-primary"
+            >
+              Medium
+            </ToggleButton>
+          </ButtonGroup> */}
         </div>
 
-        <div className={styles.deleteBtns}>
-          {(isSelectFiles) && `Selected: ${selectedIndexes.length}`}
+        <div className="d-flex gap-2">
+          <div className="d-flex w-100 align-items-center">
+            {(isSelectFiles) && `Selected:${selectedIndexes.length}`}
+          </div>
 
           <ToggleButton
             size="sm"
@@ -215,13 +118,58 @@ function FileManagerHead(props) {
           >
             Delete
           </Button>
+          <Choose>
+            <When condition={isPhotos}>
+              <Button
+                type="primary"
+                size="sm"
+              >
+                +CreatePhoto
+              </Button>
+            </When>
+            <When condition={isVideos}>
+              <Button
+                type="primary"
+                size="sm"
+              >
+                +CreateVideo
+              </Button>
+            </When>
+          </Choose>
+
         </div>
       </Col>
 
-      <Col md={12} className="mb-4 d-flex justify-content-between align-items-start">
+      <Col md={12} className="mb-3 d-flex justify-content-between align-items-start">
         <div className="d-flex gap-2">
+          {/* <If condition={isPhotos}> */}
+          <ButtonGroup>
+            <ToggleButton
+              size="sm"
+              id="onedate-button"
+              type="checkbox"
+              variant="outline-primary"
+              checked={!isRangeDate}
+              onChange={onChangeDateFormat}
+            >
+              OneDay
+            </ToggleButton>
+            <ToggleButton
+              size="sm"
+              id="range-button"
+              type="checkbox"
+              variant="outline-primary"
+              checked={isRangeDate}
+              onChange={onChangeDateFormat}
+            >
+              Range
+            </ToggleButton>
+          </ButtonGroup>
+          {/* </If> */}
+
           <If condition={isRangeDate}>
             <DatePicker
+              className={styles.dateInput}
               dateFormat="dd/MM/yyyy"
               selected={startDate}
               onChange={onChangeStartDate}
@@ -229,17 +177,29 @@ function FileManagerHead(props) {
           </If>
 
           <DatePicker
+            className={styles.dateInput}
             dateFormat="dd/MM/yyyy"
             selected={endDate}
             onChange={onChangeEndDate}
           />
 
           <div className="d-flex w-100 align-items-center">
-            {`Files: ${currentFiles ? currentFiles.length : 0}`}
+            {`Files:${currentFiles ? currentFiles.length : 0}`}
           </div>
         </div>
+
+        <div>
+          <Button
+            type="primary"
+            size="sm"
+            onClick={onRefetchClick}
+            disabled={fetchStatus.isLoading}
+          >
+            Refetch
+          </Button>
+        </div>
       </Col>
-    </>
+    </div>
   );
 }
 

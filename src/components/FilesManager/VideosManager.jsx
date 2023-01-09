@@ -1,9 +1,10 @@
 import React from 'react';
-import { Col, Spinner } from 'react-bootstrap';
+import { Card, Col, Row, Spinner } from 'react-bootstrap';
 // import { Link } from 'react-router-dom';
 import cn from 'classnames';
+import format from 'date-fns/format';
 // import _ from 'lodash';
-import styles from './PhotosManager.module.css';
+import styles from './VideosManager.module.css';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 // import folderImg from '../../assets/folder2.png';
 // import Heading from '../UI/Heading';
@@ -20,33 +21,47 @@ function VideosManager() {
     onRefetchClick,
     onDeleteSelected,
     onFileClick,
-    isSelectFiles,
     onSelectButtonClick,
-    // isRangeDate,
-    // onChangeDateFormat,
-    // startDate,
-    // onChangeStartDate,
-    // endDate,
-    // onChangeEndDate,
+
+    isSelectFiles,
+    isPhotos,
+    isVideos,
+    isRangeDate,
+    startDate,
+    endDate,
+
+    onChangeFileType,
+    onChangeDateFormat,
+    onChangeStartDate,
+    onChangeEndDate,
   } = useFileManager();
 
+  // console.log(7777, currentFiles);
+
   const renderCurrentFiles = () => currentFiles.map((file, index) => {
-    const src = `/files/${file._id}?size=thumbnail`;
+    const { video } = file;
+    const src = `/files/${video.poster}?size=thumbnail`;
     const classNames = cn(styles.item, { [styles.selectedItem]: selectedIndexes.includes(index) });
     return (
-      <div
-        role="presentation"
-        className={classNames}
-        key={file._id}
-        onClick={() => onFileClick(index)}
-      >
-        <ImgWrapper
-          width={100}
-          height={0.5625}
-          src={src}
-        />
-        <span>{file.name}</span>
-      </div>
+      <Col key={file._id} className="mb-3">
+        <Card
+          border="light"
+          role="button"
+          className={classNames}
+          onClick={() => onFileClick(index)}
+        >
+          <ImgWrapper
+            width={100}
+            height={0.5625}
+            src={src}
+          />
+          <div className={styles.itemBody}>
+            <div className="text-truncate">{file.name}</div>
+            {`${format(new Date(video.startDate), 'yyyy.MM.dd')} - ${format(new Date(video.endDate), 'yyyy.MM.dd')}`}
+            <div>{`${video.duration} seconds`}</div>
+          </div>
+        </Card>
+      </Col>
     );
   });
 
@@ -58,14 +73,17 @@ function VideosManager() {
         selectedIndexes={selectedIndexes}
         onRefetchClick={onRefetchClick}
         onDeleteSelected={onDeleteSelected}
-        isSelectFiles={isSelectFiles}
         onSelectButtonClick={onSelectButtonClick}
-        // isRangeDate={isRangeDate}
-        // onChangeDateFormat={onChangeDateFormat}
-        // startDate={startDate}
-        // onChangeStartDate={onChangeStartDate}
-        // endDate={endDate}
-        // onChangeEndDate={onChangeEndDate}
+        isSelectFiles={isSelectFiles}
+        isPhotos={isPhotos}
+        isVideos={isVideos}
+        isRangeDate={isRangeDate}
+        startDate={startDate}
+        endDate={endDate}
+        onChangeFileType={onChangeFileType}
+        onChangeDateFormat={onChangeDateFormat}
+        onChangeStartDate={onChangeStartDate}
+        onChangeEndDate={onChangeEndDate}
       />
 
       <Col md={12} className="mb-4">
@@ -84,9 +102,9 @@ function VideosManager() {
 
           <When condition={currentFiles.length > 0}>
             <div className={styles.overflowContainer}>
-              <div className={styles.filesContainer}>
+              <Row sm={4} className="mb-3">
                 {renderCurrentFiles()}
-              </div>
+              </Row>
             </div>
           </When>
         </Choose>

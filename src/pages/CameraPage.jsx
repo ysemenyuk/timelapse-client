@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { Col, Row, Nav } from 'react-bootstrap';
 import _ from 'lodash';
+import format from 'date-fns/format';
 import useThunkStatus from '../hooks/useThunkStatus.js';
 // import Screenshot from '../components/Screenshot/Screenshot.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
@@ -39,6 +40,19 @@ function CameraPage() {
       return;
     }
     setTabName(name);
+
+    if (name === 'video') {
+      const startDate = format(new Date(selectedCamera.firstVideo.date), 'yyyy-MM-dd');
+      const endDate = format(new Date(selectedCamera.lastVideo.date), 'yyyy-MM-dd');
+      const query = `?fileType=videoByHand,videoByTime&startDate=${startDate}&endDate=${endDate}`;
+      navigate(`/cameras/${cameraId}/${name}/${query}`);
+    }
+    if (name === 'photos') {
+      const oneDate = format(new Date(selectedCamera.lastPhoto.date), 'yyyy-MM-dd');
+      const query = `?fileType=videoByHand,videoByTime&oneDate=${oneDate}`;
+      navigate(`/cameras/${cameraId}/${name}/${query}`);
+    }
+
     navigate(`/cameras/${cameraId}/${name}`);
   };
 

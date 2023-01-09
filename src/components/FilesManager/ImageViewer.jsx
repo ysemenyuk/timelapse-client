@@ -54,6 +54,7 @@ function ImageViewer(props) {
     }
     const selectedItems = selectedIndexes.map((index) => images[index]);
     onDeleteSelected(selectedItems);
+    setSelectedIndexes((prew) => ([_.head(prew)]));
   };
 
   const onAvatarBtnClick = () => {
