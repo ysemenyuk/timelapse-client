@@ -49,7 +49,7 @@ function CameraPage() {
     }
     if (name === 'photos') {
       const oneDate = format(new Date(selectedCamera.lastPhoto.date), 'yyyy-MM-dd');
-      const query = `?fileType=videoByHand,videoByTime&oneDate=${oneDate}`;
+      const query = `?fileType=photoByHand,phohoByTime&oneDate=${oneDate}`;
       navigate(`/cameras/${cameraId}/${name}/${query}`);
     }
 

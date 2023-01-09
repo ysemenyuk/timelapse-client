@@ -13,7 +13,7 @@ import CameraInfo from '../CameraInfo/CameraInfo.jsx';
 
 const createLinkToPhotos = (camera) => {
   const date = camera.lastPhoto && format(new Date(camera.lastPhoto.date), 'yyyy-MM-dd');
-  const query = `?fileType=photo,photoByTime&oneDate=${date}`;
+  const query = `?fileType=photoByHand,photoByTime&oneDate=${date}`;
   return `/cameras/${camera._id}/photos${query}`;
 };
 

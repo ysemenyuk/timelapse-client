@@ -5,7 +5,7 @@ import cn from 'classnames';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 import styles from './PhotosViewer.module.css';
 
-const isImage = (file) => file.type !== 'folder';
+const isImage = (file) => file.type.includes('photo');
 // const getImages = (files) => (files ? files.filter(isImage) : []);
 
 function ImageViewer(props) {
@@ -104,7 +104,7 @@ function ImageViewer(props) {
       onHide={onHide}
       size="xl"
     >
-      <Modal.Header bsPrefix="modal-header" closeButton>
+      <Modal.Header closeButton>
         {currentImage.name}
       </Modal.Header>
 

@@ -12,13 +12,17 @@ import Error from '../UI/Error';
 import useFileManager from './useFileManager';
 import 'react-datepicker/dist/react-datepicker.css';
 import FileManagerHead from './FileManagerHead';
+import VideoViewer from './VideoViewer';
 
 function VideosManager() {
   const {
     fetchStatus,
     currentFiles,
     selectedIndexes,
+    isShowImageViewer,
+    onCloseImageViewer,
     onRefetchClick,
+    setSelectedIndexes,
     onDeleteSelected,
     onFileClick,
     onSelectButtonClick,
@@ -109,6 +113,16 @@ function VideosManager() {
           </When>
         </Choose>
       </Col>
+
+      <If condition={isShowImageViewer}>
+        <VideoViewer
+          onClose={onCloseImageViewer}
+          currentFiles={currentFiles}
+          selectedIndexes={selectedIndexes}
+          setSelectedIndexes={setSelectedIndexes}
+          onDeleteSelected={onDeleteSelected}
+        />
+      </If>
 
     </>
   );
