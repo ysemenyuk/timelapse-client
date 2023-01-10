@@ -23,7 +23,7 @@ function EditCreateVideoModal({ onHide, data: { taskId } }) {
   const selectedCameraId = useSelector(cameraSelectors.selectedCameraId);
   const task = useSelector(taskSelectors.selectTaskById(taskId));
 
-  const { status, message, settings, ...rest } = task;
+  const { status, message, videoSettings, ...rest } = task;
   const isRunning = status === taskStatus.RUNNING;
 
   const handleDelete = () => {
@@ -47,7 +47,7 @@ function EditCreateVideoModal({ onHide, data: { taskId } }) {
         taskId: task._id,
         payload: {
           ...rest,
-          setings: values,
+          videoSettings: values,
         } }))
         .then((resp) => {
           unwrapResult(resp);
@@ -74,7 +74,7 @@ function EditCreateVideoModal({ onHide, data: { taskId } }) {
       const query = {
         startDate: formik.values.startDate,
         endDate: formik.values.endDate,
-        type: 'photoByTime',
+        type: 'photo',
       };
 
       fileManagerService.getCount(selectedCameraId, query)

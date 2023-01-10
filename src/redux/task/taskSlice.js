@@ -34,7 +34,7 @@ const taskSlice = createSlice({
       // console.log('updateOne.fulfilled action -', action);
       const { cameraId, taskId, data } = action.payload;
       const index = state.tasks[cameraId].findIndex((task) => task._id === taskId);
-      if (index) {
+      if (index >= 0) {
         state.tasks[cameraId][index] = data;
       }
     },

@@ -19,8 +19,8 @@ function EditCreatePhotosByTimeModal({ onHide, data: { taskId } }) {
   const fetchStatus = useThunkStatus(taskActions.updateOne);
   const task = useSelector(taskSelectors.selectTaskById(taskId));
 
-  const { status, settings, ...rest } = task;
-  const { startTime, stopTime, interval } = settings;
+  const { status, photoSettings, ...rest } = task;
+  const { startTime, stopTime, interval } = photoSettings;
 
   const handleStartPhotosByTime = (values) => {
     console.log('handleStart');
@@ -31,7 +31,7 @@ function EditCreatePhotosByTimeModal({ onHide, data: { taskId } }) {
       payload: {
         ...rest,
         status: taskStatus.RUNNING,
-        settings: values,
+        photoSettings: values,
       },
     }))
       .then(() => {
@@ -51,7 +51,7 @@ function EditCreatePhotosByTimeModal({ onHide, data: { taskId } }) {
       payload: {
         ...rest,
         status: taskStatus.STOPPED,
-        settings,
+        photoSettings,
       },
     }));
   };

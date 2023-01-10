@@ -12,8 +12,8 @@ import CameraInfo from '../CameraInfo/CameraInfo.jsx';
 // import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 
 const createLinkToPhotos = (camera) => {
-  const date = camera.lastPhoto && format(new Date(camera.lastPhoto.date), 'yyyy-MM-dd');
-  const query = `?fileType=photoByHand,photoByTime&oneDate=${date}`;
+  const date = camera.lastPhoto ? new Date(camera.lastPhoto.date) : new Date();
+  const query = `?type=photo&oneDate=${format(date, 'yyyy-MM-dd')}`;
   return `/cameras/${camera._id}/photos${query}`;
 };
 

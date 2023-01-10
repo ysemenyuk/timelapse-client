@@ -15,6 +15,8 @@ import FileManagerHead from './FileManagerHead';
 
 function CameraPhotosManager() {
   const {
+    onCreatePhotoFile,
+
     fetchStatus,
     currentFiles,
     selectedIndexes,
@@ -73,6 +75,8 @@ function CameraPhotosManager() {
   return (
     <>
       <FileManagerHead
+        createButtonHandler={onCreatePhotoFile}
+        createButtonText="+CreatePhoto"
         fetchStatus={fetchStatus}
         currentFiles={currentFiles}
         selectedIndexes={selectedIndexes}

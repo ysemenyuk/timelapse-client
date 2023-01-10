@@ -21,6 +21,13 @@ function CameraInfo({ selectedCamera, onClick, compact, buttons }) {
   //   dispatch(modalActions.openModal({ type: modals.DELETE_CAMERA }));
   // };
 
+  const getDate = (file) => {
+    if (file && file.date) {
+      return format(new Date(file.date), 'dd.MM.yyyy hh:mm:ss');
+    }
+    return '-';
+  };
+
   if (selectedCamera === null) {
     return null;
   }
@@ -37,10 +44,10 @@ function CameraInfo({ selectedCamera, onClick, compact, buttons }) {
             </Card.Header>
             <Card.Body className={styles.cardBody}>
               <div className="text-truncate">
-                {`First photo: ${format(new Date(selectedCamera.firstPhoto.date), 'dd.MM.yyyy hh:mm:ss')}`}
+                {`First photo: ${getDate(selectedCamera.firstPhoto)}`}
               </div>
               <div className="text-truncate">
-                {`Last photo: ${format(new Date(selectedCamera.lastPhoto.date), 'dd.MM.yyyy hh:mm:ss')}`}
+                {`Last photo: ${getDate(selectedCamera.lastPhoto)}`}
               </div>
               <div className="text-truncate">
                 {`Total photos: ${selectedCamera.photosCount}`}

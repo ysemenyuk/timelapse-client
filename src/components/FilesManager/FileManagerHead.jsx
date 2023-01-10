@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Button, ToggleButton, ButtonGroup } from 'react-bootstrap';
+import { Button, ToggleButton, ButtonGroup } from 'react-bootstrap';
 // import cn from 'classnames';
 import _ from 'lodash';
 // import format from 'date-fns/format';
@@ -10,6 +10,9 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 function FileManagerHead(props) {
   const {
+    createButtonHandler,
+    createButtonText,
+
     fetchStatus,
     currentFiles,
     selectedIndexes,
@@ -19,8 +22,6 @@ function FileManagerHead(props) {
     onSelectButtonClick,
 
     isSelectFiles,
-    isPhotos,
-    isVideos,
     isRangeDate,
     startDate,
     endDate,
@@ -41,8 +42,70 @@ function FileManagerHead(props) {
 
   return (
     <div className="mb-4">
-      <Col md={12} className="mb-3 d-flex justify-content-between align-items-start gap-2">
+      <div className="d-flex flex-wrap gap-2 mb-3 justify-content-between align-items-center">
         <div className="d-flex gap-2">
+          <Button
+            type="primary"
+            size="sm"
+            onClick={createButtonHandler}
+          >
+            {createButtonText}
+          </Button>
+
+          {/* <ButtonGroup>
+            <ToggleButton
+              size="sm"
+              id="Small-button"
+              type="checkbox"
+              variant="outline-primary"
+              checked
+            >
+              Small
+            </ToggleButton>
+            <ToggleButton
+              size="sm"
+              id="Medium-button"
+              type="checkbox"
+              variant="outline-primary"
+            >
+              Medium
+            </ToggleButton>
+          </ButtonGroup> */}
+        </div>
+
+        <div className="d-flex gap-2">
+          <ToggleButton
+            size="sm"
+            id="select-button"
+            type="checkbox"
+            variant="outline-primary"
+            checked={isSelectFiles}
+            onChange={onSelectButtonClick}
+          >
+            SelectFiles
+          </ToggleButton>
+
+          <Button
+            type="primary"
+            size="sm"
+            onClick={onDeleteBtnClick}
+            disabled={fetchStatus.isLoading || _.isEmpty(selectedIndexes)}
+          >
+            {`Delete ${isSelectFiles ? `(${selectedIndexes.length})` : ''}`}
+          </Button>
+
+          <If condition={isSelectFiles}>
+            <div className="d-flex align-items-center">
+              {(isSelectFiles) && `Selected:${selectedIndexes.length}`}
+            </div>
+          </If>
+
+        </div>
+      </div>
+
+      <div className="d-flex flex-wrap gap-2 mb-3 justify-content-start align-items-start">
+
+        <div className="d-flex gap-2 justify-content-start align-items-start">
           <ButtonGroup>
             <ToggleButton
               size="sm"
@@ -73,76 +136,6 @@ function FileManagerHead(props) {
             </ToggleButton>
           </ButtonGroup>
 
-          {/* <ButtonGroup>
-            <ToggleButton
-              size="sm"
-              id="Small-button"
-              type="checkbox"
-              variant="outline-primary"
-              checked
-            >
-              Small
-            </ToggleButton>
-            <ToggleButton
-              size="sm"
-              id="Medium-button"
-              type="checkbox"
-              variant="outline-primary"
-            >
-              Medium
-            </ToggleButton>
-          </ButtonGroup> */}
-        </div>
-
-        <div className="d-flex gap-2">
-          <div className="d-flex w-100 align-items-center">
-            {(isSelectFiles) && `Selected:${selectedIndexes.length}`}
-          </div>
-
-          <ToggleButton
-            size="sm"
-            id="select-button"
-            type="checkbox"
-            variant="outline-primary"
-            checked={isSelectFiles}
-            onChange={onSelectButtonClick}
-          >
-            SelectFiles
-          </ToggleButton>
-
-          <Button
-            type="primary"
-            size="sm"
-            onClick={onDeleteBtnClick}
-            disabled={fetchStatus.isLoading || _.isEmpty(selectedIndexes)}
-          >
-            Delete
-          </Button>
-          <Choose>
-            <When condition={isPhotos}>
-              <Button
-                type="primary"
-                size="sm"
-              >
-                +CreatePhoto
-              </Button>
-            </When>
-            <When condition={isVideos}>
-              <Button
-                type="primary"
-                size="sm"
-              >
-                +CreateVideo
-              </Button>
-            </When>
-          </Choose>
-
-        </div>
-      </Col>
-
-      <Col md={12} className="mb-3 d-flex justify-content-between align-items-start">
-        <div className="d-flex gap-2">
-          {/* <If condition={isPhotos}> */}
           <ButtonGroup>
             <ToggleButton
               size="sm"
@@ -165,8 +158,9 @@ function FileManagerHead(props) {
               Range
             </ToggleButton>
           </ButtonGroup>
-          {/* </If> */}
+        </div>
 
+        <div className="d-flex gap-2 justify-content-start align-items-center">
           <If condition={isRangeDate}>
             <DatePicker
               className={styles.dateInput}
@@ -183,12 +177,10 @@ function FileManagerHead(props) {
             onChange={onChangeEndDate}
           />
 
-          <div className="d-flex w-100 align-items-center">
+          <div className="d-flex h-100 align-items-center">
             {`Files:${currentFiles ? currentFiles.length : 0}`}
           </div>
-        </div>
 
-        <div>
           <Button
             type="primary"
             size="sm"
@@ -197,8 +189,10 @@ function FileManagerHead(props) {
           >
             Refetch
           </Button>
+
         </div>
-      </Col>
+      </div>
+
     </div>
   );
 }

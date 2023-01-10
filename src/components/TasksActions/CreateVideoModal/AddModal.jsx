@@ -20,21 +20,21 @@ const videoSettingsInitialValues = {
 
 function AddCreateVideoModal({ onHide }) {
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
   const fetchStatus = useThunkStatus(taskActions.createOne);
   const selectedCameraId = useSelector(cameraSelectors.selectedCameraId);
 
   const formik = useFormik({
     initialValues: videoSettingsInitialValues,
     onSubmit: (values, { resetForm, setSubmitting, setFieldError }) => {
-      dispatch(taskActions.createVideoFile({
+      dispatch(taskActions.createOne({
         cameraId: selectedCameraId,
         payload: {
-          name: taskName.CREATE_VIDEO,
+          name: taskName.CREATE_VIDEO_BY_HAND,
           type: taskType.ONE_TIME,
-          setings: values,
+          videoSettings: values,
         } }))
         .then((resp) => {
+          console.log(123, resp);
           unwrapResult(resp);
           resetForm();
           setSubmitting(false);
@@ -46,7 +46,6 @@ function AddCreateVideoModal({ onHide }) {
           console.log('catch formik err -', e);
         });
     },
-
   });
 
   // console.log(11111111, 'formik.errors -', formik.errors);
@@ -58,7 +57,7 @@ function AddCreateVideoModal({ onHide }) {
     const query = {
       startDate: formik.values.startDate,
       endDate: formik.values.endDate,
-      type: 'photoByTime',
+      type: 'photo',
     };
 
     const queryString = `?${Object.entries(query).map(([key, value]) => `${key}=${value}`).join('&')}`;

@@ -35,7 +35,7 @@ function AddCreatePhotosByTimeModal({ onHide }) {
         name: taskName.CREATE_PHOTOS_BY_TIME,
         type: taskType.REPEAT_EVERY,
         status: taskStatus.RUNNING,
-        settings: values,
+        photoSettings: values,
       },
     }))
       .then(() => {

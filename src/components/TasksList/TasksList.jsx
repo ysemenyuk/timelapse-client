@@ -35,14 +35,23 @@ function CameraTasks({ selectedCamera }) {
   };
 
   const renderText = (task) => {
-    const { name, settings } = task;
+    const { name, photoSettings, videoSettings } = task;
 
-    if (settings) {
+    if (photoSettings) {
+      const { startTime, stopTime, interval, photoUrl } = photoSettings;
       const mapping = {
-        [taskName.CREATE_PHOTO]: `Url: ${settings?.photoUrl}`,
-        [taskName.CREATE_PHOTOS_BY_TIME]: `StartAt: ${settings.startTime}, StopAt: ${settings.stopTime}, Interval: ${settings.interval} sec`,
-        [taskName.CREATE_VIDEO]: `From: ${settings.startDate}, to: ${settings.endDate}, Duration: ${settings.duration}, Fps: ${settings.fps}`,
-        [taskName.CREATE_VIDEOS_BY_TIME]: `StartAt: ${settings.startTime}, Duration: ${settings.duration}, Fps: ${settings.fps}`,
+        [taskName.CREATE_PHOTO_BY_HAND]: `Url: ${photoUrl}`,
+        [taskName.CREATE_PHOTOS_BY_TIME]: `StartAt: ${startTime}, StopAt: ${stopTime}, Interval: ${interval} sec`,
+      };
+
+      return mapping[name];
+    }
+
+    if (videoSettings) {
+      const { startDate, endDate, duration, fps, periodicity } = videoSettings;
+      const mapping = {
+        [taskName.CREATE_VIDEO_BY_HAND]: `From: ${startDate}, To: ${endDate}, Duration: ${duration}, Fps: ${fps}`,
+        [taskName.CREATE_VIDEOS_BY_TIME]: `Periodicity: ${periodicity}, Duration: ${duration}, Fps: ${fps}`,
       };
 
       return mapping[name];
@@ -70,7 +79,7 @@ function CameraTasks({ selectedCamera }) {
       </Heading>
 
       {cameraTasks.map((task) => (
-        <Card onClick={() => handleClickTask(task)} key={task._id} bsPrefix="card mb-3">
+        <Card onClick={() => handleClickTask(task)} key={task._id} className="card mb-3">
           <Card.Header bsPrefix="card-header d-flex justify-content-between align-items-center">
             <div className="text-truncate">
               {task.name}
@@ -79,7 +88,7 @@ function CameraTasks({ selectedCamera }) {
               Delete
             </Button>
           </Card.Header>
-          <Card.Body bsPrefix="card-body d-flex justify-content-between align-items-center pt-2 pb-2">
+          <Card.Body className="card-body d-flex justify-content-between align-items-center pt-2 pb-2">
             <div className="text-truncate">{renderText(task)}</div>
             <div className="d-flex align-items-center ms-2">
               <Badge status={task.status} />

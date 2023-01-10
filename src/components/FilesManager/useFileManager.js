@@ -8,6 +8,8 @@ import { cameraActions } from '../../redux/camera/cameraSlice.js';
 // import { fileManagerSelectors, fileManagerActions } from '../../redux/fileManager/fileManagerSlice.js';
 // import { fileType } from '../../utils/constants.js';
 import { useGetFilesQuery, useDeleteFileMutation } from '../../api/fileManagerApi.js';
+import { modals } from '../../utils/constants.js';
+import { modalActions } from '../../redux/modalSlice.js';
 // import fileManagerService from '../../api/fileManager.service.js';
 
 export default function useFileManager() {
@@ -20,13 +22,13 @@ export default function useFileManager() {
   const isVideos = tabName === 'videos';
 
   const [fileType, setFileType] = useState(() => {
-    if (searchParams.get('fileType')) {
-      return searchParams.get('fileType');
+    if (searchParams.get('type')) {
+      return searchParams.get('type');
     }
     if (isVideos) {
-      return 'videoByHand,videoByTime';
+      return 'video';
     }
-    return 'photoByHand,photoByTime';
+    return 'photo';
   });
 
   const [startDate, setStartDate] = useState(() => {
@@ -75,25 +77,22 @@ export default function useFileManager() {
     if (isRangeDate) {
       const start = format(startDate, 'yyyy-MM-dd');
       const end = format(endDate, 'yyyy-MM-dd');
-      const query = `?fileType=${fileType}&startDate=${start}&endDate=${end}`;
+      const query = `?type=${fileType}&startDate=${start}&endDate=${end}`;
       return query;
     }
     const oneDate = format(endDate, 'yyyy-MM-dd');
-    const query = `?fileType=${fileType}&oneDate=${oneDate}`;
+    const query = `?type=${fileType}&oneDate=${oneDate}`;
     return query;
-  }, [fileType, startDate, endDate]);
+  }, [fileType, startDate, endDate, isRangeDate]);
 
   // eslint-disable-next-line max-len
   const { data: currentFiles, isLoading, isSuccess, isError, refetch } = useGetFilesQuery({ cameraId: selectedCamera._id, queryString });
   const fetchStatus = { isLoading, isSuccess, isError };
 
-  // console.log(1111, searchParams);
-  // console.log(2222, queryString);
-
   //
 
   useEffect(() => {
-    searchParams.set('fileType', fileType);
+    searchParams.set('type', fileType);
     if (!isRangeDate) {
       searchParams.set('oneDate', format(endDate, 'yyyy-MM-dd'));
       searchParams.delete('startDate');
@@ -201,7 +200,18 @@ export default function useFileManager() {
     }));
   };
 
+  const onCreatePhotoFile = () => {
+    dispatch(modalActions.openModal({ type: modals.ADD_CREATE_PHOTO_BY_HAND }));
+  };
+
+  const onCreateVideoFile = () => {
+    dispatch(modalActions.openModal({ type: modals.ADD_CREATE_VIDEO_BY_HAND }));
+  };
+
   return {
+    onCreatePhotoFile,
+    onCreateVideoFile,
+
     fetchStatus,
     currentFiles,
     selectedIndexes,

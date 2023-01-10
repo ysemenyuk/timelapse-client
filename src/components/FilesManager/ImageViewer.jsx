@@ -6,7 +6,6 @@ import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 import styles from './PhotosViewer.module.css';
 
 const isImage = (file) => file.type.includes('photo');
-// const getImages = (files) => (files ? files.filter(isImage) : []);
 
 function ImageViewer(props) {
   const {

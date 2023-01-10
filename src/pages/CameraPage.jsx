@@ -44,12 +44,12 @@ function CameraPage() {
     if (name === 'video') {
       const startDate = format(new Date(selectedCamera.firstVideo.date), 'yyyy-MM-dd');
       const endDate = format(new Date(selectedCamera.lastVideo.date), 'yyyy-MM-dd');
-      const query = `?fileType=videoByHand,videoByTime&startDate=${startDate}&endDate=${endDate}`;
+      const query = `?type=video&createType=ByHand,ByTime&startDate=${startDate}&endDate=${endDate}`;
       navigate(`/cameras/${cameraId}/${name}/${query}`);
     }
     if (name === 'photos') {
       const oneDate = format(new Date(selectedCamera.lastPhoto.date), 'yyyy-MM-dd');
-      const query = `?fileType=photoByHand,phohoByTime&oneDate=${oneDate}`;
+      const query = `?type=photo&createType=ByHand,ByTime&oneDate=${oneDate}`;
       navigate(`/cameras/${cameraId}/${name}/${query}`);
     }
 

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React from 'react';
 import { Card, Col, Row, Spinner } from 'react-bootstrap';
 // import { Link } from 'react-router-dom';
@@ -16,6 +17,8 @@ import VideoViewer from './VideoViewer';
 
 function VideosManager() {
   const {
+    onCreateVideoFile,
+
     fetchStatus,
     currentFiles,
     selectedIndexes,
@@ -43,8 +46,8 @@ function VideosManager() {
   // console.log(7777, currentFiles);
 
   const renderCurrentFiles = () => currentFiles.map((file, index) => {
-    const { video } = file;
-    const src = `/files/${video.poster}?size=thumbnail`;
+    const { videoData } = file;
+    const src = `/files/${videoData.poster}?size=thumbnail`;
     const classNames = cn(styles.item, { [styles.selectedItem]: selectedIndexes.includes(index) });
     return (
       <Col key={file._id} className="mb-3">
@@ -61,8 +64,8 @@ function VideosManager() {
           />
           <div className={styles.itemBody}>
             <div className="text-truncate">{file.name}</div>
-            {`${format(new Date(video.startDate), 'yyyy.MM.dd')} - ${format(new Date(video.endDate), 'yyyy.MM.dd')}`}
-            <div>{`${video.duration} seconds`}</div>
+            {`${format(new Date(videoData.startDate), 'yyyy.MM.dd')} - ${format(new Date(videoData.endDate), 'yyyy.MM.dd')}`}
+            <div>{`${videoData.duration} seconds`}</div>
           </div>
         </Card>
       </Col>
@@ -72,6 +75,8 @@ function VideosManager() {
   return (
     <>
       <FileManagerHead
+        createButtonHandler={onCreateVideoFile}
+        createButtonText="+CreateVideo"
         fetchStatus={fetchStatus}
         currentFiles={currentFiles}
         selectedIndexes={selectedIndexes}
