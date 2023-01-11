@@ -10,6 +10,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 function FileManagerHead(props) {
   const {
+    isPhotos,
     createButtonHandler,
     createButtonText,
 
@@ -52,25 +53,27 @@ function FileManagerHead(props) {
             {createButtonText}
           </Button>
 
-          {/* <ButtonGroup>
-            <ToggleButton
-              size="sm"
-              id="Small-button"
-              type="checkbox"
-              variant="outline-primary"
-              checked
-            >
-              Small
-            </ToggleButton>
-            <ToggleButton
-              size="sm"
-              id="Medium-button"
-              type="checkbox"
-              variant="outline-primary"
-            >
-              Medium
-            </ToggleButton>
-          </ButtonGroup> */}
+          <If condition={isPhotos}>
+            <ButtonGroup>
+              <ToggleButton
+                size="sm"
+                id="Small-button"
+                type="checkbox"
+                variant="outline-primary"
+                checked
+              >
+                Small
+              </ToggleButton>
+              <ToggleButton
+                size="sm"
+                id="Medium-button"
+                type="checkbox"
+                variant="outline-primary"
+              >
+                Medium
+              </ToggleButton>
+            </ButtonGroup>
+          </If>
         </div>
 
         <div className="d-flex gap-2">

@@ -34,6 +34,7 @@ function CameraTasks({ selectedCamera }) {
     }));
   };
 
+  // TODO refactor
   const renderText = (task) => {
     const { name, photoSettings, videoSettings } = task;
 

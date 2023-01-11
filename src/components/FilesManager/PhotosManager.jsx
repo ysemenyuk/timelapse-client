@@ -30,8 +30,8 @@ function CameraPhotosManager() {
     onSelectButtonClick,
 
     isSelectFiles,
-    isPhotos,
-    isVideos,
+    // isPhotos,
+    // isVideos,
     isRangeDate,
     startDate,
     endDate,
@@ -62,10 +62,10 @@ function CameraPhotosManager() {
             src={src}
           />
           <div className={styles.itemBody}>
+            <div>{time}</div>
             <If condition={isRangeDate}>
               <div>{date}</div>
             </If>
-            <div>{time}</div>
           </div>
         </Card>
       </Col>
@@ -75,6 +75,7 @@ function CameraPhotosManager() {
   return (
     <>
       <FileManagerHead
+        isPhotos
         createButtonHandler={onCreatePhotoFile}
         createButtonText="+CreatePhoto"
         fetchStatus={fetchStatus}
@@ -85,8 +86,6 @@ function CameraPhotosManager() {
         onDeleteSelected={onDeleteSelected}
         onSelectButtonClick={onSelectButtonClick}
         isSelectFiles={isSelectFiles}
-        isPhotos={isPhotos}
-        isVideos={isVideos}
         isRangeDate={isRangeDate}
         startDate={startDate}
         endDate={endDate}

@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import { fileManagerActions } from './redux/fileManager/fileManagerSlice.js';
+// import { fileManagerActions } from './redux/fileManager/fileManagerSlice.js';
 import { taskActions } from './redux/task/taskSlice.js';
 
 const SERVER_URL = 'http://localhost:4000';
@@ -21,19 +21,19 @@ export default (store) => {
   };
 
   socket.on('connect', () => {
-    console.log('connect - socket.connected', socket.connected);
+    console.log('socket.on connect', socket.connected);
   });
 
   socket.on('connect_error', (err) => {
-    console.log('connect_error', { err: err.message });
+    console.log('socket.on connect_error', { err: err.message });
   });
 
   socket.onAny((event, ...args) => {
-    console.log('onAny', { event, args });
+    console.log('socket.onAny onAny', { event, args });
   });
 
   socket.on('update-task', (data) => {
-    console.log('update-task data -', data);
+    console.log('socket.on update-task data -', data);
 
     const { cameraId, taskId } = data;
     const allTasks = store.getState().task.tasks;
@@ -49,14 +49,14 @@ export default (store) => {
   });
 
   socket.on('add-file', (data) => {
-    console.log('update-task data -', data);
+    console.log('socket.on add-file data -', data);
 
-    const { cameraId, fileId, parentId } = data;
-    const filesByParent = store.getState().fileManager.files;
+    // const { cameraId, fileId } = data;
+    // const filesByParent = store.getState().fileManager.files;
 
-    if (filesByParent[parentId]) {
-      store.dispatch(fileManagerActions.fetchOne({ cameraId, parentId, fileId }));
-    }
+    // if (filesByParent[parentId]) {
+    //   store.dispatch(fileManagerActions.fetchOne({ cameraId, parentId, fileId }));
+    // }
   });
 
   const isSocketConnected = () => socket && socket.connected;

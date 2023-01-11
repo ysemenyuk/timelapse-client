@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
 import { Modal, Button, Form, Row, Col, Spinner } from 'react-bootstrap';
-// import { useNavigate } from 'react-router-dom';
 import fileManagerService from '../../../api/fileManager.service.js'; //
 import { cameraSelectors } from '../../../redux/camera/cameraSlice.js';
 import { taskActions } from '../../../redux/task/taskSlice.js';
@@ -34,7 +33,6 @@ function AddCreateVideoModal({ onHide }) {
           videoSettings: values,
         } }))
         .then((resp) => {
-          console.log(123, resp);
           unwrapResult(resp);
           resetForm();
           setSubmitting(false);
@@ -66,6 +64,8 @@ function AddCreateVideoModal({ onHide }) {
       .then((resp) => {
         setFilesCount(resp.data.count);
       });
+
+    // TODO clear request then unmount
   }, [formik.values.startDate, formik.values.endDate]);
 
   return (
@@ -76,7 +76,7 @@ function AddCreateVideoModal({ onHide }) {
 
       <Modal.Body>
         <div className="mb-3">
-          Create video file from screenshots
+          Create video from photos
         </div>
 
         <Form className="mb-3">
@@ -110,6 +110,7 @@ function AddCreateVideoModal({ onHide }) {
               </Form.Control.Feedback>
             </Form.Group>
           </Row>
+
           <Row className="mb-3">
             <Form.Group as={Col}>
               <Form.Label htmlFor="duration">Duration (seconds)</Form.Label>
@@ -142,12 +143,12 @@ function AddCreateVideoModal({ onHide }) {
           </Row>
         </Form>
 
-        <div className="mb-4">
-          {`Required ${formik.values.duration * formik.values.fps} files for ${formik.values.duration} seconds video (${formik.values.fps} fps)`}
+        <div className="mb-3">
+          {`Required: ${formik.values.duration * formik.values.fps} files`}
         </div>
 
         <div className="mb-3">
-          {`Count in DB: ${filesCount} files (${Math.round(filesCount / formik.values.fps)} seconds)`}
+          {`Saved: ${filesCount} files (${Math.round(filesCount / formik.values.fps)} seconds)`}
         </div>
 
       </Modal.Body>

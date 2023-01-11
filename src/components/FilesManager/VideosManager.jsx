@@ -46,6 +46,7 @@ function VideosManager() {
   // console.log(7777, currentFiles);
 
   const renderCurrentFiles = () => currentFiles.map((file, index) => {
+    // console.log(9999, file);
     const { videoData } = file;
     const src = `/files/${videoData.poster}?size=thumbnail`;
     const classNames = cn(styles.item, { [styles.selectedItem]: selectedIndexes.includes(index) });
@@ -53,20 +54,25 @@ function VideosManager() {
       <Col key={file._id} className="mb-3">
         <Card
           border="light"
-          role="button"
           className={classNames}
-          onClick={() => onFileClick(index)}
         >
           <ImgWrapper
             width={100}
             height={0.5625}
             src={src}
+            onClick={() => onFileClick(index)}
+            role="button"
           />
           <div className={styles.itemBody}>
             <div className="text-truncate">{file.name}</div>
             {`${format(new Date(videoData.startDate), 'yyyy.MM.dd')} - ${format(new Date(videoData.endDate), 'yyyy.MM.dd')}`}
             <div>{`${videoData.duration} seconds`}</div>
+            <div className="d-flex gap-2 align-items-start">
+              <a href="/#">Delete</a>
+              <a href="/#">Download</a>
+            </div>
           </div>
+
         </Card>
       </Col>
     );
@@ -80,6 +86,7 @@ function VideosManager() {
         fetchStatus={fetchStatus}
         currentFiles={currentFiles}
         selectedIndexes={selectedIndexes}
+        setSelectedIndexes={setSelectedIndexes}
         onRefetchClick={onRefetchClick}
         onDeleteSelected={onDeleteSelected}
         onSelectButtonClick={onSelectButtonClick}
