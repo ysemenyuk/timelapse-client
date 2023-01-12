@@ -1,10 +1,11 @@
 /* eslint-disable max-len */
 import React from 'react';
-import { Card, Col, Row, Spinner } from 'react-bootstrap';
+import { Button, Card, Col, Row, Spinner } from 'react-bootstrap';
 // import { Link } from 'react-router-dom';
 import cn from 'classnames';
 import format from 'date-fns/format';
 // import _ from 'lodash';
+import { PlayCircle } from 'react-bootstrap-icons';
 import styles from './VideosManager.module.css';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 // import folderImg from '../../assets/folder2.png';
@@ -43,12 +44,17 @@ function VideosManager() {
     onChangeEndDate,
   } = useFileManager();
 
-  // console.log(7777, currentFiles);
+  const onDeleteBtnClick = (file) => () => {
+    console.log('onDeleteBtnClick', file);
+    onDeleteSelected([file]);
+  };
 
   const renderCurrentFiles = () => currentFiles.map((file, index) => {
     // console.log(9999, file);
     const { videoData } = file;
-    const src = `/files/${videoData.poster}?size=thumbnail`;
+    // const srcPoster = `/files/${videoData.poster}?size=thumbnail`;
+    const srcPoster = `/files/${file._id}/poster`;
+    const srcDownload = `/files/${file._id}`;
     const classNames = cn(styles.item, { [styles.selectedItem]: selectedIndexes.includes(index) });
     return (
       <Col key={file._id} className="mb-3">
@@ -56,23 +62,30 @@ function VideosManager() {
           border="light"
           className={classNames}
         >
-          <ImgWrapper
-            width={100}
-            height={0.5625}
-            src={src}
+          <div
+            role="presentation"
             onClick={() => onFileClick(index)}
-            role="button"
-          />
+            className={styles.container}
+          >
+            <ImgWrapper
+              width={100}
+              height={0.5625}
+              src={srcPoster}
+            />
+            <div className={styles.overlay}>
+              <PlayCircle className={styles.icon} />
+            </div>
+          </div>
           <div className={styles.itemBody}>
             <div className="text-truncate">{file.name}</div>
             {`${format(new Date(videoData.startDate), 'yyyy.MM.dd')} - ${format(new Date(videoData.endDate), 'yyyy.MM.dd')}`}
             <div>{`${videoData.duration} seconds`}</div>
             <div className="d-flex gap-2 align-items-start">
-              <a href="/#">Delete</a>
-              <a href="/#">Download</a>
+              <Button className="p-0" variant="link" size="sm" onClick={onDeleteBtnClick(file)}>Delete</Button>
+              <Button className="p-0" variant="link" size="sm" as="a" href={srcDownload} download>Download</Button>
             </div>
           </div>
-
+          {/* <img src={ReactLogo} alt="React Logo" /> */}
         </Card>
       </Col>
     );

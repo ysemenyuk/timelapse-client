@@ -43,17 +43,19 @@ function FileManagerHead(props) {
 
   return (
     <div className="mb-4">
-      <div className="d-flex flex-wrap gap-2 mb-3 justify-content-between align-items-center">
+
+      <div className="d-flex flex-wrap gap-2 mb-2 justify-content-between align-items-center">
         <div className="d-flex gap-2">
           <Button
-            type="primary"
+            variant="info"
             size="sm"
             onClick={createButtonHandler}
           >
             {createButtonText}
           </Button>
-
-          <If condition={isPhotos}>
+        </div>
+        <If condition={isPhotos}>
+          <div className="d-flex gap-2">
             <ButtonGroup>
               <ToggleButton
                 size="sm"
@@ -73,42 +75,46 @@ function FileManagerHead(props) {
                 Medium
               </ToggleButton>
             </ButtonGroup>
-          </If>
-        </div>
+            <ToggleButton
+              size="sm"
+              id="select-button"
+              type="checkbox"
+              variant="outline-primary"
+              checked={isSelectFiles}
+              onChange={onSelectButtonClick}
+            >
+              SelectFiles
+            </ToggleButton>
 
-        <div className="d-flex gap-2">
-          <ToggleButton
-            size="sm"
-            id="select-button"
-            type="checkbox"
-            variant="outline-primary"
-            checked={isSelectFiles}
-            onChange={onSelectButtonClick}
-          >
-            SelectFiles
-          </ToggleButton>
+            <Button
+              type="primary"
+              size="sm"
+              onClick={onDeleteBtnClick}
+              disabled={fetchStatus.isLoading || _.isEmpty(selectedIndexes)}
+            >
+              {`Delete ${isSelectFiles ? `(${selectedIndexes.length})` : ''}`}
+            </Button>
 
-          <Button
-            type="primary"
-            size="sm"
-            onClick={onDeleteBtnClick}
-            disabled={fetchStatus.isLoading || _.isEmpty(selectedIndexes)}
-          >
-            {`Delete ${isSelectFiles ? `(${selectedIndexes.length})` : ''}`}
-          </Button>
+            <If condition={false}>
+              <div className="d-flex align-items-center">
+                {(isSelectFiles) && `Selected:${selectedIndexes.length}`}
+              </div>
+            </If>
 
-          <If condition={isSelectFiles}>
-            <div className="d-flex align-items-center">
-              {(isSelectFiles) && `Selected:${selectedIndexes.length}`}
-            </div>
-          </If>
-
-        </div>
+          </div>
+        </If>
       </div>
 
       <div className="d-flex flex-wrap gap-2 mb-3 justify-content-start align-items-start">
-
         <div className="d-flex gap-2 justify-content-start align-items-start">
+          <Button
+            type="primary"
+            size="sm"
+            onClick={onRefetchClick}
+            disabled={fetchStatus.isLoading}
+          >
+            Refetch
+          </Button>
           <ButtonGroup>
             <ToggleButton
               size="sm"
@@ -138,29 +144,30 @@ function FileManagerHead(props) {
               byTime
             </ToggleButton>
           </ButtonGroup>
-
-          <ButtonGroup>
-            <ToggleButton
-              size="sm"
-              id="onedate-button"
-              type="checkbox"
-              variant="outline-primary"
-              checked={!isRangeDate}
-              onChange={onChangeDateFormat}
-            >
-              OneDay
-            </ToggleButton>
-            <ToggleButton
-              size="sm"
-              id="range-button"
-              type="checkbox"
-              variant="outline-primary"
-              checked={isRangeDate}
-              onChange={onChangeDateFormat}
-            >
-              Range
-            </ToggleButton>
-          </ButtonGroup>
+          <If condition={false}>
+            <ButtonGroup>
+              <ToggleButton
+                size="sm"
+                id="onedate-button"
+                type="checkbox"
+                variant="outline-primary"
+                checked={!isRangeDate}
+                onChange={onChangeDateFormat}
+              >
+                OneDay
+              </ToggleButton>
+              <ToggleButton
+                size="sm"
+                id="range-button"
+                type="checkbox"
+                variant="outline-primary"
+                checked={isRangeDate}
+                onChange={onChangeDateFormat}
+              >
+                Range
+              </ToggleButton>
+            </ButtonGroup>
+          </If>
         </div>
 
         <div className="d-flex gap-2 justify-content-start align-items-center">
@@ -172,7 +179,6 @@ function FileManagerHead(props) {
               onChange={onChangeStartDate}
             />
           </If>
-
           <DatePicker
             className={styles.dateInput}
             dateFormat="dd/MM/yyyy"
@@ -184,14 +190,14 @@ function FileManagerHead(props) {
             {`Files:${currentFiles ? currentFiles.length : 0}`}
           </div>
 
-          <Button
+          {/* <Button
             type="primary"
             size="sm"
             onClick={onRefetchClick}
             disabled={fetchStatus.isLoading}
           >
             Refetch
-          </Button>
+          </Button> */}
 
         </div>
       </div>

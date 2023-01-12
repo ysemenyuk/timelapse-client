@@ -3,6 +3,7 @@ import { Card, Col, Row, Spinner } from 'react-bootstrap';
 // import { Link } from 'react-router-dom';
 import cn from 'classnames';
 // import _ from 'lodash';
+import { Image } from 'react-bootstrap-icons';
 import styles from './PhotosManager.module.css';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 // import folderImg from '../../assets/folder2.png';
@@ -52,15 +53,22 @@ function CameraPhotosManager() {
       <Col key={file._id} className="mb-3">
         <Card
           border="light"
-          role="button"
           className={classNames}
-          onClick={() => onFileClick(index)}
         >
-          <ImgWrapper
-            width={100}
-            height={0.5625}
-            src={src}
-          />
+          <div
+            role="presentation"
+            onClick={() => onFileClick(index)}
+            className={styles.container}
+          >
+            <ImgWrapper
+              width={100}
+              height={0.5625}
+              src={src}
+            />
+            <div className={styles.overlay}>
+              <Image className={styles.icon} />
+            </div>
+          </div>
           <div className={styles.itemBody}>
             <div>{time}</div>
             <If condition={isRangeDate}>

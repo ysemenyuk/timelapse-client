@@ -55,14 +55,12 @@ function EditCreateVideosByTimeModal({ onHide }) {
   return (
     <>
       <Modal.Header closeButton>
-        <Modal.Title bsPrefix="modal-title h5">
-          VideosByTimeTask
-        </Modal.Title>
+        <Modal.Title>VideosByTimeTask</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Row className="mb-3">
           <Col>
-            Create video file from screenshots every day
+            Create video file from photos every day
           </Col>
         </Row>
 

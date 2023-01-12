@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 import format from 'date-fns/format';
 import { useOutletContext, useSearchParams } from 'react-router-dom';
 // import useThunkStatus from '../../hooks/useThunkStatus.js';
 import { cameraActions } from '../../redux/camera/cameraSlice.js';
-// import { fileManagerSelectors, fileManagerActions } from '../../redux/fileManager/fileManagerSlice.js';
+import { fileManagerSelectors } from '../../redux/fileManager/fileManagerSlice.js';
 // import { fileType } from '../../utils/constants.js';
 import { useGetFilesQuery, useDeleteFileMutation } from '../../api/fileManagerApi.js';
 import { modals } from '../../utils/constants.js';
@@ -17,6 +17,7 @@ export default function useFileManager() {
   const { selectedCamera, tabName } = useOutletContext();
   const [searchParams, setSearchParams] = useSearchParams();
   const [deleteOneFile] = useDeleteFileMutation();
+  const addedFile = useSelector(fileManagerSelectors.addedFile);
 
   const isPhotos = tabName === 'photos';
   const isVideos = tabName === 'videos';
@@ -106,6 +107,13 @@ export default function useFileManager() {
   }, [fileType, startDate, endDate, isRangeDate]);
 
   useEffect(() => {
+    // TODO if addedFile in queryString
+    if (addedFile.type === fileType) {
+      refetch();
+    }
+  }, [addedFile]);
+
+  useEffect(() => {
     if (currentFiles) {
       const currentFilesCount = currentFiles.length;
 
@@ -153,11 +161,11 @@ export default function useFileManager() {
   };
 
   const onDeleteSelected = (selectedItems) => {
-    if (_.isEmpty(selectedIndexes) || !selectedItems) {
+    console.log('onDeleteBtnClick', selectedItems);
+
+    if (_.isEmpty(selectedItems)) {
       return;
     }
-
-    // setSelectedIndexes((prew) => ([_.head(prew)]));
 
     Promise.all(selectedItems.map((item) => deleteOneFile({
       cameraId: item.camera,

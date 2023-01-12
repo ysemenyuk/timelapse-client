@@ -7,8 +7,14 @@ const fileManagerSlice = createSlice({
   name: 'fileManager',
   initialState: {
     files: {},
+    addedFile: {},
   },
-  reducers: { },
+  reducers: {
+    addFile: (state, action) => {
+      console.log('addFile action -', action);
+      state.addedFile = action.payload;
+    },
+  },
   extraReducers: {
     [fetchFiles.fulfilled]: (state, action) => {
       const { parentId, data } = action.payload;
@@ -29,8 +35,9 @@ const fileManagerSlice = createSlice({
 });
 
 const filesByParent = (state) => state.fileManager.files;
+const addedFile = (state) => state.fileManager.addedFile;
 
-export const fileManagerSelectors = { filesByParent };
+export const fileManagerSelectors = { filesByParent, addedFile };
 
 export const fileManagerActions = { ...fileManagerSlice.actions, ...fileManagerAsyncActions };
 

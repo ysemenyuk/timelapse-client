@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom';
 import 'core-js/stable/index.js';
 import 'regenerator-runtime/runtime.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import './assets/favicon.ico';
 import './index.css';
 import initApp from './components/App/init.jsx';

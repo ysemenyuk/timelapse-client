@@ -21,7 +21,7 @@ function VideoViewer(props) {
   const startDate = format(new Date(currentVideo.videoData.startDate), 'yyyy.MM.dd');
   const endDate = format(new Date(currentVideo.videoData.endDate), 'yyyy.MM.dd');
 
-  console.log(666, currentVideo);
+  // console.log(666, currentVideo);
 
   const onHide = () => {
     setSelectedIndexes([]);

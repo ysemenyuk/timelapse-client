@@ -34,7 +34,7 @@ function InfoCreatePhotoModal({ onHide, data: { taskId } }) {
   return (
     <>
       <Modal.Header closeButton>
-        Create photo
+        <Modal.Title>Create photo</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>

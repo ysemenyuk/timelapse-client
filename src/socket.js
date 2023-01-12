@@ -1,5 +1,6 @@
 import io from 'socket.io-client';
-// import { fileManagerActions } from './redux/fileManager/fileManagerSlice.js';
+// import { cameraActions } from './redux/camera/cameraSlice.js';
+import { fileManagerActions } from './redux/fileManager/fileManagerSlice.js';
 import { taskActions } from './redux/task/taskSlice.js';
 
 const SERVER_URL = 'http://localhost:4000';
@@ -51,12 +52,9 @@ export default (store) => {
   socket.on('add-file', (data) => {
     console.log('socket.on add-file data -', data);
 
-    // const { cameraId, fileId } = data;
-    // const filesByParent = store.getState().fileManager.files;
-
-    // if (filesByParent[parentId]) {
-    //   store.dispatch(fileManagerActions.fetchOne({ cameraId, parentId, fileId }));
-    // }
+    const { file } = data;
+    // store.dispatch(cameraActions.fetchOne(cameraId));
+    store.dispatch(fileManagerActions.addFile(file));
   });
 
   const isSocketConnected = () => socket && socket.connected;

@@ -25,7 +25,7 @@ module.exports = {
     contentBase: path.join(__dirname, 'public'),
     publicPath: '/public/',
     proxy: {
-      context: ['/files'],
+      context: ['/files', 'files/:id/poster'],
       target: 'http://localhost:4000',
     },
     historyApiFallback: true,
@@ -34,6 +34,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: 'template/index.html',
+      favicon: 'template/favicon.ico',
     }),
     new MiniCssExtractPlugin(),
   ],
@@ -67,6 +68,22 @@ module.exports = {
         test: /\.(jpe?g|png|gif|svg|ico)$/i,
         use: [{ loader: 'url-loader' }],
       },
+      {
+        test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        loader: 'file-loader',
+      },
+      // {
+      //   test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+      //   include: path.resolve(__dirname, './node_modules/bootstrap-icons/font/fonts'),
+      //   use: {
+      //     loader: 'file-loader',
+      //     options: {
+      //       name: '[name].[ext]',
+      //       outputPath: 'webfonts',
+      //       publicPath: '../webfonts',
+      //     },
+      //   },
+      // },
     ],
   },
 };

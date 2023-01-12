@@ -27,9 +27,7 @@ function AddCreateVideosByTimeModal({ onHide }) {
   return (
     <>
       <Modal.Header closeButton>
-        <Modal.Title>
-          VideosByTimeTask
-        </Modal.Title>
+        <Modal.Title>VideosByTimeTask</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Row className="mb-3">

@@ -67,9 +67,7 @@ function EditCreatePhotosByTimeModal({ onHide, data: { taskId } }) {
   return (
     <>
       <Modal.Header closeButton>
-        <Modal.Title bsPrefix="modal-title h5">
-          PhotosByTimeTask
-        </Modal.Title>
+        <Modal.Title>PhotosByTimeTask</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>

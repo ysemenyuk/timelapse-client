@@ -55,7 +55,7 @@ function AddCreatePhotosByTimeModal({ onHide }) {
   return (
     <>
       <Modal.Header closeButton>
-        PhotosByTimeTask
+        <Modal.Title>PhotosByTimeTask</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
