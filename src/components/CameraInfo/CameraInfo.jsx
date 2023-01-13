@@ -46,9 +46,9 @@ function CameraInfo({ selectedCamera, onClick, tabName, main, buttons }) {
         </div>
         <Card.Body className={styles.cardBody}>
 
-          <If condition={main && selectedCamera.createPhotosByTimeTask}>
+          <If condition={main && selectedCamera.photosByTimeTask}>
             <div className="d-flex gap-2 align-items-start">
-              {`PhotosByTime: ${selectedCamera.createPhotosByTimeTask.status}`}
+              {`PhotosByTime: ${selectedCamera.photosByTimeTask.status}`}
             </div>
           </If>
 

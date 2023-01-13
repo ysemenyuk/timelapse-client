@@ -33,7 +33,8 @@ function LoginPage() {
           unwrapResult(resp);
           resetForm();
           setSubmitting(false);
-          navigate('/login');
+          navigate('/cameras');
+          // navigate('/login');
         })
         .catch((e) => {
           setSubmitting(false);

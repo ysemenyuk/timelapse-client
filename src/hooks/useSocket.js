@@ -26,8 +26,5 @@ export default function useSocket() {
     socketRef.current.emit('message:add', 5);
   };
 
-  // console.log(1111222, socketRef.current);
-  // console.log(1111222, messages);
-
   return [messages, sendMessage];
 }

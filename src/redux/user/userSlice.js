@@ -27,10 +27,14 @@ const userSlice = createSlice({
     [singup.fulfilled]: (state, action) => {
       state.isLoggedIn = true;
       state.user = action.payload.user;
+      state.userId = action.payload.user._id;
+      state.token = action.payload.token;
     },
     [login.fulfilled]: (state, action) => {
       state.isLoggedIn = true;
       state.user = action.payload.user;
+      state.userId = action.payload.user._id;
+      state.token = action.payload.token;
     },
     [uploadAvatar.fulfilled]: (state, action) => {
       state.user = action.payload.user;

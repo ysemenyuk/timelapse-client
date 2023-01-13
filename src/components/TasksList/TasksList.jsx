@@ -9,7 +9,7 @@ import Heading from '../UI/Heading.jsx';
 import { taskActions, taskSelectors } from '../../redux/task/taskSlice';
 import { modalActions } from '../../redux/modalSlice.js';
 import Badge from '../UI/Badge.jsx';
-import { taskName } from '../../utils/constants.js';
+// import { taskName } from '../../utils/constants.js';
 // import TasksActions from '../TasksActions/TasksActions.jsx';
 
 function CameraTasks({ selectedCamera }) {
@@ -36,29 +36,29 @@ function CameraTasks({ selectedCamera }) {
 
   // TODO refactor
   const renderText = (task) => {
-    const { name, photoSettings, videoSettings } = task;
+    const { _id } = task;
 
-    if (photoSettings) {
-      const { startTime, stopTime, interval, photoUrl } = photoSettings;
-      const mapping = {
-        [taskName.CREATE_PHOTO_BY_HAND]: `Url: ${photoUrl}`,
-        [taskName.CREATE_PHOTOS_BY_TIME]: `StartAt: ${startTime}, StopAt: ${stopTime}, Interval: ${interval} sec`,
-      };
+    // if (photoSettings) {
+    //   const { startTime, stopTime, interval, photoUrl } = photoSettings;
+    //   const mapping = {
+    //     [taskName.CREATE_PHOTO_BY_HAND]: `Url: ${photoUrl}`,
+    //     [taskName.CREATE_PHOTOS_BY_TIME]: `StartAt: ${startTime}, StopAt: ${stopTime}, Interval: ${interval} sec`,
+    //   };
 
-      return mapping[name];
-    }
+    //   return mapping[name];
+    // }
 
-    if (videoSettings) {
-      const { startDate, endDate, duration, fps, periodicity } = videoSettings;
-      const mapping = {
-        [taskName.CREATE_VIDEO_BY_HAND]: `From: ${startDate}, To: ${endDate}, Duration: ${duration}, Fps: ${fps}`,
-        [taskName.CREATE_VIDEOS_BY_TIME]: `Periodicity: ${periodicity}, Duration: ${duration}, Fps: ${fps}`,
-      };
+    // if (videoSettings) {
+    //   const { startDate, endDate, duration, fps, periodicity } = videoSettings;
+    //   const mapping = {
+    //     [taskName.CREATE_VIDEO_BY_HAND]: `From: ${startDate}, To: ${endDate}, Duration: ${duration}, Fps: ${fps}`,
+    //     [taskName.CREATE_VIDEOS_BY_TIME]: `Periodicity: ${periodicity}, Duration: ${duration}, Fps: ${fps}`,
+    //   };
 
-      return mapping[name];
-    }
+    //   return mapping[name];
+    // }
 
-    return task._id.toString();
+    return _id.toString();
   };
   //
 

@@ -7,6 +7,13 @@ const singup = createAsyncThunk('user/singup', async (values) => {
 
     console.log('user/singup response.data -', data);
 
+    const userInfo = {
+      userId: data.user._id,
+      token: data.token,
+    };
+
+    localStorage.setItem('userInfo', JSON.stringify(userInfo));
+
     return data;
   } catch (e) {
     console.log('user/singup error -', e.response.data);
