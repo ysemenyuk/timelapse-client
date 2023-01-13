@@ -54,7 +54,6 @@ function AddCreatePhotoModal({ onHide }) {
 
       <Modal.Footer>
         {fetchStatus.isLoading && <Spinner as="span" animation="border" size="sm" />}
-
         <Button
           key="close"
           size="sm"

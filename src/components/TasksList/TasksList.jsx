@@ -10,7 +10,7 @@ import { taskActions, taskSelectors } from '../../redux/task/taskSlice';
 import { modalActions } from '../../redux/modalSlice.js';
 import Badge from '../UI/Badge.jsx';
 import { taskName } from '../../utils/constants.js';
-import TasksActions from '../TasksActions/TasksActions.jsx';
+// import TasksActions from '../TasksActions/TasksActions.jsx';
 
 function CameraTasks({ selectedCamera }) {
   const dispatch = useDispatch();
@@ -60,6 +60,7 @@ function CameraTasks({ selectedCamera }) {
 
     return task._id.toString();
   };
+  //
 
   useEffect(() => {
     if (selectedCamera._id && _.isEmpty(cameraTasks)) {
@@ -85,9 +86,11 @@ function CameraTasks({ selectedCamera }) {
             <div className="text-truncate">
               {task.name}
             </div>
-            <Button onClick={(e) => handleDeleteTask(e, task)} variant="link" size="sm">
-              Delete
-            </Button>
+            <If condition={task.removable}>
+              <Button onClick={(e) => handleDeleteTask(e, task)} variant="link" size="sm">
+                Delete
+              </Button>
+            </If>
           </Card.Header>
           <Card.Body className="card-body d-flex justify-content-between align-items-center pt-2 pb-2">
             <div className="text-truncate">{renderText(task)}</div>
@@ -98,7 +101,7 @@ function CameraTasks({ selectedCamera }) {
         </Card>
       ))}
 
-      <TasksActions />
+      {/* <TasksActions /> */}
 
     </Col>
   );

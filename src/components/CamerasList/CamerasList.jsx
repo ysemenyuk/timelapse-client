@@ -1,6 +1,6 @@
 import React from 'react';
 // import cn from 'classnames';
-import format from 'date-fns/format';
+// import format from 'date-fns/format';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Col, Button, Row, Card } from 'react-bootstrap';
@@ -11,11 +11,11 @@ import { modalActions } from '../../redux/modalSlice.js';
 import CameraInfo from '../CameraInfo/CameraInfo.jsx';
 // import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 
-const createLinkToPhotos = (camera) => {
-  const date = camera.lastPhoto ? new Date(camera.lastPhoto.date) : new Date();
-  const query = `?type=photo&oneDate=${format(date, 'yyyy-MM-dd')}`;
-  return `/cameras/${camera._id}/photos${query}`;
-};
+// const createLinkToPhotos = (camera) => {
+//   const date = camera.lastPhoto ? new Date(camera.lastPhoto.date) : new Date();
+//   const query = `?type=photo&oneDate=${format(date, 'yyyy-MM-dd')}`;
+//   return `/cameras/${camera._id}/photos${query}`;
+// };
 
 function CamerasList({ cameras }) {
   const dispatch = useDispatch();
@@ -23,7 +23,7 @@ function CamerasList({ cameras }) {
 
   const handleSelectItem = (camera) => () => {
     dispatch(cameraActions.selectCamera(camera._id));
-    navigate(createLinkToPhotos(camera));
+    navigate(`/cameras/${camera._id}/photos`);
   };
 
   const handleAddCamera = () => {
@@ -39,7 +39,7 @@ function CamerasList({ cameras }) {
       <Row sm={4} className="mb-3">
         {cameras.map((camera) => (
           <Col className="mb-4" key={camera._id}>
-            <CameraInfo selectedCamera={camera} onClick={handleSelectItem(camera)} compact />
+            <CameraInfo selectedCamera={camera} onClick={handleSelectItem(camera)} main />
           </Col>
         ))}
 

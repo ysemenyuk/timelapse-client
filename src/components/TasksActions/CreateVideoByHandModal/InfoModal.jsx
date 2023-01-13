@@ -59,7 +59,6 @@ function InfoCreateVideoModal({ onHide, data: { taskId } }) {
 
       <Modal.Footer className="modal-footer justify-content-between">
         <div className="d-flex align-items-center gap-2">
-          {fetchStatusDeleting.isLoading && <Spinner as="span" animation="border" size="sm" />}
           <Button
             key="delete"
             size="sm"
@@ -76,6 +75,7 @@ function InfoCreateVideoModal({ onHide, data: { taskId } }) {
               Cancel
             </Button>
           </If>
+          {fetchStatusDeleting.isLoading && <Spinner as="span" animation="border" size="sm" />}
         </div>
         <div className="d-flex align-items-center gap-2">
           <Button

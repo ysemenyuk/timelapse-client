@@ -1,31 +1,33 @@
+/* eslint-disable max-len */
 import React from 'react';
 // import cn from 'classnames';
-// import { useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import format from 'date-fns/format';
-import { ListGroup, Card, Button } from 'react-bootstrap';
-import Heading from '../UI/Heading.jsx';
+import { Card, Button } from 'react-bootstrap';
 import styles from './CameraInfo.module.css';
-// import TasksActions from '../TasksActions/TasksActions.jsx';
-// import { modals } from '../../utils/constants.js';
-// import { modalActions } from '../../redux/modalSlice.js';
+import { modals } from '../../utils/constants.js';
+import { modalActions } from '../../redux/modalSlice.js';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
+import { cameraActions } from '../../redux/camera/cameraSlice';
 
-function CameraInfo({ selectedCamera, onClick, compact, buttons }) {
-  // const dispatch = useDispatch();
+const getDate = (file) => {
+  if (file && file.date) {
+    return format(new Date(file.date), 'dd.MM.yyyy hh:mm:ss');
+  }
+  return '-';
+};
 
-  // const openEditCameraModal = () => {
-  //   dispatch(modalActions.openModal({ type: modals.EDIT_CAMERA }));
-  // };
+function CameraInfo({ selectedCamera, onClick, tabName, main, buttons }) {
+  const dispatch = useDispatch();
 
-  // const openDeleteCameraModal = async () => {
-  //   dispatch(modalActions.openModal({ type: modals.DELETE_CAMERA }));
-  // };
+  const openEditCameraModal = () => {
+    dispatch(cameraActions.selectCamera(selectedCamera._id));
+    dispatch(modalActions.openModal({ type: modals.EDIT_CAMERA }));
+  };
 
-  const getDate = (file) => {
-    if (file && file.date) {
-      return format(new Date(file.date), 'dd.MM.yyyy hh:mm:ss');
-    }
-    return '-';
+  const openDeleteCameraModal = async () => {
+    dispatch(cameraActions.selectCamera(selectedCamera._id));
+    dispatch(modalActions.openModal({ type: modals.DELETE_CAMERA }));
   };
 
   if (selectedCamera === null) {
@@ -34,15 +36,35 @@ function CameraInfo({ selectedCamera, onClick, compact, buttons }) {
 
   return (
     <>
-      <Choose>
-        <When condition={compact}>
-          <Card className={styles.card} role="button" onClick={onClick}>
-            <ImgWrapper width={100} height={0.5625} src={`/files/${selectedCamera.avatar._id}`} />
-            <Card.Header className={styles.cardHeader}>
-              <div className="text-truncate fw-bold">{selectedCamera.name}</div>
-              <div className="text-truncate">{selectedCamera.description}</div>
-            </Card.Header>
-            <Card.Body className={styles.cardBody}>
+      <Card className={styles.card}>
+        <div className={styles.cardImgWithHeader} role="presentation" onClick={onClick}>
+          <ImgWrapper width={100} height={0.5625} src={selectedCamera.avatar && `/files/${selectedCamera.avatar._id}`} />
+          <Card.Header className={styles.cardHeader}>
+            <div className="text-truncate fw-bold">{selectedCamera.name}</div>
+            <div className="text-truncate">{selectedCamera.description}</div>
+          </Card.Header>
+        </div>
+        <Card.Body className={styles.cardBody}>
+
+          <If condition={main && selectedCamera.createPhotosByTimeTask}>
+            <div className="d-flex gap-2 align-items-start">
+              {`PhotosByTime: ${selectedCamera.createPhotosByTimeTask.status}`}
+            </div>
+          </If>
+
+          <Choose>
+            <When condition={tabName === 'videos'}>
+              <div className="text-truncate">
+                {`First video: ${getDate(selectedCamera.firstVideo)}`}
+              </div>
+              <div className="text-truncate">
+                {`Last video: ${getDate(selectedCamera.lastVideo)}`}
+              </div>
+              <div className="text-truncate">
+                {`Total videos: ${selectedCamera.totalVideos}`}
+              </div>
+            </When>
+            <Otherwise>
               <div className="text-truncate">
                 {`First photo: ${getDate(selectedCamera.firstPhoto)}`}
               </div>
@@ -50,50 +72,26 @@ function CameraInfo({ selectedCamera, onClick, compact, buttons }) {
                 {`Last photo: ${getDate(selectedCamera.lastPhoto)}`}
               </div>
               <div className="text-truncate">
-                {`Total photos: ${selectedCamera.photosCount}`}
+                {`Total photos: ${selectedCamera.totalPhotos}`}
               </div>
-            </Card.Body>
-          </Card>
-        </When>
+            </Otherwise>
+          </Choose>
 
-        <Otherwise>
-          <Heading lvl={6} className="mb-3">
-            Info
-          </Heading>
-          <ListGroup className="mb-3" role="button" onClick={onClick}>
-            <ListGroup.Item>
-              <div className="w-50 me-3">Name:</div>
-              <div className="w-75 text-truncate text-muted">{selectedCamera.name}</div>
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <div className="w-50 me-3">Description:</div>
-              <div className="w-75 text-truncate text-muted">{selectedCamera.description}</div>
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <div className="me-3">http Link:</div>
-              <div className="w-75 text-truncate text-muted">{selectedCamera.photoUrl || 'Empty link'}</div>
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <div className="w-50 me-3">rtsp Link:</div>
-              <div className="w-75 text-truncate text-muted">{selectedCamera.rtspUrl || 'Empty link'}</div>
-            </ListGroup.Item>
-          </ListGroup>
-        </Otherwise>
-      </Choose>
+          <div className="d-flex gap-2 align-items-start">
+            <Button className="p-0" variant="link" size="sm" onClick={openDeleteCameraModal}>Delete</Button>
+            <Button className="p-0" variant="link" size="sm" onClick={openEditCameraModal}>Settings</Button>
+          </div>
+        </Card.Body>
+      </Card>
 
       <If condition={buttons}>
-        <div className="mb-3 mt-2 d-flex justify-content-between">
-          <div>
-            <Button onClick={onClick} variant="primary" size="sm" className="me-2">
-              Settings
-            </Button>
-            {/* <Button onClick={openDeleteCameraModal} variant="primary" size="sm" className="me-2">
+        <div className="mt-3 mb-3 d-flex justify-content-start">
+          <Button onClick={onClick} variant="primary" size="sm">
+            Settings
+          </Button>
+          {/* <Button onClick={openDeleteCameraModal} variant="primary" size="sm">
               Delete
             </Button> */}
-          </div>
-
-          {/* <TasksActions /> */}
-
         </div>
       </If>
     </>

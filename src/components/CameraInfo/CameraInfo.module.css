@@ -9,18 +9,22 @@
   max-height: 800px;
 }
 
-.card {
+/* .card { */
   /* width: calc((100% / 6) - 1rem); */
   /* margin: 0.5rem; */
   /* text-align: center; */
   /* cursor: pointer; */
-  overflow-wrap: break-word;
-}
+  /* margin-bottom: 1rem */
+/* } */
 
-.card:hover {
+/* .card:hover {
     box-shadow: 0 0 0 1px #0d6efd;
     outline: none;
     transition: .1s;
+} */
+
+.cardImgWithHeader{
+  cursor: pointer;
 }
 
 .cardBody {

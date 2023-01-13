@@ -1,23 +1,18 @@
 import React from 'react';
-import { Card, Col, Row, Spinner } from 'react-bootstrap';
-// import { Link } from 'react-router-dom';
+import { Button, ButtonGroup, Card, Col, Row, Spinner, ToggleButton } from 'react-bootstrap';
 import cn from 'classnames';
-// import _ from 'lodash';
+import _ from 'lodash';
 import { Image } from 'react-bootstrap-icons';
 import styles from './PhotosManager.module.css';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
-// import folderImg from '../../assets/folder2.png';
-// import Heading from '../UI/Heading';
 import Error from '../UI/Error';
 import useFileManager from './useFileManager';
 import ImageViewer from './ImageViewer';
-import 'react-datepicker/dist/react-datepicker.css';
 import FileManagerHead from './FileManagerHead';
 
 function CameraPhotosManager() {
   const {
     onCreatePhotoFile,
-
     fetchStatus,
     currentFiles,
     selectedIndexes,
@@ -29,21 +24,24 @@ function CameraPhotosManager() {
     onDeleteSelected,
     onFileClick,
     onSelectButtonClick,
-
     isSelectFiles,
-    // isPhotos,
-    // isVideos,
     isRangeDate,
     startDate,
     endDate,
-
     onChangeFileType,
     onChangeDateFormat,
     onChangeStartDate,
     onChangeEndDate,
   } = useFileManager();
 
-  // console.log(7777, fetchStatus);
+  const onDeleteBtnClick = () => {
+    if (_.isEmpty(selectedIndexes)) {
+      return;
+    }
+    const selectedItems = selectedIndexes.map((index) => currentFiles[index]);
+    onDeleteSelected(selectedItems);
+    setSelectedIndexes([]);
+  };
 
   const renderCurrentFiles = () => currentFiles.map((file, index) => {
     const src = `/files/${file._id}?size=thumbnail`;
@@ -82,18 +80,71 @@ function CameraPhotosManager() {
 
   return (
     <>
+      <div className="d-flex flex-wrap gap-2 mb-2 justify-content-between align-items-center">
+        <div className="d-flex gap-2">
+          <Button
+            variant="info"
+            size="sm"
+            onClick={onCreatePhotoFile}
+          >
+            +CreatePhoto
+          </Button>
+        </div>
+
+        <div className="d-flex gap-2">
+          <ButtonGroup>
+            <ToggleButton
+              size="sm"
+              id="Small-button"
+              type="checkbox"
+              variant="outline-primary"
+              checked
+            >
+              Small
+            </ToggleButton>
+            <ToggleButton
+              size="sm"
+              id="Medium-button"
+              type="checkbox"
+              variant="outline-primary"
+            >
+              Medium
+            </ToggleButton>
+          </ButtonGroup>
+          <ToggleButton
+            size="sm"
+            id="select-button"
+            type="checkbox"
+            variant="outline-primary"
+            checked={isSelectFiles}
+            onChange={onSelectButtonClick}
+          >
+            SelectFiles
+          </ToggleButton>
+
+          <Button
+            type="primary"
+            size="sm"
+            onClick={onDeleteBtnClick}
+            disabled={fetchStatus.isLoading || _.isEmpty(selectedIndexes)}
+          >
+            {`Delete ${isSelectFiles ? `(${selectedIndexes.length})` : ''}`}
+          </Button>
+
+          <If condition={false}>
+            <div className="d-flex align-items-center">
+              {(isSelectFiles) && `Selected:${selectedIndexes.length}`}
+            </div>
+          </If>
+
+        </div>
+
+      </div>
+
       <FileManagerHead
-        isPhotos
-        createButtonHandler={onCreatePhotoFile}
-        createButtonText="+CreatePhoto"
         fetchStatus={fetchStatus}
         currentFiles={currentFiles}
-        selectedIndexes={selectedIndexes}
-        setSelectedIndexes={setSelectedIndexes}
         onRefetchClick={onRefetchClick}
-        onDeleteSelected={onDeleteSelected}
-        onSelectButtonClick={onSelectButtonClick}
-        isSelectFiles={isSelectFiles}
         isRangeDate={isRangeDate}
         startDate={startDate}
         endDate={endDate}
@@ -119,7 +170,7 @@ function CameraPhotosManager() {
 
           <When condition={currentFiles.length > 0}>
             <div className={styles.overflowContainer}>
-              <Row xs={2} sm={4} lg={6} className="mb-3">
+              <Row xs={2} sm={2} md={4} lg={6} className="mb-3">
                 {renderCurrentFiles()}
               </Row>
             </div>

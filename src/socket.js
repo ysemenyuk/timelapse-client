@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-// import { cameraActions } from './redux/camera/cameraSlice.js';
+import { cameraActions } from './redux/camera/cameraSlice.js';
 import { fileManagerActions } from './redux/fileManager/fileManagerSlice.js';
 import { taskActions } from './redux/task/taskSlice.js';
 
@@ -52,8 +52,8 @@ export default (store) => {
   socket.on('add-file', (data) => {
     console.log('socket.on add-file data -', data);
 
-    const { file } = data;
-    // store.dispatch(cameraActions.fetchOne(cameraId));
+    const { cameraId, file } = data;
+    store.dispatch(cameraActions.fetchOne(cameraId));
     store.dispatch(fileManagerActions.addFile(file));
   });
 

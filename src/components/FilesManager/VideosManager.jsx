@@ -1,25 +1,20 @@
 /* eslint-disable max-len */
 import React from 'react';
 import { Button, Card, Col, Row, Spinner } from 'react-bootstrap';
-// import { Link } from 'react-router-dom';
 import cn from 'classnames';
 import format from 'date-fns/format';
 // import _ from 'lodash';
 import { PlayCircle } from 'react-bootstrap-icons';
 import styles from './VideosManager.module.css';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
-// import folderImg from '../../assets/folder2.png';
-// import Heading from '../UI/Heading';
 import Error from '../UI/Error';
 import useFileManager from './useFileManager';
-import 'react-datepicker/dist/react-datepicker.css';
 import FileManagerHead from './FileManagerHead';
 import VideoViewer from './VideoViewer';
 
 function VideosManager() {
   const {
     onCreateVideoFile,
-
     fetchStatus,
     currentFiles,
     selectedIndexes,
@@ -29,15 +24,9 @@ function VideosManager() {
     setSelectedIndexes,
     onDeleteSelected,
     onFileClick,
-    onSelectButtonClick,
-
-    isSelectFiles,
-    isPhotos,
-    isVideos,
     isRangeDate,
     startDate,
     endDate,
-
     onChangeFileType,
     onChangeDateFormat,
     onChangeStartDate,
@@ -85,7 +74,6 @@ function VideosManager() {
               <Button className="p-0" variant="link" size="sm" as="a" href={srcDownload} download>Download</Button>
             </div>
           </div>
-          {/* <img src={ReactLogo} alt="React Logo" /> */}
         </Card>
       </Col>
     );
@@ -93,19 +81,22 @@ function VideosManager() {
 
   return (
     <>
+      <div className="d-flex flex-wrap gap-2 mb-2 justify-content-between align-items-center">
+        <div className="d-flex gap-2">
+          <Button
+            variant="info"
+            size="sm"
+            onClick={onCreateVideoFile}
+          >
+            +CreateVideo
+          </Button>
+        </div>
+      </div>
+
       <FileManagerHead
-        createButtonHandler={onCreateVideoFile}
-        createButtonText="+CreateVideo"
         fetchStatus={fetchStatus}
         currentFiles={currentFiles}
-        selectedIndexes={selectedIndexes}
-        setSelectedIndexes={setSelectedIndexes}
         onRefetchClick={onRefetchClick}
-        onDeleteSelected={onDeleteSelected}
-        onSelectButtonClick={onSelectButtonClick}
-        isSelectFiles={isSelectFiles}
-        isPhotos={isPhotos}
-        isVideos={isVideos}
         isRangeDate={isRangeDate}
         startDate={startDate}
         endDate={endDate}
@@ -131,7 +122,7 @@ function VideosManager() {
 
           <When condition={currentFiles.length > 0}>
             <div className={styles.overflowContainer}>
-              <Row sm={4} className="mb-3">
+              <Row xs={1} sm={2} lg={4} className="mb-3">
                 {renderCurrentFiles()}
               </Row>
             </div>

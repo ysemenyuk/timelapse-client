@@ -74,30 +74,34 @@ function EditCreatePhotosByTimeModal({ onHide, data: { taskId } }) {
         <PhotosByTimeForm formik={formik} status={status} />
       </Modal.Body>
 
-      <Modal.Footer>
-        {fetchStatus.isLoading && <Spinner as="span" animation="border" size="sm" />}
-        <Button
-          key="close"
-          onClick={onHide}
-          size="sm"
-        >
-          Close
-        </Button>
-        <Button
-          disabled={!isRunning}
-          onClick={handleStopPhotosByTime}
-          size="sm"
-        >
-          Stop
-        </Button>
-        <Button
-          disabled={isRunning}
-          onClick={formik.handleSubmit}
-          size="sm"
-          key="submit"
-        >
-          Start
-        </Button>
+      <Modal.Footer className="modal-footer justify-content-between">
+        <div className="d-flex align-items-center gap-2">
+          <Button
+            disabled={!isRunning}
+            onClick={handleStopPhotosByTime}
+            size="sm"
+          >
+            Stop
+          </Button>
+          <Button
+            disabled={isRunning}
+            onClick={formik.handleSubmit}
+            size="sm"
+            key="submit"
+          >
+            Start
+          </Button>
+          {fetchStatus.isLoading && <Spinner as="span" animation="border" size="sm" />}
+        </div>
+        <div className="d-flex align-items-center gap-2">
+          <Button
+            key="close"
+            size="sm"
+            onClick={onHide}
+          >
+            Close
+          </Button>
+        </div>
       </Modal.Footer>
     </>
   );

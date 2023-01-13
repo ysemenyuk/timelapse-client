@@ -15,7 +15,7 @@ function CameraListPage() {
   const dispatch = useDispatch();
 
   const allCameras = useSelector(cameraSelectors.allCameras);
-  const selectedCamera = useSelector(cameraSelectors.selectedCamera);
+  // const selectedCamera = useSelector(cameraSelectors.selectedCamera);
 
   const fetchStatus = useThunkStatus(cameraActions.fetchAll);
 
@@ -27,10 +27,10 @@ function CameraListPage() {
 
   return (
     <Choose>
-      <When condition={!fetchStatus.isLoading && !fetchStatus.isError && selectedCamera}>
+      <When condition={!fetchStatus.isLoading && !fetchStatus.isError}>
         <Row>
           <Col sm={12}>
-            <CamerasList cameras={allCameras} selectedCamera={selectedCamera} />
+            <CamerasList cameras={allCameras} />
           </Col>
         </Row>
       </When>
