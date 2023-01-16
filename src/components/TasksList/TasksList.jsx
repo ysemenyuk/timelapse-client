@@ -41,7 +41,7 @@ function CameraTasks({ selectedCamera }) {
     // if (photoSettings) {
     //   const { startTime, stopTime, interval, photoUrl } = photoSettings;
     //   const mapping = {
-    //     [taskName.CREATE_PHOTO_BY_HAND]: `Url: ${photoUrl}`,
+    //     [taskName.CREATE_PHOTO]: `Url: ${photoUrl}`,
     //     [taskName.CREATE_PHOTOS_BY_TIME]: `StartAt: ${startTime}, StopAt: ${stopTime}, Interval: ${interval} sec`,
     //   };
 
@@ -51,7 +51,7 @@ function CameraTasks({ selectedCamera }) {
     // if (videoSettings) {
     //   const { startDate, endDate, duration, fps, periodicity } = videoSettings;
     //   const mapping = {
-    //     [taskName.CREATE_VIDEO_BY_HAND]: `From: ${startDate}, To: ${endDate}, Duration: ${duration}, Fps: ${fps}`,
+    //     [taskName.CREATE_VIDEO]: `From: ${startDate}, To: ${endDate}, Duration: ${duration}, Fps: ${fps}`,
     //     [taskName.CREATE_VIDEOS_BY_TIME]: `Periodicity: ${periodicity}, Duration: ${duration}, Fps: ${fps}`,
     //   };
 

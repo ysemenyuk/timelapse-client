@@ -17,7 +17,7 @@ function AddCreatePhotoModal({ onHide }) {
     dispatch(taskActions.createOne({
       cameraId: selectedCamera._id,
       payload: {
-        name: taskName.CREATE_PHOTO_BY_HAND,
+        name: taskName.CREATE_PHOTO,
         type: taskType.ONE_TIME,
         photoSettings: {
           photoUrl: link,

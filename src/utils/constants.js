@@ -26,8 +26,8 @@ export const fileType = {
 
 // tasks
 export const taskName = {
-  CREATE_PHOTO_BY_HAND: 'CreatePhotoByHand',
-  CREATE_VIDEO_BY_HAND: 'CreateVideoByHand',
+  CREATE_PHOTO: 'CreatePhoto',
+  CREATE_VIDEO: 'CreateVideo',
   CREATE_PHOTOS_BY_TIME: 'CreatePhotosByTime',
   CREATE_VIDEOS_BY_TIME: 'CreateVideosByTime',
 };

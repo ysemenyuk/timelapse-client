@@ -28,7 +28,7 @@ function AddCreateVideoModal({ onHide }) {
       dispatch(taskActions.createOne({
         cameraId: selectedCameraId,
         payload: {
-          name: taskName.CREATE_VIDEO_BY_HAND,
+          name: taskName.CREATE_VIDEO,
           type: taskType.ONE_TIME,
           videoSettings: values,
         } }))
