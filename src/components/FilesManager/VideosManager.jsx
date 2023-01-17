@@ -41,9 +41,6 @@ function VideosManager() {
   const renderCurrentFiles = () => currentFiles.map((file, index) => {
     // console.log(9999, file);
     const { metaData } = file;
-    // const srcPoster = `/files/${videoData.poster}?size=thumbnail`;
-    // const srcPoster = `/files/${file._id}/poster`;
-    // const srcDownload = `/files/${file._id}`;
     const classNames = cn(styles.item, { [styles.selectedItem]: selectedIndexes.includes(index) });
     return (
       <Col key={file._id} className="mb-3">

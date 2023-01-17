@@ -152,6 +152,12 @@ function ImageViewer(props) {
             <Button
               type="primary"
               size="sm"
+            >
+              Download
+            </Button>
+            <Button
+              type="primary"
+              size="sm"
               onClick={onDeleteBtnClick}
               disabled={_.isEmpty(selectedIndexes)}
             >

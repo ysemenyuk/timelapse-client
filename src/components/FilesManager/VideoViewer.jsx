@@ -5,7 +5,6 @@ import format from 'date-fns/format';
 import { Modal, Button } from 'react-bootstrap';
 import { Player, BigPlayButton } from 'video-react';
 import 'video-react/dist/video-react.css';
-// @import "~video-react/styles/scss/video-react";
 
 function VideoViewer(props) {
   const {
@@ -49,9 +48,8 @@ function VideoViewer(props) {
 
       <Modal.Body>
         {/* <video controls muted width="100%" height="100%">
-          <source src={`/files/${currentVideo._id}`} type="video/mp4" />
+          <source src={currentVideo.link} type="video/mp4" />
         </video> */}
-        {/* <ReactPlayer width="100%" height="100%" playing controls url={`/files/${currentVideo._id}`} /> */}
         <Player
           autoPlay
           src={currentVideo.link}

@@ -12,7 +12,7 @@ import { cameraActions } from '../../redux/camera/cameraSlice';
 
 const getDate = (file) => {
   if (file && file.date) {
-    return format(new Date(file.date), 'dd.MM.yyyy hh:mm:ss');
+    return format(new Date(file.date), 'dd.MM.yyyy HH:mm:ss');
   }
   return '-';
 };
