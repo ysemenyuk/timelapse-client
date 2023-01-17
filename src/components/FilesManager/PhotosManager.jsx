@@ -44,7 +44,7 @@ function CameraPhotosManager() {
   };
 
   const renderCurrentFiles = () => currentFiles.map((file, index) => {
-    const src = `/files/${file._id}?size=thumbnail`;
+    // const src = `/files/${file._id}?size=thumbnail`;
     const classNames = cn(styles.item, { [styles.selectedItem]: selectedIndexes.includes(index) });
     const [date, time] = file.name.split(' ');
     return (
@@ -61,7 +61,7 @@ function CameraPhotosManager() {
             <ImgWrapper
               width={100}
               height={0.5625}
-              src={src}
+              src={file.preview}
             />
             <div className={styles.overlay}>
               <Image className={styles.icon} />

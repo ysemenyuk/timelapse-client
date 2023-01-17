@@ -29,9 +29,9 @@ export default (store) => {
     console.log('socket.on connect_error', { err: err.message });
   });
 
-  socket.onAny((event, ...args) => {
-    console.log('socket.onAny onAny', { event, args });
-  });
+  // socket.onAny((event, ...args) => {
+  //   console.log('socket.onAny onAny', { event, args });
+  // });
 
   socket.on('update-task', (data) => {
     console.log('socket.on update-task data -', data);
@@ -49,8 +49,8 @@ export default (store) => {
     }
   });
 
-  socket.on('add-file', (data) => {
-    console.log('socket.on add-file data -', data);
+  socket.on('create-file', (data) => {
+    console.log('socket.on create-file data -', data);
 
     const { cameraId, file } = data;
     store.dispatch(cameraActions.fetchOne(cameraId));

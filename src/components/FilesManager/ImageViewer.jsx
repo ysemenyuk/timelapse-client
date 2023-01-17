@@ -110,7 +110,12 @@ function ImageViewer(props) {
       <Modal.Body>
         <div className={styles.bodyContainer}>
           <div className={styles.imageContainer}>
-            <ImgWrapper width={100} height={0.5625} src={`/files/${currentImage._id}`} />
+            <ImgWrapper
+              width={100}
+              height={0.5625}
+              src={currentImage.link}
+              // src={`/files/${currentImage._id}`}
+            />
           </div>
           <div className={styles.overflowContainer}>
             <div style={{ width: `${images.length * 110}px` }} className={styles.itemsContainer}>
@@ -121,7 +126,8 @@ function ImageViewer(props) {
                     <ImgWrapper
                       width={100}
                       height={0.5625}
-                      src={`/files/${file._id}?size=thumbnail`}
+                      src={file.preview}
+                      // src={`/files/${file._id}?size=thumbnail`}
                       role="button"
                       onClick={() => onFileClick(index)}
                     />

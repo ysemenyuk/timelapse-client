@@ -209,11 +209,11 @@ export default function useFileManager() {
   };
 
   const onCreatePhotoFile = () => {
-    dispatch(modalActions.openModal({ type: modals.ADD_CREATE_PHOTO_BY_HAND }));
+    dispatch(modalActions.openModal({ type: modals.ADD_CREATE_PHOTO }));
   };
 
   const onCreateVideoFile = () => {
-    dispatch(modalActions.openModal({ type: modals.ADD_CREATE_VIDEO_BY_HAND }));
+    dispatch(modalActions.openModal({ type: modals.ADD_CREATE_VIDEO }));
   };
 
   return {

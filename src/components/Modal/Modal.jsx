@@ -6,10 +6,10 @@ import { modals } from '../../utils/constants';
 import AddCameraModal from '../CameraInfo/CameraModal/AddCameraModal';
 import EditCameraModal from '../CameraInfo/CameraModal/EditCameraModal';
 import DeleteCameraModal from '../CameraInfo/CameraModal/DeleteCameraModal';
-import AddCreatePhotoModal from '../TasksActions/CreatePhotoByHandModal/AddModal';
-import EditCreatePhotoModal from '../TasksActions/CreatePhotoByHandModal/InfoModal';
-import AddCreateVideoModal from '../TasksActions/CreateVideoByHandModal/AddModal';
-import EditCreateVideoModal from '../TasksActions/CreateVideoByHandModal/InfoModal';
+import AddCreatePhotoModal from '../TasksActions/CreatePhoto/AddModal';
+import EditCreatePhotoModal from '../TasksActions/CreatePhoto/InfoModal';
+import AddCreateVideoModal from '../TasksActions/CreateVideo/AddModal';
+import EditCreateVideoModal from '../TasksActions/CreateVideo/InfoModal';
 import AddCreatePhotosByTimeModal from '../TasksActions/CreatePhotosByTimeModal/AddModal';
 import EditCreatePhotosByTimeModal from '../TasksActions/CreatePhotosByTimeModal/EditModal';
 import AddCreateVideosByTimeModal from '../TasksActions/CreateVideosByTimeModal/AddModal';
@@ -19,10 +19,10 @@ const modalsMap = {
   [modals.ADD_CAMERA]: AddCameraModal,
   [modals.EDIT_CAMERA]: EditCameraModal,
   [modals.DELETE_CAMERA]: DeleteCameraModal,
-  [modals.ADD_CREATE_PHOTO_BY_HAND]: AddCreatePhotoModal,
-  [modals.EDIT_CREATE_PHOTO_BY_HAND]: EditCreatePhotoModal,
-  [modals.ADD_CREATE_VIDEO_BY_HAND]: AddCreateVideoModal,
-  [modals.EDIT_CREATE_VIDEO_BY_HAND]: EditCreateVideoModal,
+  [modals.ADD_CREATE_PHOTO]: AddCreatePhotoModal,
+  [modals.EDIT_CREATE_PHOTO]: EditCreatePhotoModal,
+  [modals.ADD_CREATE_VIDEO]: AddCreateVideoModal,
+  [modals.EDIT_CREATE_VIDEO]: EditCreateVideoModal,
   [modals.ADD_CREATE_PHOTOS_BY_TIME]: AddCreatePhotosByTimeModal,
   [modals.EDIT_CREATE_PHOTOS_BY_TIME]: EditCreatePhotosByTimeModal,
   [modals.ADD_CREATE_VIDEOS_BY_TIME]: AddCreateVideosByTimeModal,

@@ -18,8 +18,8 @@ function VideoViewer(props) {
 
   const currentIndex = _.head(selectedIndexes);
   const currentVideo = currentFiles[currentIndex];
-  const startDate = format(new Date(currentVideo.videoData.startDate), 'yyyy.MM.dd');
-  const endDate = format(new Date(currentVideo.videoData.endDate), 'yyyy.MM.dd');
+  const startDate = format(new Date(currentVideo.metaData.startDate), 'yyyy.MM.dd');
+  const endDate = format(new Date(currentVideo.metaData.endDate), 'yyyy.MM.dd');
 
   // console.log(666, currentVideo);
 
@@ -54,7 +54,7 @@ function VideoViewer(props) {
         {/* <ReactPlayer width="100%" height="100%" playing controls url={`/files/${currentVideo._id}`} /> */}
         <Player
           autoPlay
-          src={`/files/${currentVideo._id}`}
+          src={currentVideo.link}
         >
           <BigPlayButton position="center" />
         </Player>

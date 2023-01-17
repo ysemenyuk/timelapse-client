@@ -6,11 +6,11 @@ export const modals = {
   EDIT_CAMERA: 'EDIT_CAMERA',
   DELETE_CAMERA: 'DELETE_CAMERA',
 
-  ADD_CREATE_PHOTO_BY_HAND: 'AddCreatePhotoByHand',
-  EDIT_CREATE_PHOTO_BY_HAND: 'EditCreatePhotoByHand',
+  ADD_CREATE_PHOTO: 'AddCreatePhoto',
+  EDIT_CREATE_PHOTO: 'EditCreatePhoto',
 
-  ADD_CREATE_VIDEO_BY_HAND: 'AddCreateVideoByHand',
-  EDIT_CREATE_VIDEO_BY_HAND: 'EditCreateVideoByHand',
+  ADD_CREATE_VIDEO: 'AddCreateVideo',
+  EDIT_CREATE_VIDEO: 'EditCreateVideo',
 
   ADD_CREATE_PHOTOS_BY_TIME: 'AddCreatePhotosByTime',
   EDIT_CREATE_PHOTOS_BY_TIME: 'EditCreatePhotosByTime',

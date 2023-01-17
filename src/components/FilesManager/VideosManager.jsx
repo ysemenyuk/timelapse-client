@@ -40,10 +40,10 @@ function VideosManager() {
 
   const renderCurrentFiles = () => currentFiles.map((file, index) => {
     // console.log(9999, file);
-    const { videoData } = file;
+    const { metaData } = file;
     // const srcPoster = `/files/${videoData.poster}?size=thumbnail`;
-    const srcPoster = `/files/${file._id}/poster`;
-    const srcDownload = `/files/${file._id}`;
+    // const srcPoster = `/files/${file._id}/poster`;
+    // const srcDownload = `/files/${file._id}`;
     const classNames = cn(styles.item, { [styles.selectedItem]: selectedIndexes.includes(index) });
     return (
       <Col key={file._id} className="mb-3">
@@ -59,7 +59,7 @@ function VideosManager() {
             <ImgWrapper
               width={100}
               height={0.5625}
-              src={srcPoster}
+              src={file.preview}
             />
             <div className={styles.overlay}>
               <PlayCircle className={styles.icon} />
@@ -67,11 +67,11 @@ function VideosManager() {
           </div>
           <div className={styles.itemBody}>
             <div className="text-truncate">{file.name}</div>
-            {`${format(new Date(videoData.startDate), 'yyyy.MM.dd')} - ${format(new Date(videoData.endDate), 'yyyy.MM.dd')}`}
-            <div>{`${videoData.duration} seconds`}</div>
+            {`${format(new Date(metaData.startDate), 'yyyy.MM.dd')} - ${format(new Date(metaData.endDate), 'yyyy.MM.dd')}`}
+            <div>{`${metaData.duration} seconds`}</div>
             <div className="d-flex gap-2 align-items-start">
               <Button className="p-0" variant="link" size="sm" onClick={onDeleteBtnClick(file)}>Delete</Button>
-              <Button className="p-0" variant="link" size="sm" as="a" href={srcDownload} download>Download</Button>
+              <Button className="p-0" variant="link" size="sm" as="a" href={file.link} download>Download</Button>
             </div>
           </div>
         </Card>
