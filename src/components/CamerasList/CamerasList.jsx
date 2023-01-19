@@ -8,7 +8,7 @@ import Heading from '../UI/Heading.jsx';
 import { cameraActions } from '../../redux/camera/cameraSlice.js';
 import { modals } from '../../utils/constants.js';
 import { modalActions } from '../../redux/modalSlice.js';
-import CameraInfo from '../CameraInfo/CameraInfo.jsx';
+import CameraCard from '../CameraCard/CameraCard.jsx';
 // import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 
 // const createLinkToPhotos = (camera) => {
@@ -39,7 +39,7 @@ function CamerasList({ cameras }) {
       <Row sm={4} className="mb-3">
         {cameras.map((camera) => (
           <Col className="mb-4" key={camera._id}>
-            <CameraInfo selectedCamera={camera} onClick={handleSelectItem(camera)} main />
+            <CameraCard selectedCamera={camera} onClick={handleSelectItem(camera)} main />
           </Col>
         ))}
 

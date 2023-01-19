@@ -5,9 +5,9 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Button, Modal, Spinner } from 'react-bootstrap';
 import CameraForm from './CameraForm.jsx';
-import { cameraActions, cameraSelectors } from '../../../redux/camera/cameraSlice.js';
-import { modals } from '../../../utils/constants.js';
-import { modalActions } from '../../../redux/modalSlice.js';
+import { cameraActions, cameraSelectors } from '../../redux/camera/cameraSlice.js';
+import { modals } from '../../utils/constants.js';
+import { modalActions } from '../../redux/modalSlice.js';
 
 const validationSchema = Yup.object({
   name: Yup.string().required().min(3).max(20),

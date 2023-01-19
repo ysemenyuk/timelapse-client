@@ -17,8 +17,8 @@ function VideoViewer(props) {
 
   const currentIndex = _.head(selectedIndexes);
   const currentVideo = currentFiles[currentIndex];
-  const startDate = format(new Date(currentVideo.metaData.startDate), 'yyyy.MM.dd');
-  const endDate = format(new Date(currentVideo.metaData.endDate), 'yyyy.MM.dd');
+  const startDate = format(new Date(currentVideo.videoFileData.startDate), 'yyyy.MM.dd');
+  const endDate = format(new Date(currentVideo.videoFileData.endDate), 'yyyy.MM.dd');
 
   // console.log(666, currentVideo);
 
@@ -43,7 +43,7 @@ function VideoViewer(props) {
       size="xl"
     >
       <Modal.Header closeButton>
-        {`${currentVideo.name} (${startDate} - ${endDate})`}
+        <Modal.Title>{`Timelapse (${startDate} - ${endDate})`}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -53,6 +53,7 @@ function VideoViewer(props) {
         <Player
           autoPlay
           src={currentVideo.link}
+          poster={currentVideo.poster.link}
         >
           <BigPlayButton position="center" />
         </Player>

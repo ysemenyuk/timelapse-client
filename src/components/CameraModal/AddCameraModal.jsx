@@ -5,7 +5,7 @@ import { Button, Modal, Spinner } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import CameraForm from './CameraForm.jsx';
-import { cameraActions } from '../../../redux/camera/cameraSlice.js';
+import { cameraActions } from '../../redux/camera/cameraSlice.js';
 
 const validationSchema = Yup.object({
   name: Yup.string().required().min(3).max(20),
@@ -17,6 +17,11 @@ const validationSchema = Yup.object({
 const initialValues = {
   name: '',
   description: '',
+  location: {
+    latitude: '',
+    longitude: '',
+  },
+  model: '',
   photoUrl: '',
   rtspUrl: '',
 };

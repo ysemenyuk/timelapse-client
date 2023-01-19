@@ -2,12 +2,13 @@ import React from 'react';
 import { Button, ButtonGroup, Card, Col, Row, Spinner, ToggleButton } from 'react-bootstrap';
 import cn from 'classnames';
 import _ from 'lodash';
+import format from 'date-fns/format';
 import { Image } from 'react-bootstrap-icons';
 import styles from './PhotosManager.module.css';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 import Error from '../UI/Error';
 import useFileManager from './useFileManager';
-import ImageViewer from './ImageViewer';
+import PhotoViewer from './PhotoViewer';
 import FileManagerHead from './FileManagerHead';
 
 function CameraPhotosManager() {
@@ -34,6 +35,8 @@ function CameraPhotosManager() {
     onChangeEndDate,
   } = useFileManager();
 
+  // console.log(1111, currentFiles);
+
   const onDeleteBtnClick = () => {
     if (_.isEmpty(selectedIndexes)) {
       return;
@@ -44,9 +47,10 @@ function CameraPhotosManager() {
   };
 
   const renderCurrentFiles = () => currentFiles.map((file, index) => {
-    // const src = `/files/${file._id}?size=thumbnail`;
     const classNames = cn(styles.item, { [styles.selectedItem]: selectedIndexes.includes(index) });
-    const [date, time] = file.name.split(' ');
+    const date = format(new Date(file.date), 'dd.MM.yyyy');
+    const time = format(new Date(file.date), 'HH:mm:ss');
+
     return (
       <Col key={file._id} className="mb-3">
         <Card
@@ -61,7 +65,7 @@ function CameraPhotosManager() {
             <ImgWrapper
               width={100}
               height={0.5625}
-              src={file.preview}
+              src={`${file.link}?size=thumbnail`}
             />
             <div className={styles.overlay}>
               <Image className={styles.icon} />
@@ -179,7 +183,7 @@ function CameraPhotosManager() {
       </Col>
 
       <If condition={isShowImageViewer}>
-        <ImageViewer
+        <PhotoViewer
           onClose={onCloseImageViewer}
           currentFiles={currentFiles}
           selectedIndexes={selectedIndexes}

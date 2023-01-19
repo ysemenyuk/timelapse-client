@@ -33,14 +33,15 @@ function VideosManager() {
     onChangeEndDate,
   } = useFileManager();
 
+  // console.log(2222, currentFiles);
+
   const onDeleteBtnClick = (file) => () => {
     console.log('onDeleteBtnClick', file);
     onDeleteSelected([file]);
   };
 
   const renderCurrentFiles = () => currentFiles.map((file, index) => {
-    // console.log(9999, file);
-    const { metaData } = file;
+    const { videoFileData } = file;
     const classNames = cn(styles.item, { [styles.selectedItem]: selectedIndexes.includes(index) });
     return (
       <Col key={file._id} className="mb-3">
@@ -56,7 +57,7 @@ function VideosManager() {
             <ImgWrapper
               width={100}
               height={0.5625}
-              src={file.preview}
+              src={file.poster && file.poster.link && `${file.poster.link}?size=thumbnail`}
             />
             <div className={styles.overlay}>
               <PlayCircle className={styles.icon} />
@@ -64,8 +65,8 @@ function VideosManager() {
           </div>
           <div className={styles.itemBody}>
             <div className="text-truncate">{file.name}</div>
-            {`${format(new Date(metaData.startDate), 'yyyy.MM.dd')} - ${format(new Date(metaData.endDate), 'yyyy.MM.dd')}`}
-            <div>{`${metaData.duration} seconds`}</div>
+            {`${format(new Date(videoFileData.startDate), 'yyyy.MM.dd')} - ${format(new Date(videoFileData.endDate), 'yyyy.MM.dd')}`}
+            <div>{`${videoFileData.duration} seconds`}</div>
             <div className="d-flex gap-2 align-items-start">
               <Button className="p-0" variant="link" size="sm" onClick={onDeleteBtnClick(file)}>Delete</Button>
               <Button className="p-0" variant="link" size="sm" as="a" href={file.link} download>Download</Button>

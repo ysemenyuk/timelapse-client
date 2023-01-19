@@ -2,8 +2,8 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Modal, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { cameraActions, cameraSelectors } from '../../../redux/camera/cameraSlice.js';
-import useThunkStatus from '../../../hooks/useThunkStatus.js';
+import { cameraActions, cameraSelectors } from '../../redux/camera/cameraSlice.js';
+import useThunkStatus from '../../hooks/useThunkStatus.js';
 
 function DeleteCameraModal({ onHide }) {
   const dispatch = useDispatch();

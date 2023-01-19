@@ -15,6 +15,8 @@ import SocketContext from '../../context/SocketContext.js';
 import CameraPhotosManager from '../FilesManager/PhotosManager.jsx';
 import CameraSettings from '../CameraSettings/CameraSettings.jsx';
 import CameraVideosManager from '../FilesManager/VideosManager.jsx';
+import CameraLive from '../CameraLive/CameraLive.jsx';
+import CameraInfo from '../CameraInfo/CameraInfo.jsx';
 
 function RequireAuth({ children }) {
   const user = useSelector((state) => state.user);
@@ -89,6 +91,8 @@ function App() {
                   <Route path="photos" element={<CameraPhotosManager />} />
                   <Route path="videos" element={<CameraVideosManager />} />
                   <Route path="settings" element={<CameraSettings />} />
+                  <Route path="info" element={<CameraInfo />} />
+                  <Route path="live" element={<CameraLive />} />
                 </Route>
               </Route>
             </Routes>

@@ -9,7 +9,7 @@ import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
 import { cameraActions, cameraSelectors } from '../redux/camera/cameraSlice.js';
 import TasksList from '../components/TasksList/TasksList.jsx';
-import CameraInfo from '../components/CameraInfo/CameraInfo.jsx';
+import CameraCard from '../components/CameraCard/CameraCard.jsx';
 import { modalActions } from '../redux/modalSlice.js';
 import { modals } from '../utils/constants.js';
 
@@ -24,7 +24,6 @@ function CameraPage() {
 
   useEffect(() => {
     if (selectedCamera === null) {
-      // dispatch(cameraActions.fetchOne(cameraId));
       dispatch(cameraActions.fetchAll(cameraId))
         .then(() => {
           dispatch(cameraActions.selectCamera(cameraId));
@@ -40,19 +39,6 @@ function CameraPage() {
       return;
     }
     setTabName(name);
-
-    // if (name === 'video') {
-    //   const startDate = format(new Date(selectedCamera.firstVideo.date), 'yyyy-MM-dd');
-    //   const endDate = format(new Date(selectedCamera.lastVideo.date), 'yyyy-MM-dd');
-    //   const query = `?type=video&createType=ByHand,ByTime&startDate=${startDate}&endDate=${endDate}`;
-    //   navigate(`/cameras/${cameraId}/${name}/${query}`);
-    // }
-    // if (name === 'photos') {
-    //   const oneDate = format(new Date(selectedCamera.lastPhoto.date), 'yyyy-MM-dd');
-    //   const query = `?type=photo&createType=ByHand,ByTime&oneDate=${oneDate}`;
-    //   navigate(`/cameras/${cameraId}/${name}/${query}`);
-    // }
-
     navigate(`/cameras/${cameraId}/${name}`);
   };
 
@@ -66,7 +52,7 @@ function CameraPage() {
         <Row>
           <Col sm={3}>
             <Col md={12} className="mb-4">
-              <CameraInfo selectedCamera={selectedCamera} onClick={openEditCameraModal} tabName={tabName} />
+              <CameraCard selectedCamera={selectedCamera} onClick={openEditCameraModal} tabName={tabName} />
             </Col>
             <TasksList selectedCamera={selectedCamera} />
           </Col>
@@ -88,6 +74,14 @@ function CameraPage() {
                   Settings
                 </Nav.Link>
               </Nav.Item>
+              <Nav.Link active={tabName === 'info'} onClick={handleClickOnTab('info')}>
+                Info
+              </Nav.Link>
+              <Nav.Item />
+              <Nav.Link active={tabName === 'live'} onClick={handleClickOnTab('live')}>
+                Live
+              </Nav.Link>
+              <Nav.Item />
             </Nav>
 
             <Outlet context={{ selectedCamera, tabName }} />

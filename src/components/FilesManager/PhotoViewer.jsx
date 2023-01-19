@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import { Modal, Button } from 'react-bootstrap';
 import cn from 'classnames';
+import format from 'date-fns/format';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 import styles from './PhotosViewer.module.css';
 
@@ -104,7 +105,7 @@ function ImageViewer(props) {
       size="xl"
     >
       <Modal.Header closeButton>
-        {currentImage.name}
+        <Modal.Title>{format(new Date(currentImage.date), 'yyyy-MM-dd HH-mm-ss')}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -126,8 +127,7 @@ function ImageViewer(props) {
                     <ImgWrapper
                       width={100}
                       height={0.5625}
-                      src={file.preview}
-                      // src={`/files/${file._id}?size=thumbnail`}
+                      src={`${file.link}?size=thumbnail`}
                       role="button"
                       onClick={() => onFileClick(index)}
                     />
