@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { Col, Row, Nav } from 'react-bootstrap';
 import _ from 'lodash';
-// import format from 'date-fns/format';
 import useThunkStatus from '../hooks/useThunkStatus.js';
 import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
@@ -15,6 +15,7 @@ import { modals } from '../utils/constants.js';
 
 function CameraPage() {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { cameraId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -61,25 +62,25 @@ function CameraPage() {
             <Nav variant="tabs" className="mb-4">
               <Nav.Item>
                 <Nav.Link active={tabName === 'photos'} onClick={handleClickOnTab('photos')}>
-                  Photos
+                  {t('photos')}
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link active={tabName === 'videos'} onClick={handleClickOnTab('videos')}>
-                  Videos
+                  {t('videos')}
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link active={tabName === 'settings'} onClick={handleClickOnTab('settings')}>
-                  Settings
+                  {t('settings')}
                 </Nav.Link>
               </Nav.Item>
               <Nav.Link active={tabName === 'info'} onClick={handleClickOnTab('info')}>
-                Info
+                {t('info')}
               </Nav.Link>
               <Nav.Item />
               <Nav.Link active={tabName === 'live'} onClick={handleClickOnTab('live')}>
-                Live
+                {t('live')}
               </Nav.Link>
               <Nav.Item />
             </Nav>

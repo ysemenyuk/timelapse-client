@@ -2,61 +2,60 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Container, Navbar, Nav, Button, NavDropdown } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { userActions } from '../../redux/user/userSlice.js';
 
 function NavBar() {
   const dispatch = useDispatch();
   const { isLoggedIn } = useSelector((state) => state.user);
+  const { t, i18n } = useTranslation();
 
   const logoutHandler = () => {
     dispatch(userActions.logout());
   };
 
+  const selectLng = (key) => () => {
+    i18n.changeLanguage(key);
+  };
+
   return (
-    <Navbar className="navbar-expand-lg navbar-light bg-light mb-4">
+    <Navbar className="bg-light mb-4">
       <Container className="px-3">
-        <Navbar.Brand as={Link} to="/cameras" className="navbar-brand mr-auto">
+        <Navbar.Brand as={Link} to="/cameras" className="mr-auto">
           Timelapse
         </Navbar.Brand>
-        <Link to="/cameras" className="navbar-brand mr-auto">
-          Timelapse
-        </Link>
+
         <If condition={isLoggedIn}>
           <Nav className="collapse navbar-collapse">
             <Nav.Item as="li">
               <Link className="nav-link" to="/cameras">
-                All cameras
+                {t('cameras')}
               </Link>
             </Nav.Item>
           </Nav>
         </If>
-        <NavDropdown title="Lng" id="lng">
-          <NavDropdown.Item eventKey="eng">Eng</NavDropdown.Item>
-          <NavDropdown.Item eventKey="ru">Ru</NavDropdown.Item>
-        </NavDropdown>
-        <Choose>
-          <When condition={isLoggedIn}>
-            <div>
-              <Link className="" to="/user">
-                Profile
-              </Link>
-              <Button onClick={logoutHandler} variant="link" className="me-2">
-                LogOut
-              </Button>
-            </div>
-          </When>
-          <Otherwise>
-            <div>
-              <Link className="me-3" to="/login">
-                LogIn
-              </Link>
-              <Link className="me-3" to="/signup">
-                SignUp
-              </Link>
-            </div>
-          </Otherwise>
-        </Choose>
 
+        <div className="d-flex gap-3 justify-content-start align-items-center">
+          <NavDropdown title={t('name')} id="lng">
+            <NavDropdown.Item onClick={selectLng('en')}>En</NavDropdown.Item>
+            <NavDropdown.Item onClick={selectLng('ru')}>Ru</NavDropdown.Item>
+          </NavDropdown>
+
+          <If condition={isLoggedIn}>
+
+            <span className="navbar-text">
+              |
+            </span>
+
+            <Link className="" to="/user">
+              {t('profile')}
+            </Link>
+            <Button onClick={logoutHandler} variant="link">
+              {t('exit')}
+            </Button>
+          </If>
+
+        </div>
       </Container>
     </Navbar>
   );

@@ -1,23 +1,18 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+// import { useTranslation } from 'react-i18next';
 import { Col, Row } from 'react-bootstrap';
 import { cameraActions, cameraSelectors } from '../redux/camera/cameraSlice.js';
 import useThunkStatus from '../hooks/useThunkStatus.js';
 import CamerasList from '../components/CamerasList/CamerasList.jsx';
-// import Screenshot from '../components/Screenshot/Screenshot.jsx';
-// import CameraInfo from '../components/CameraInfo/CameraInfo.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
-// import FoldersList from '../components/FoldersList/FoldersList.jsx';
-// import TasksList from '../components/TasksList/TasksList.jsx';
 
 function CameraListPage() {
   const dispatch = useDispatch();
-
-  const allCameras = useSelector(cameraSelectors.allCameras);
-  // const selectedCamera = useSelector(cameraSelectors.selectedCamera);
-
+  // const { t } = useTranslation();
   const fetchStatus = useThunkStatus(cameraActions.fetchAll);
+  const allCameras = useSelector(cameraSelectors.allCameras);
 
   useEffect(() => {
     if (allCameras.length < 2) {

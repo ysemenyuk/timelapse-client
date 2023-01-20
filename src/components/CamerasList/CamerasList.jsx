@@ -1,25 +1,22 @@
 import React from 'react';
-// import cn from 'classnames';
-// import format from 'date-fns/format';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Col, Button, Row, Card } from 'react-bootstrap';
+import { Camera } from 'react-bootstrap-icons';
+// import cn from 'classnames';
+// import format from 'date-fns/format';
+import styles from './CamerasList.module.css';
 import Heading from '../UI/Heading.jsx';
 import { cameraActions } from '../../redux/camera/cameraSlice.js';
 import { modals } from '../../utils/constants.js';
 import { modalActions } from '../../redux/modalSlice.js';
 import CameraCard from '../CameraCard/CameraCard.jsx';
-// import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
-
-// const createLinkToPhotos = (camera) => {
-//   const date = camera.lastPhoto ? new Date(camera.lastPhoto.date) : new Date();
-//   const query = `?type=photo&oneDate=${format(date, 'yyyy-MM-dd')}`;
-//   return `/cameras/${camera._id}/photos${query}`;
-// };
 
 function CamerasList({ cameras }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleSelectItem = (camera) => () => {
     dispatch(cameraActions.selectCamera(camera._id));
@@ -33,7 +30,7 @@ function CamerasList({ cameras }) {
   return (
     <Col md={12} className="mb-4">
       <Heading lvl={6} className="mb-3">
-        Cameras List
+        {t('cameras')}
       </Heading>
 
       <Row sm={4} className="mb-3">
@@ -44,10 +41,10 @@ function CamerasList({ cameras }) {
         ))}
 
         <Col className="mb-4">
-          <Card className="card justify-content-center align-items-center h-100">
-            Add new camera
-            <Button onClick={handleAddCamera} size="sm">
-              AddCamera
+          <Card className={`${styles.card} gap-2 justify-content-center align-items-center h-100`}>
+            <Camera size="3rem" color="#0d6efd" />
+            <Button variant="outline-primary" onClick={handleAddCamera} size="sm">
+              {t('add_camera')}
             </Button>
           </Card>
         </Col>

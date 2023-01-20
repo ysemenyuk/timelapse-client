@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, Link, Navigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -11,7 +12,7 @@ import { userActions } from '../redux/user/userSlice.js';
 function LoginPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const { t } = useTranslation();
   const { isLoggedIn } = useSelector((state) => state.user);
 
   const formik = useFormik({
@@ -23,9 +24,7 @@ function LoginPage() {
     validationSchema: Yup.object({
       email: Yup.string().required().email(),
       password: Yup.string().required().min(6),
-      confirmPassword: Yup.string()
-        .required()
-        .oneOf([Yup.ref('password')]),
+      confirmPassword: Yup.string().required().oneOf([Yup.ref('password')]),
     }),
     onSubmit: (values, { resetForm, setSubmitting, setFieldError }) => {
       dispatch(userActions.singup(values))
@@ -34,7 +33,6 @@ function LoginPage() {
           resetForm();
           setSubmitting(false);
           navigate('/cameras');
-          // navigate('/login');
         })
         .catch((e) => {
           setSubmitting(false);
@@ -54,14 +52,14 @@ function LoginPage() {
   return (
     <Container fluid>
       <Row className="justify-content-center pt-5">
-        <Col md={3}>
+        <Col md={4}>
           <Heading lvl={3} className="text-center mb-3">
-            Sing Up
+            {t('sign_up')}
           </Heading>
 
           <Form className="mb-3" onSubmit={formik.handleSubmit}>
             <Form.Group className="mb-3">
-              <Form.Label htmlFor="email">Email</Form.Label>
+              <Form.Label htmlFor="email">{t('email')}</Form.Label>
               <Form.Control
                 type="email"
                 name="email"
@@ -77,7 +75,7 @@ function LoginPage() {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Password</Form.Label>
+              <Form.Label>{t('password')}</Form.Label>
               <Form.Control
                 type="password"
                 name="password"
@@ -93,7 +91,7 @@ function LoginPage() {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Confirm password</Form.Label>
+              <Form.Label>{t('confirm_password')}</Form.Label>
               <Form.Control
                 type="password"
                 name="confirmPassword"
@@ -114,7 +112,7 @@ function LoginPage() {
               variant="outline-primary"
               className="w-100 mb-3 mt-3"
             >
-              SignUp
+              {t('sign_up')}
               <If condition={formik.isSubmitting}>
                 <Spinner as="span" animation="border" size="sm" />
               </If>
@@ -126,8 +124,8 @@ function LoginPage() {
           </If>
 
           <Stack gap={1} className="align-items-center">
-            <span>Already have an account?</span>
-            <Link to="/login">Log In</Link>
+            <span>{t('have_accaunt')}</span>
+            <Link to="/login">{t('log_in')}</Link>
           </Stack>
         </Col>
       </Row>

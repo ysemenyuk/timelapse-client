@@ -4,7 +4,7 @@ import { Modal, Button } from 'react-bootstrap';
 import cn from 'classnames';
 import format from 'date-fns/format';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
-import styles from './PhotosViewer.module.css';
+import styles from './PhotoViewer.module.css';
 
 const isImage = (file) => file.type.includes('photo');
 

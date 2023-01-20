@@ -6,6 +6,7 @@ import { Button, ToggleButton, ButtonGroup } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import styles from './FileManagerHead.module.css';
 import 'react-datepicker/dist/react-datepicker.css';
+// import { useGetOneQuery } from '../../api/dateInfoApi.js';
 
 function FileManagerHead(props) {
   const {
@@ -20,6 +21,10 @@ function FileManagerHead(props) {
     onChangeStartDate,
     onChangeEndDate,
   } = props;
+
+  // eslint-disable-next-line max-len
+  // const { data, isLoading, isSuccess, isError, refetch } = useGetOneQuery({ cameraId: selectedCamera._id, date: '2023-01-21' });
+  // const fetchStatus = { isLoading, isSuccess, isError };
 
   return (
     <div className="mb-4">

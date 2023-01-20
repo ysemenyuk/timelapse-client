@@ -7,9 +7,11 @@ import { useOutletContext, useSearchParams } from 'react-router-dom';
 import { cameraActions } from '../../redux/camera/cameraSlice.js';
 import { fileManagerSelectors } from '../../redux/fileManager/fileManagerSlice.js';
 // import { fileType } from '../../utils/constants.js';
-import { useGetFilesQuery, useDeleteFileMutation } from '../../api/fileManagerApi.js';
+import { useGetFilesQuery, useDeleteFileMutation } from '../../api/fileManager.api.js';
 import { modals } from '../../utils/constants.js';
 import { modalActions } from '../../redux/modalSlice.js';
+import dateInfoService from '../../api/dateInfo.service.js';
+// import { useGetOneQuery } from '../../api/dateInfo.api.js';
 // import fileManagerService from '../../api/fileManager.service.js';
 
 export default function useFileManager() {
@@ -89,6 +91,14 @@ export default function useFileManager() {
   // eslint-disable-next-line max-len
   const { data: currentFiles, isLoading, isSuccess, isError, refetch } = useGetFilesQuery({ cameraId: selectedCamera._id, queryString });
   const fetchStatus = { isLoading, isSuccess, isError };
+
+  // eslint-disable-next-line max-len
+  // const { data } = useGetOneQuery({ cameraId: selectedCamera._id, date: '2023-01-21' });
+  // console.log(1111, data);
+
+  useEffect(() => {
+    dateInfoService.getOne({ cameraId: selectedCamera._id, date: '2023-01-21' });
+  }, []);
 
   //
 

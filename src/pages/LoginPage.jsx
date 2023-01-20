@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useNavigate, Link, Navigate, useLocation } from 'react-router-dom';
 import { useFormik } from 'formik';
@@ -11,6 +12,7 @@ import { userActions } from '../redux/user/userSlice.js';
 function LoginPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
 
@@ -52,14 +54,14 @@ function LoginPage() {
   return (
     <Container fluid>
       <Row className="justify-content-center pt-5">
-        <Col md={3}>
+        <Col md={4}>
           <Heading lvl={3} className="text-center mb-3">
-            Log In
+            {t('log_in')}
           </Heading>
 
           <Form className="mb-3" onSubmit={formik.handleSubmit}>
             <Form.Group className="mb-3">
-              <Form.Label htmlFor="email">Email</Form.Label>
+              <Form.Label htmlFor="email">{t('email')}</Form.Label>
               <Form.Control
                 onChange={formik.handleChange}
                 value={formik.values.email}
@@ -74,7 +76,7 @@ function LoginPage() {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Password</Form.Label>
+              <Form.Label>{t('password')}</Form.Label>
               <Form.Control
                 type="password"
                 onChange={formik.handleChange}
@@ -94,7 +96,7 @@ function LoginPage() {
               variant="outline-primary"
               className="w-100 mb-3 mt-3"
             >
-              LogIn
+              {t('log_in')}
               <If condition={formik.isSubmitting}>
                 <Spinner as="span" animation="border" size="sm" />
               </If>
@@ -106,8 +108,8 @@ function LoginPage() {
           </If>
 
           <Stack gap={2} className="align-items-center">
-            <span>New user?</span>
-            <Link to="/signup">Sign Up</Link>
+            <span>{t('new_user')}</span>
+            <Link to="/signup">{t('sign_up')}</Link>
           </Stack>
         </Col>
       </Row>

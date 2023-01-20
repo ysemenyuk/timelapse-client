@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Row, Col, Form, Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import Message from '../components/UI/Message.jsx';
 import Heading from '../components/UI/Heading.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
@@ -10,6 +11,7 @@ import useThunkStatus from '../hooks/useThunkStatus.js';
 
 function ProfilePage() {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const fetchStatus = useThunkStatus(userActions.updateOne);
   const { user } = useSelector((state) => state.user);
 
@@ -23,14 +25,20 @@ function ProfilePage() {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      setMessage('Invalid passwords');
+      setMessage(t('passwords_should_match'));
       return;
     }
 
     setMessage(null);
 
     const values = { name, email, password };
-    dispatch(userActions.updateOne({ userId: user._id, values }));
+    dispatch(userActions.updateOne({ userId: user._id, values }))
+      .then((res) => {
+        console.log('res', res);
+      })
+      .catch((err) => {
+        console.log('err -', err);
+      });
   };
 
   const handleDeleteUser = async (e) => {
@@ -43,14 +51,14 @@ function ProfilePage() {
     <Row className="justify-content-center">
       <Col sm={6}>
         <Heading lvl={3} className="mb-3">
-          User Profile
+          {t('profile')}
         </Heading>
 
         {message && <Message variant="danger">{message}</Message>}
 
         <Form className="mb-3" onSubmit={handleUpdateUser}>
           <Form.Group className="mb-3">
-            <Form.Label htmlFor="username">Username</Form.Label>
+            <Form.Label htmlFor="username">{t('user_name')}</Form.Label>
             <Form.Control
               type="username"
               name="username"
@@ -62,7 +70,7 @@ function ProfilePage() {
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label htmlFor="email">Email address</Form.Label>
+            <Form.Label htmlFor="email">{t('email')}</Form.Label>
             <Form.Control
               type="email"
               name="email"
@@ -74,7 +82,7 @@ function ProfilePage() {
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label htmlFor="password">New Password</Form.Label>
+            <Form.Label htmlFor="password">{t('new_password')}</Form.Label>
             <Form.Control
               type="password"
               name="password"
@@ -86,7 +94,7 @@ function ProfilePage() {
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label htmlFor="confirmPassword">Confirm New Password</Form.Label>
+            <Form.Label htmlFor="confirmPassword">{t('confirm_new_password')}</Form.Label>
             <Form.Control
               type="password"
               name="confirmPassword"
@@ -99,10 +107,10 @@ function ProfilePage() {
 
           <div className="d-flex gap-2 justify-content-start align-items-center">
             <Button variant="primary" onClick={handleDeleteUser} size="sm">
-              Delete
+              {t('delete')}
             </Button>
             <Button variant="primary" type="submit" size="sm">
-              Update
+              {t('update')}
             </Button>
             {fetchStatus.isLoading && <Spinner as="span" animation="border" size="sm" />}
           </div>

@@ -53,7 +53,7 @@ function AddCameraModal({ onHide }) {
   return (
     <>
       <Modal.Header closeButton>
-        Add new camera
+        <Modal.Title>Add new camera</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>

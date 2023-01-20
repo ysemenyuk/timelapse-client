@@ -6,7 +6,7 @@ import userReducer from './user/userSlice.js';
 import fileManagerReducer from './fileManager/fileManagerSlice.js';
 import modalReducer from './modalSlice.js';
 import taskReducer from './task/taskSlice.js';
-import { fileManagerApi } from '../api/fileManagerApi.js';
+import { fileManagerApi } from '../api/fileManager.api.js';
 
 export default () => configureStore({
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({
