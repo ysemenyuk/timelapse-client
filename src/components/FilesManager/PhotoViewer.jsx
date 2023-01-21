@@ -49,19 +49,12 @@ function ImageViewer(props) {
   };
 
   const onDeleteBtnClick = () => {
-    if (_.isEmpty(selectedIndexes)) {
-      return;
-    }
     const selectedItems = selectedIndexes.map((index) => images[index]);
     onDeleteSelected(selectedItems);
     setSelectedIndexes((prew) => ([_.head(prew)]));
   };
 
   const onAvatarBtnClick = () => {
-    if (_.isEmpty(selectedIndexes)) {
-      return;
-    }
-    // TODO: check file is image?
     onSetAvatarClick(currentImage);
   };
 

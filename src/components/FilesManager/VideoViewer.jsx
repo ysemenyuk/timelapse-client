@@ -28,12 +28,10 @@ function VideoViewer(props) {
   };
 
   const onDeleteBtnClick = () => {
-    if (_.isEmpty(selectedIndexes)) {
-      return;
-    }
     const selectedItems = selectedIndexes.map((index) => currentFiles[index]);
     onDeleteSelected(selectedItems);
     setSelectedIndexes([]);
+    onClose();
   };
 
   return (

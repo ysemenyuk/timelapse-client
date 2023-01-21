@@ -17,26 +17,25 @@ function VideosManager() {
     onCreateVideoFile,
     fetchStatus,
     currentFiles,
+    onRefetch,
+    isShowViewer,
+    onCloseViewer,
     selectedIndexes,
-    isShowImageViewer,
-    onCloseImageViewer,
-    onRefetchClick,
     setSelectedIndexes,
     onDeleteSelected,
     onFileClick,
-    isRangeDate,
     startDate,
     endDate,
-    onChangeFileType,
-    onChangeDateFormat,
+    oneDate,
     onChangeStartDate,
     onChangeEndDate,
+    onChangeOneDate,
   } = useFileManager();
 
   // console.log(2222, currentFiles);
 
-  const onDeleteBtnClick = (file) => () => {
-    console.log('onDeleteBtnClick', file);
+  const onDeleteFile = (file) => () => {
+    // console.log('onDeleteBtnClick', file);
     onDeleteSelected([file]);
   };
 
@@ -68,7 +67,7 @@ function VideosManager() {
             {`${format(new Date(videoFileData.startDate), 'yyyy.MM.dd')} - ${format(new Date(videoFileData.endDate), 'yyyy.MM.dd')}`}
             <div>{`${videoFileData.duration} seconds`}</div>
             <div className="d-flex gap-2 align-items-start">
-              <Button className="p-0" variant="link" size="sm" onClick={onDeleteBtnClick(file)}>Delete</Button>
+              <Button className="p-0" variant="link" size="sm" onClick={onDeleteFile(file)}>Delete</Button>
               <Button className="p-0" variant="link" size="sm" as="a" href={file.link} download>Download</Button>
             </div>
           </div>
@@ -94,14 +93,14 @@ function VideosManager() {
       <FileManagerHead
         fetchStatus={fetchStatus}
         currentFiles={currentFiles}
-        onRefetchClick={onRefetchClick}
-        isRangeDate={isRangeDate}
+        onRefetch={onRefetch}
+        isRangeDate
         startDate={startDate}
         endDate={endDate}
-        onChangeFileType={onChangeFileType}
-        onChangeDateFormat={onChangeDateFormat}
+        oneDate={oneDate}
         onChangeStartDate={onChangeStartDate}
         onChangeEndDate={onChangeEndDate}
+        onChangeOneDate={onChangeOneDate}
       />
 
       <Col md={12} className="mb-4">
@@ -128,9 +127,9 @@ function VideosManager() {
         </Choose>
       </Col>
 
-      <If condition={isShowImageViewer}>
+      <If condition={isShowViewer}>
         <VideoViewer
-          onClose={onCloseImageViewer}
+          onClose={onCloseViewer}
           currentFiles={currentFiles}
           selectedIndexes={selectedIndexes}
           setSelectedIndexes={setSelectedIndexes}

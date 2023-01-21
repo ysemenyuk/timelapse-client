@@ -1,45 +1,44 @@
 import React from 'react';
-import { Button, ToggleButton, ButtonGroup } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 // import cn from 'classnames';
 // import _ from 'lodash';
 // import format from 'date-fns/format';
 import DatePicker from 'react-datepicker';
 import styles from './FileManagerHead.module.css';
 import 'react-datepicker/dist/react-datepicker.css';
-// import { useGetOneQuery } from '../../api/dateInfoApi.js';
 
 function FileManagerHead(props) {
   const {
     fetchStatus,
     currentFiles,
-    onRefetchClick,
+    onRefetch,
     isRangeDate,
     startDate,
     endDate,
-    onChangeDateFormat,
+    oneDate,
+    // onChangeDateFormat,
     // onChangeFileType,
     onChangeStartDate,
     onChangeEndDate,
+    onChangeOneDate,
   } = props;
-
-  // eslint-disable-next-line max-len
-  // const { data, isLoading, isSuccess, isError, refetch } = useGetOneQuery({ cameraId: selectedCamera._id, date: '2023-01-21' });
-  // const fetchStatus = { isLoading, isSuccess, isError };
 
   return (
     <div className="mb-4">
 
       <div className="d-flex flex-wrap gap-2 mb-3 justify-content-start align-items-start">
         <div className="d-flex gap-2 justify-content-start align-items-start">
+
           <Button
             type="primary"
             size="sm"
-            onClick={onRefetchClick}
+            onClick={onRefetch}
             disabled={fetchStatus.isLoading}
           >
             Refetch
           </Button>
-          <ButtonGroup>
+
+          {/* <ButtonGroup>
             <ToggleButton
               size="sm"
               id="button-1"
@@ -67,8 +66,9 @@ function FileManagerHead(props) {
             >
               byTime
             </ToggleButton>
-          </ButtonGroup>
-          <If condition={false}>
+          </ButtonGroup> */}
+
+          {/* <If condition={false}>
             <ButtonGroup>
               <ToggleButton
                 size="sm"
@@ -91,24 +91,41 @@ function FileManagerHead(props) {
                 Range
               </ToggleButton>
             </ButtonGroup>
-          </If>
+          </If> */}
         </div>
 
         <div className="d-flex gap-2 justify-content-start align-items-center">
-          <If condition={isRangeDate}>
-            <DatePicker
-              className={styles.dateInput}
-              dateFormat="dd/MM/yyyy"
-              selected={startDate}
-              onChange={onChangeStartDate}
-            />
-          </If>
-          <DatePicker
-            className={styles.dateInput}
-            dateFormat="dd/MM/yyyy"
-            selected={endDate}
-            onChange={onChangeEndDate}
-          />
+          <Choose>
+            <When condition={isRangeDate}>
+              <DatePicker
+                className={styles.dateInput}
+                dateFormat="dd/MM/yyyy"
+                selected={startDate}
+                onChange={onChangeStartDate}
+                selectsStart
+                startDate={startDate}
+                endDate={endDate}
+              />
+              <DatePicker
+                className={styles.dateInput}
+                dateFormat="dd/MM/yyyy"
+                selected={endDate}
+                onChange={onChangeEndDate}
+                selectsEnd
+                startDate={startDate}
+                endDate={endDate}
+                minDate={startDate}
+              />
+            </When>
+            <Otherwise>
+              <DatePicker
+                className={styles.dateInput}
+                dateFormat="dd/MM/yyyy"
+                selected={oneDate}
+                onChange={onChangeOneDate}
+              />
+            </Otherwise>
+          </Choose>
 
           <div className="d-flex h-100 align-items-center">
             {`Files:${currentFiles ? currentFiles.length : 0}`}

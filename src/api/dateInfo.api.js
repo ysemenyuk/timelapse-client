@@ -14,7 +14,7 @@ export const dateInfoApi = createApi({
     },
   }),
   endpoints: (build) => ({
-    getOne: build.query({
+    getDateInfo: build.query({
       query: ({ cameraId, date }) => ({
         url: `/${cameraId}/date-info/${date}`,
       }),
@@ -23,4 +23,4 @@ export const dateInfoApi = createApi({
   }),
 });
 
-export const { useGetOneQuery } = dateInfoApi;
+export const { useGetDateInfoQuery } = dateInfoApi;

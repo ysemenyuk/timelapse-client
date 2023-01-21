@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, ButtonGroup, Card, Col, Row, Spinner, ToggleButton } from 'react-bootstrap';
+import { Button, Card, Col, Row, Spinner, ToggleButton } from 'react-bootstrap';
 import cn from 'classnames';
 import _ from 'lodash';
 import format from 'date-fns/format';
@@ -16,31 +16,27 @@ function CameraPhotosManager() {
     onCreatePhotoFile,
     fetchStatus,
     currentFiles,
+    onRefetch,
+    isShowViewer,
+    onCloseViewer,
     selectedIndexes,
-    isShowImageViewer,
-    onCloseImageViewer,
-    onRefetchClick,
     setSelectedIndexes,
-    onSetAvatarClick,
     onDeleteSelected,
     onFileClick,
-    onSelectButtonClick,
+    onSetAvatar,
     isSelectFiles,
-    isRangeDate,
+    onSelectButtonClick,
     startDate,
     endDate,
-    onChangeFileType,
-    onChangeDateFormat,
+    oneDate,
     onChangeStartDate,
     onChangeEndDate,
+    onChangeOneDate,
   } = useFileManager();
 
   // console.log(1111, currentFiles);
 
   const onDeleteBtnClick = () => {
-    if (_.isEmpty(selectedIndexes)) {
-      return;
-    }
     const selectedItems = selectedIndexes.map((index) => currentFiles[index]);
     onDeleteSelected(selectedItems);
     setSelectedIndexes([]);
@@ -48,7 +44,7 @@ function CameraPhotosManager() {
 
   const renderCurrentFiles = () => currentFiles.map((file, index) => {
     const classNames = cn(styles.item, { [styles.selectedItem]: selectedIndexes.includes(index) });
-    const date = format(new Date(file.date), 'dd.MM.yyyy');
+    // const date = format(new Date(file.date), 'dd.MM.yyyy');
     const time = format(new Date(file.date), 'HH:mm:ss');
 
     return (
@@ -73,9 +69,6 @@ function CameraPhotosManager() {
           </div>
           <div className={styles.itemBody}>
             <div>{time}</div>
-            <If condition={isRangeDate}>
-              <div>{date}</div>
-            </If>
           </div>
         </Card>
       </Col>
@@ -96,7 +89,7 @@ function CameraPhotosManager() {
         </div>
 
         <div className="d-flex gap-2">
-          <ButtonGroup>
+          {/* <ButtonGroup>
             <ToggleButton
               size="sm"
               id="Small-button"
@@ -114,7 +107,26 @@ function CameraPhotosManager() {
             >
               Medium
             </ToggleButton>
-          </ButtonGroup>
+          </ButtonGroup> */}
+
+          <If condition={isSelectFiles}>
+            <Button
+              type="primary"
+              size="sm"
+              onClick={onDeleteBtnClick}
+              disabled={fetchStatus.isLoading || _.isEmpty(selectedIndexes)}
+            >
+              {`Delete ${isSelectFiles ? `(${selectedIndexes.length})` : ''}`}
+            </Button>
+
+            <Button
+              type="primary"
+              size="sm"
+            >
+              SelectAll
+            </Button>
+          </If>
+
           <ToggleButton
             size="sm"
             id="select-button"
@@ -123,23 +135,8 @@ function CameraPhotosManager() {
             checked={isSelectFiles}
             onChange={onSelectButtonClick}
           >
-            SelectFiles
+            {isSelectFiles ? 'ResetSelect' : 'SelectFiles'}
           </ToggleButton>
-
-          <Button
-            type="primary"
-            size="sm"
-            onClick={onDeleteBtnClick}
-            disabled={fetchStatus.isLoading || _.isEmpty(selectedIndexes)}
-          >
-            {`Delete ${isSelectFiles ? `(${selectedIndexes.length})` : ''}`}
-          </Button>
-
-          <If condition={false}>
-            <div className="d-flex align-items-center">
-              {(isSelectFiles) && `Selected:${selectedIndexes.length}`}
-            </div>
-          </If>
 
         </div>
 
@@ -148,14 +145,14 @@ function CameraPhotosManager() {
       <FileManagerHead
         fetchStatus={fetchStatus}
         currentFiles={currentFiles}
-        onRefetchClick={onRefetchClick}
-        isRangeDate={isRangeDate}
+        onRefetch={onRefetch}
+        isRangeDate={false}
         startDate={startDate}
         endDate={endDate}
-        onChangeFileType={onChangeFileType}
-        onChangeDateFormat={onChangeDateFormat}
+        oneDate={oneDate}
         onChangeStartDate={onChangeStartDate}
         onChangeEndDate={onChangeEndDate}
+        onChangeOneDate={onChangeOneDate}
       />
 
       <Col md={12} className="mb-4">
@@ -182,14 +179,14 @@ function CameraPhotosManager() {
         </Choose>
       </Col>
 
-      <If condition={isShowImageViewer}>
+      <If condition={isShowViewer}>
         <PhotoViewer
-          onClose={onCloseImageViewer}
+          onClose={onCloseViewer}
           currentFiles={currentFiles}
           selectedIndexes={selectedIndexes}
           setSelectedIndexes={setSelectedIndexes}
           onDeleteSelected={onDeleteSelected}
-          onSetAvatarClick={onSetAvatarClick}
+          onSetAvatar={onSetAvatar}
         />
       </If>
 
