@@ -5,18 +5,17 @@ import _ from 'lodash';
 import format from 'date-fns/format';
 import { Image } from 'react-bootstrap-icons';
 import styles from './PhotosManager.module.css';
-import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
-import Error from '../UI/Error';
-import useFileManager from './useFileManager';
+import ImgWrapper from '../../UI/ImgWrapper/ImgWrapper.jsx';
+import Error from '../../UI/Error';
+import useFileManager from '../useFileManager';
 import PhotoViewer from './PhotoViewer';
-import FileManagerHead from './FileManagerHead';
+import QueryBar from '../QueryBar/QueryBar';
 
 function CameraPhotosManager() {
   const {
     onCreatePhotoFile,
-    fetchStatus,
-    currentFiles,
-    onRefetch,
+    getFilesQuery,
+    getDateInfoQuery,
     isShowViewer,
     onCloseViewer,
     selectedIndexes,
@@ -34,6 +33,7 @@ function CameraPhotosManager() {
     onChangeOneDate,
   } = useFileManager();
 
+  const currentFiles = getFilesQuery.data || [];
   // console.log(1111, currentFiles);
 
   const onDeleteBtnClick = () => {
@@ -44,7 +44,7 @@ function CameraPhotosManager() {
 
   const renderCurrentFiles = () => currentFiles.map((file, index) => {
     const classNames = cn(styles.item, { [styles.selectedItem]: selectedIndexes.includes(index) });
-    // const date = format(new Date(file.date), 'dd.MM.yyyy');
+    const date = format(new Date(file.date), 'dd.MM.yyyy');
     const time = format(new Date(file.date), 'HH:mm:ss');
 
     return (
@@ -69,6 +69,7 @@ function CameraPhotosManager() {
           </div>
           <div className={styles.itemBody}>
             <div>{time}</div>
+            <div>{date}</div>
           </div>
         </Card>
       </Col>
@@ -114,7 +115,7 @@ function CameraPhotosManager() {
               type="primary"
               size="sm"
               onClick={onDeleteBtnClick}
-              disabled={fetchStatus.isLoading || _.isEmpty(selectedIndexes)}
+              disabled={getFilesQuery.isLoading || _.isEmpty(selectedIndexes)}
             >
               {`Delete ${isSelectFiles ? `(${selectedIndexes.length})` : ''}`}
             </Button>
@@ -135,17 +136,15 @@ function CameraPhotosManager() {
             checked={isSelectFiles}
             onChange={onSelectButtonClick}
           >
-            {isSelectFiles ? 'ResetSelect' : 'SelectFiles'}
+            {isSelectFiles ? 'Cancel' : 'SelectFiles'}
           </ToggleButton>
 
         </div>
-
       </div>
 
-      <FileManagerHead
-        fetchStatus={fetchStatus}
-        currentFiles={currentFiles}
-        onRefetch={onRefetch}
+      <QueryBar
+        getFilesQuery={getFilesQuery}
+        getDateInfoQuery={getDateInfoQuery}
         isRangeDate={false}
         startDate={startDate}
         endDate={endDate}
@@ -157,11 +156,11 @@ function CameraPhotosManager() {
 
       <Col md={12} className="mb-4">
         <Choose>
-          <When condition={fetchStatus.isError}>
+          <When condition={getFilesQuery.isError}>
             <Error message="Fetch files. Network error " type="error" />
           </When>
 
-          <When condition={!currentFiles || fetchStatus.isLoading}>
+          <When condition={!currentFiles || getFilesQuery.isLoading}>
             <Spinner animation="border" />
           </When>
 

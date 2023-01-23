@@ -10,10 +10,10 @@ import AddCreatePhotoModal from '../TasksActions/CreatePhoto/AddModal';
 import EditCreatePhotoModal from '../TasksActions/CreatePhoto/InfoModal';
 import AddCreateVideoModal from '../TasksActions/CreateVideo/AddModal';
 import EditCreateVideoModal from '../TasksActions/CreateVideo/InfoModal';
-import AddCreatePhotosByTimeModal from '../TasksActions/CreatePhotosByTimeModal/AddModal';
-import EditCreatePhotosByTimeModal from '../TasksActions/CreatePhotosByTimeModal/EditModal';
-import AddCreateVideosByTimeModal from '../TasksActions/CreateVideosByTimeModal/AddModal';
-import EditCreateVideosByTimeModal from '../TasksActions/CreateVideosByTimeModal/EditModal';
+import AddCreatePhotosByTimeModal from '../TasksActions/CreatePhotosByTime/AddModal';
+import EditCreatePhotosByTimeModal from '../TasksActions/CreatePhotosByTime/EditModal';
+import AddCreateVideosByTimeModal from '../TasksActions/CreateVideosByTime/AddModal';
+import EditCreateVideosByTimeModal from '../TasksActions/CreateVideosByTime/EditModal';
 
 const modalsMap = {
   [modals.ADD_CAMERA]: AddCameraModal,

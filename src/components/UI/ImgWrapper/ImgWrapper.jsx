@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Spinner } from 'react-bootstrap';
+// import { Spinner } from 'react-bootstrap';
 import LazyLoad from 'react-lazyload';
 // import cn from 'classnames';
 import styles from './ImgWrapper.module.css';
@@ -43,8 +43,8 @@ export default function ImgWrapper({ src, width, height, ...props }) {
           </Choose>
 
           <If condition={!load && src}>
-            <span>
-              <Spinner animation="border" />
+            <span className={styles.loading}>
+              {/* <Spinner animation="border" /> */}
             </span>
           </If>
         </div>

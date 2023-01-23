@@ -9,7 +9,8 @@ import { fileManagerSelectors } from '../../redux/fileManager/fileManagerSlice.j
 import { useGetFilesQuery, useDeleteFileMutation } from '../../api/fileManager.api.js';
 import { modals } from '../../utils/constants.js';
 import { modalActions } from '../../redux/modalSlice.js';
-import dateInfoService from '../../api/dateInfo.service.js';
+// import dateInfoService from '../../api/dateInfo.service.js';
+import { useGetDateInfoQuery } from '../../api/dateInfo.api.js';
 // import { useGetDateInfoQuery } from '../../api/dateInfo.api.js';
 
 export default function useFileManager() {
@@ -21,14 +22,10 @@ export default function useFileManager() {
 
   const isPhotos = tabName === 'photos';
   const isVideos = tabName === 'videos';
+  const fileType = isPhotos ? 'photo' : 'video';
 
-  console.log(1111, searchParams.toString());
-
-  // const initFileType = () => {
-  // };
-
-  // const initIsRangeDate = () => {
-  // };
+  // const initFileType = () => {}
+  // const initIsRangeDate = () => {}
 
   const initStartDate = () => {
     if (searchParams.get('startDate')) {
@@ -63,6 +60,7 @@ export default function useFileManager() {
   const [isShowViewer, setIsShowViewer] = useState(false);
   const [isSelectFiles, setIsSelectFiles] = useState(false);
   const [selectedIndexes, setSelectedIndexes] = useState([]);
+
   // const [fileType, setFileType] = useState(initFileType);
   // const [isRangeDate, setIsRangeDate] = useState(initIsRangeDate);
   const [startDate, setStartDate] = useState(initStartDate);
@@ -70,7 +68,6 @@ export default function useFileManager() {
   const [oneDate, setOneDate] = useState(initOneDate);
 
   const [isReady, setIsReady] = useState(false);
-  console.log(2222, isReady);
 
   //
 
@@ -83,33 +80,34 @@ export default function useFileManager() {
       searchParams.set('endDate', format(endDate, 'yyyy-MM-dd'));
     }
     // searchParams.set('fileType', fileType);
-    // searchParams.set('isRangeDate', isRangeDate);
     setSearchParams(searchParams);
     setIsReady(true);
   }, [isPhotos, isVideos, startDate, endDate, oneDate]);
 
   //
 
-  const queryString = useMemo(() => {
-    if (isPhotos) {
-      // const date = format(oneDate, 'yyyy-MM-dd');
-      // return `?type=photo&oneDate=${date}`;
-      return `?type=photo&${searchParams.toString()}`;
-    }
-    if (isVideos) {
-      // const start = format(startDate, 'yyyy-MM-dd');
-      // const end = format(endDate, 'yyyy-MM-dd');
-      // return `?type=video&startDate=${start}&endDate=${end}`;
-      return `?type=video&${searchParams.toString()}`;
-    }
-    return '';
-  }, [isPhotos, isVideos, startDate, endDate, oneDate]);
+  const queryString = useMemo(
+    () => `?type=${fileType}&${searchParams.toString()}`,
+    [fileType, searchParams.toString()],
+  );
 
-  // eslint-disable-next-line max-len
-  const { data: currentFiles, isLoading, isFetching, isSuccess, isError, isUninitialized, refetch } = useGetFilesQuery({ cameraId: selectedCamera._id, queryString }, { skip: !isReady });
-  const fetchStatus = { isLoading, isSuccess, isError };
+  const getFilesQuery = useGetFilesQuery(
+    { cameraId: selectedCamera._id, query: queryString },
+    { skip: !isReady },
+  );
 
-  console.log(3333, isFetching, isUninitialized, currentFiles);
+  const { data: currentFiles, refetch } = getFilesQuery;
+  // console.log(1111, currentFiles);
+
+  //
+
+  const getDateInfoQuery = useGetDateInfoQuery(
+    { cameraId: selectedCamera._id, date: format(oneDate, 'yyyy-MM-dd') },
+    { skip: isVideos },
+  );
+
+  // const { data: dateInfo } = getDateInfoQuery;
+  // console.log(2222, dateInfo);
 
   //
 
@@ -135,45 +133,44 @@ export default function useFileManager() {
 
   //
 
-  useEffect(() => {
-    dateInfoService.getOne({ cameraId: selectedCamera._id, date: '2023-01-21' });
-  }, []);
+  // useEffect(() => {
+  //   dateInfoService.getOne({ cameraId: selectedCamera._id, date: '2023-01-21' });
+  // }, []);
 
   //
 
+  const resetSelect = () => {
+    setSelectedIndexes([]);
+    setIsSelectFiles(false);
+  };
+
   // const onChangeFileType = () => {
-  //   setSelectedIndexes([]);
-  //   setIsSelectFiles(false);
-  //   // setFileType(e.currentTarget.value);
+  //   resetSelect();
+  //   setFileType(e.currentTarget.value);
   // };
 
   // const onChangeDateFormat = () => {
-  //   setSelectedIndexes([]);
-  //   setIsSelectFiles(false);
-  //   // setIsRangeDate(!isRangeDate);
+  //   resetSelect();
+  //   setIsRangeDate(!isRangeDate);
   // };
 
   const onChangeStartDate = (date) => {
-    setSelectedIndexes([]);
-    setIsSelectFiles(false);
+    resetSelect();
     setStartDate(date);
   };
 
   const onChangeEndDate = (date) => {
-    setSelectedIndexes([]);
-    setIsSelectFiles(false);
+    resetSelect();
     setEndDate(date);
   };
 
   const onChangeOneDate = (date) => {
-    setSelectedIndexes([]);
-    setIsSelectFiles(false);
+    resetSelect();
     setOneDate(date);
   };
 
   const onRefetchClick = () => {
-    setSelectedIndexes([]);
-    setIsSelectFiles(false);
+    resetSelect();
     refetch();
   };
 
@@ -237,8 +234,8 @@ export default function useFileManager() {
     onCreatePhotoFile,
     onCreateVideoFile,
 
-    fetchStatus,
-    currentFiles,
+    getFilesQuery,
+    getDateInfoQuery,
     selectedIndexes,
     isShowViewer,
 

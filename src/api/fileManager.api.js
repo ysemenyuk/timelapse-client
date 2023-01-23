@@ -15,14 +15,14 @@ export const fileManagerApi = createApi({
   }),
   endpoints: (build) => ({
     getFiles: build.query({
-      query: ({ cameraId, queryString = '' }) => ({
-        url: `/${cameraId}/files${queryString}`,
+      query: ({ cameraId, query = '' }) => ({
+        url: `/${cameraId}/files${query}`,
       }),
       providesTags: () => ['Files'],
     }),
     getFilesCount: build.query({
-      query: ({ cameraId, queryString = '' }) => ({
-        url: `/${cameraId}/files/count${queryString}`,
+      query: ({ cameraId, query = '' }) => ({
+        url: `/${cameraId}/files/count${query}`,
       }),
     }),
     deleteFile: build.mutation({

@@ -6,18 +6,17 @@ import format from 'date-fns/format';
 // import _ from 'lodash';
 import { PlayCircle } from 'react-bootstrap-icons';
 import styles from './VideosManager.module.css';
-import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
-import Error from '../UI/Error';
-import useFileManager from './useFileManager';
-import FileManagerHead from './FileManagerHead';
+import ImgWrapper from '../../UI/ImgWrapper/ImgWrapper.jsx';
+import Error from '../../UI/Error';
+import useFileManager from '../useFileManager';
+import QueryBar from '../QueryBar/QueryBar';
 import VideoViewer from './VideoViewer';
 
 function VideosManager() {
   const {
     onCreateVideoFile,
-    fetchStatus,
-    currentFiles,
-    onRefetch,
+    getFilesQuery,
+    getDateInfoQuery,
     isShowViewer,
     onCloseViewer,
     selectedIndexes,
@@ -32,6 +31,7 @@ function VideosManager() {
     onChangeOneDate,
   } = useFileManager();
 
+  const currentFiles = getFilesQuery.data || [];
   // console.log(2222, currentFiles);
 
   const onDeleteFile = (file) => () => {
@@ -90,10 +90,9 @@ function VideosManager() {
         </div>
       </div>
 
-      <FileManagerHead
-        fetchStatus={fetchStatus}
-        currentFiles={currentFiles}
-        onRefetch={onRefetch}
+      <QueryBar
+        getFilesQuery={getFilesQuery}
+        getDateInfoQuery={getDateInfoQuery}
         isRangeDate
         startDate={startDate}
         endDate={endDate}
@@ -105,11 +104,11 @@ function VideosManager() {
 
       <Col md={12} className="mb-4">
         <Choose>
-          <When condition={fetchStatus.isError}>
+          <When condition={getFilesQuery.isError}>
             <Error message="Fetch files. Network error " type="error" />
           </When>
 
-          <When condition={!currentFiles || fetchStatus.isLoading}>
+          <When condition={!currentFiles || getFilesQuery.isLoading}>
             <Spinner animation="border" />
           </When>
 

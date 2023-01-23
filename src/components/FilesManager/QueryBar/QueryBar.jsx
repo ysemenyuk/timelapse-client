@@ -2,16 +2,16 @@ import React from 'react';
 import { Button } from 'react-bootstrap';
 // import cn from 'classnames';
 // import _ from 'lodash';
-// import format from 'date-fns/format';
+import format from 'date-fns/format';
+import fromUnixTime from 'date-fns/fromUnixTime';
 import DatePicker from 'react-datepicker';
-import styles from './FileManagerHead.module.css';
+import styles from './QueryBar.module.css';
 import 'react-datepicker/dist/react-datepicker.css';
 
-function FileManagerHead(props) {
+function QueryBar(props) {
   const {
-    fetchStatus,
-    currentFiles,
-    onRefetch,
+    getFilesQuery,
+    getDateInfoQuery,
     isRangeDate,
     startDate,
     endDate,
@@ -23,17 +23,23 @@ function FileManagerHead(props) {
     onChangeOneDate,
   } = props;
 
+  const { data: currentFiles } = getFilesQuery;
+  // console.log(1111, currentFiles);
+
+  const { data: dateInfo } = getDateInfoQuery;
+  // console.log(2222, dateInfo);
+
   return (
     <div className="mb-4">
 
-      <div className="d-flex flex-wrap gap-2 mb-3 justify-content-start align-items-start">
-        <div className="d-flex gap-2 justify-content-start align-items-start">
+      <div className="d-flex flex-wrap gap-2 mb-3 justify-content-start align-items-center">
+        <div className="d-flex gap-2 justify-content-start align-items-center">
 
           <Button
             type="primary"
             size="sm"
-            onClick={onRefetch}
-            disabled={fetchStatus.isLoading}
+            onClick={getFilesQuery.refetch}
+            disabled={getFilesQuery.isFetching}
           >
             Refetch
           </Button>
@@ -127,15 +133,31 @@ function FileManagerHead(props) {
             </Otherwise>
           </Choose>
 
-          <div className="d-flex h-100 align-items-center">
-            {`Files:${currentFiles ? currentFiles.length : 0}`}
+          <div className={`${styles.filesCount} d-flex h-100 align-items-center`}>
+            {`Files: ${currentFiles ? currentFiles.length : 0}`}
           </div>
 
         </div>
+
+        <If condition={dateInfo && dateInfo.weather}>
+          <div className="d-flex gap-2 justify-content-end align-items-center ms-auto">
+            <div className={`${styles.filesCount} d-flex h-100 gap-2 align-items-center`}>
+              <div>{`Sunrise: ${format(fromUnixTime(dateInfo.weather.sys.sunrise), 'HH:mm')}`}</div>
+              <div>
+                {`Sunset: ${format(fromUnixTime(dateInfo.weather.sys.sunset), 'HH:mm')}`}
+              </div>
+              <div>
+                {`Temp: ${(dateInfo.weather.main.temp_min).toFixed(1)}°C 
+                .. ${(dateInfo.weather.main.temp_max).toFixed(1)}°C`}
+              </div>
+            </div>
+          </div>
+        </If>
+
       </div>
 
     </div>
   );
 }
 
-export default FileManagerHead;
+export default QueryBar;

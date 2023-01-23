@@ -3,30 +3,55 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
+import format from 'date-fns/format';
+import * as Yup from 'yup';
 import { Modal, Button, Form, Row, Col, Spinner } from 'react-bootstrap';
 import fileManagerService from '../../../api/fileManager.service.js'; //
 import { cameraSelectors } from '../../../redux/camera/cameraSlice.js';
 import { taskActions } from '../../../redux/task/taskSlice.js';
 import useThunkStatus from '../../../hooks/useThunkStatus.js';
 import { taskName, taskType } from '../../../utils/constants.js';
+import Message from '../../UI/Message.jsx';
 
-const videoSettingsInitialValues = {
-  startDate: '2022-06-01', // today - week
-  endDate: '2022-07-31', // today
-  duration: 60,
-  fps: 20,
+// const videoSettingsInitialValues = {
+//   startDate: '2022-06-01', // today
+//   endDate: '2022-07-31', // today
+//   startTime: '08:00',
+//   endTime: '20:00',
+//   duration: 60,
+//   fps: 20,
+// };
+
+const validationSchema = Yup.object({
+  filename: Yup.string().required().min(2).max(20),
+});
+
+const getDate = (file) => {
+  if (file && file.date) {
+    return format(new Date(file.date), 'yyyy-MM-dd');
+  }
+  return format(new Date(), 'yyyy-MM-dd');
 };
 
 function AddCreateVideoModal({ onHide }) {
   const dispatch = useDispatch();
   const fetchStatus = useThunkStatus(taskActions.createOne);
-  const selectedCameraId = useSelector(cameraSelectors.selectedCameraId);
+  const selectedCamera = useSelector(cameraSelectors.selectedCamera);
 
   const formik = useFormik({
-    initialValues: videoSettingsInitialValues,
+    validationSchema,
+    initialValues: {
+      filename: '',
+      startDate: getDate(selectedCamera.firstPhoto),
+      endDate: getDate(selectedCamera.lastPhoto),
+      startTime: '08:00',
+      endTime: '20:00',
+      duration: 10,
+      fps: 20,
+    },
     onSubmit: (values, { resetForm, setSubmitting, setFieldError }) => {
       dispatch(taskActions.createOne({
-        cameraId: selectedCameraId,
+        cameraId: selectedCamera._id,
         payload: {
           name: taskName.CREATE_VIDEO,
           type: taskType.ONE_TIME,
@@ -50,6 +75,9 @@ function AddCreateVideoModal({ onHide }) {
   // console.log(22222222, 'formik.values -', formik.values);
 
   const [filesCount, setFilesCount] = useState(0);
+  const maxVideoLength = Math.round(filesCount / formik.values.fps);
+  const minVideoLength = 10;
+  const isDidabled = false; // maxVideoLength < minVideoLength;
 
   useEffect(() => {
     const query = {
@@ -60,7 +88,7 @@ function AddCreateVideoModal({ onHide }) {
 
     const queryString = `?${Object.entries(query).map(([key, value]) => `${key}=${value}`).join('&')}`;
 
-    fileManagerService.getCount(selectedCameraId, queryString)
+    fileManagerService.getCount(selectedCamera._id, queryString)
       .then((resp) => {
         setFilesCount(resp.data.count);
       });
@@ -80,6 +108,24 @@ function AddCreateVideoModal({ onHide }) {
         </div>
 
         <Form className="mb-3">
+
+          <Row className="mb-3">
+            <Form.Group as={Col}>
+              <Form.Label htmlFor="filename">File name</Form.Label>
+              <Form.Control
+                onChange={formik.handleChange}
+                value={formik.values.filename}
+                name="filename"
+                id="filename"
+                type="string"
+                isInvalid={formik.errors && formik.errors.filename}
+              />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors && formik.errors.filename}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Row>
+
           <Row className="mb-3">
             <Form.Group as={Col}>
               <Form.Label htmlFor="startDate">Start date</Form.Label>
@@ -95,6 +141,7 @@ function AddCreateVideoModal({ onHide }) {
                 {formik.errors && formik.errors.startDate}
               </Form.Control.Feedback>
             </Form.Group>
+
             <Form.Group as={Col}>
               <Form.Label htmlFor="endDate">End date</Form.Label>
               <Form.Control
@@ -111,45 +158,80 @@ function AddCreateVideoModal({ onHide }) {
             </Form.Group>
           </Row>
 
-          <Row className="mb-3">
+          <div key="inline-radio" className="mb-3">
+            <Form.Check
+              checked
+              inline
+              label="AllFilesFromDay"
+              type="radio"
+              id="inline-radio-1"
+            />
+            <Form.Check
+              disabled
+              inline
+              label="CustomeTime"
+              type="radio"
+              id="inline-radio-2"
+            />
+          </div>
+
+          <Row className="mb-4">
             <Form.Group as={Col}>
-              <Form.Label htmlFor="duration">Duration (seconds)</Form.Label>
+              {/* <Form.Label htmlFor="startTime">Start time</Form.Label> */}
               <Form.Control
+                disabled
                 onChange={formik.handleChange}
-                value={formik.values.duration}
-                name="duration"
-                id="duration"
-                type="number"
-                isInvalid={formik.errors && formik.errors.duration}
+                value={formik.values.startTime}
+                name="startTime"
+                id="startTime"
+                type="time"
+                isInvalid={formik.errors && formik.errors.startTime}
               />
               <Form.Control.Feedback type="invalid">
-                {formik.errors && formik.errors.duration}
+                {formik.errors && formik.errors.startTime}
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group as={Col}>
-              <Form.Label htmlFor="fps">Frames per second (fps)</Form.Label>
+              {/* <Form.Label htmlFor="endTime">End time</Form.Label> */}
               <Form.Control
+                disabled
                 onChange={formik.handleChange}
-                value={formik.values.fps}
-                name="fps"
-                id="fps"
-                type="number"
-                isInvalid={formik.errors && formik.errors.fps}
+                value={formik.values.endTime}
+                name="endTime"
+                id="endTime"
+                type="time"
+                isInvalid={formik.errors && formik.errors.endTime}
               />
               <Form.Control.Feedback type="invalid">
-                {formik.errors && formik.errors.fps}
+                {formik.errors && formik.errors.endTime}
               </Form.Control.Feedback>
             </Form.Group>
           </Row>
+
+          <div className="mb-4">
+            {`Found: ${filesCount} photos (${maxVideoLength} sec video)`}
+          </div>
+
+          <div className="mb-4">
+            <Form.Label>{`Video length (${formik.values.duration} sec)`}</Form.Label>
+            <Form.Range
+              disabled={isDidabled}
+              name="duration"
+              id="duration"
+              min={minVideoLength}
+              max={maxVideoLength}
+              value={formik.values.duration}
+              onChange={formik.handleChange}
+            />
+          </div>
+
         </Form>
 
-        <div className="mb-3">
-          {`Required: ${formik.values.duration * formik.values.fps} files`}
-        </div>
-
-        <div className="mb-3">
-          {`Saved: ${filesCount} files (${Math.round(filesCount / formik.values.fps)} seconds)`}
-        </div>
+        <If condition={isDidabled}>
+          <Message variant="warning">
+            Minimum 10 sec video length.
+          </Message>
+        </If>
 
       </Modal.Body>
 
@@ -166,6 +248,7 @@ function AddCreateVideoModal({ onHide }) {
           key="submit"
           onClick={formik.handleSubmit}
           size="sm"
+          disabled={isDidabled}
         >
           Submit
         </Button>

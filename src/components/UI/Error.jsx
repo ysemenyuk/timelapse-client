@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Error = (props) => {
+function Error({ message }) {
   return (
     <div>
-      <span>{props.message || 'Error...'}</span>
+      <span>{message || 'Error...'}</span>
     </div>
   );
-};
+}
 
 export default Error;

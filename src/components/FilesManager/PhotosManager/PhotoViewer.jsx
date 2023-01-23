@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { Modal, Button } from 'react-bootstrap';
 import cn from 'classnames';
 import format from 'date-fns/format';
-import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
+import ImgWrapper from '../../UI/ImgWrapper/ImgWrapper.jsx';
 import styles from './PhotoViewer.module.css';
 
 const isImage = (file) => file.type.includes('photo');
@@ -15,7 +15,7 @@ function ImageViewer(props) {
     selectedIndexes,
     setSelectedIndexes,
     onDeleteSelected,
-    onSetAvatarClick,
+    onSetAvatar,
   } = props;
 
   const [images, setImages] = useState(currentFiles.filter(isImage));
@@ -55,7 +55,7 @@ function ImageViewer(props) {
   };
 
   const onAvatarBtnClick = () => {
-    onSetAvatarClick(currentImage);
+    onSetAvatar(currentImage);
   };
 
   useEffect(() => {
@@ -108,7 +108,6 @@ function ImageViewer(props) {
               width={100}
               height={0.5625}
               src={currentImage.link}
-              // src={`/files/${currentImage._id}`}
             />
           </div>
           <div className={styles.overflowContainer}>

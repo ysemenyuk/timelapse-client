@@ -11,7 +11,7 @@ import { dateInfoApi } from '../api/dateInfo.api.js';
 export default () => configureStore({
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({
     serializableCheck: false,
-  }).concat(fileManagerApi.middleware),
+  }).concat(fileManagerApi.middleware, dateInfoApi.middleware),
   reducer: {
     user: userReducer,
     camera: cameraReducer,

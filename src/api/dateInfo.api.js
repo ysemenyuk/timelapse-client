@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const dateInfoApi = createApi({
   reducerPath: 'dateInfoApi',
-  // tagTypes: ['dates'],
+  tagTypes: ['Dates'],
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://localhost:4000/api/cameras',
     prepareHeaders: (headers) => {
@@ -18,7 +18,7 @@ export const dateInfoApi = createApi({
       query: ({ cameraId, date }) => ({
         url: `/${cameraId}/date-info/${date}`,
       }),
-      // providesTags: () => ['Dates'],
+      providesTags: () => ['Dates'],
     }),
   }),
 });

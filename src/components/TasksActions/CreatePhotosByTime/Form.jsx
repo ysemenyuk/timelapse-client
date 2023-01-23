@@ -13,10 +13,37 @@ function CreatePhotosByTimeForm({ formik, status }) {
   return (
     <>
       <div className="mb-3">
-        {`Create photos by time - ${status}`}
+        Create photos by time
       </div>
 
       <Form className="mb-3">
+        <div key="inline-radio" className="mb-3">
+          <Form.Check
+            disabled
+            inline
+            label="AllTime"
+            name="group1"
+            type="radio"
+            id="inline-radio-2"
+          />
+          <Form.Check
+            disabled
+            inline
+            label="SunTime"
+            name="group1"
+            type="radio"
+            id="inline-radio-3"
+          />
+          <Form.Check
+            checked
+            inline
+            label="CustomTime"
+            name="group1"
+            type="radio"
+            id="inline-radio-1"
+          />
+        </div>
+
         <Row className="mb-3">
           <Form.Group as={Col}>
             <Form.Label htmlFor="startTime">Start time</Form.Label>
@@ -64,22 +91,17 @@ function CreatePhotosByTimeForm({ formik, status }) {
             </Form.Control.Feedback>
           </Form.Group>
         </Row>
+
       </Form>
 
+      <hr />
+
       <div className="mb-3">
-        <span className="fw-bold">
-          {`${files} files`}
-        </span>
-        {' '}
-        per day
+        {`${files} files = ${Math.round(files / 20)} seconds video (20fps)`}
       </div>
 
       <div className="mb-3">
-        <span className="fw-bold">
-          {`${Math.round(files / 25)} seconds`}
-        </span>
-        {' '}
-        (25 fps) video of the day
+        {`Status: ${status}`}
       </div>
 
       <If condition={isRunning}>
