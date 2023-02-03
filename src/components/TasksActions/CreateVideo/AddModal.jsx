@@ -11,19 +11,10 @@ import { cameraSelectors } from '../../../redux/camera/cameraSlice.js';
 import { taskActions } from '../../../redux/task/taskSlice.js';
 import useThunkStatus from '../../../hooks/useThunkStatus.js';
 import { taskName, taskType } from '../../../utils/constants.js';
-import Message from '../../UI/Message.jsx';
-
-// const videoSettingsInitialValues = {
-//   startDate: '2022-06-01', // today
-//   endDate: '2022-07-31', // today
-//   startTime: '08:00',
-//   endTime: '20:00',
-//   duration: 60,
-//   fps: 20,
-// };
+// import Message from '../../UI/Message.jsx';
 
 const validationSchema = Yup.object({
-  filename: Yup.string().required().min(2).max(20),
+  customName: Yup.string().min(2).max(20),
 });
 
 const getDate = (file) => {
@@ -41,13 +32,14 @@ function AddCreateVideoModal({ onHide }) {
   const formik = useFormik({
     validationSchema,
     initialValues: {
-      filename: '',
+      customName: 'filename',
       startDate: getDate(selectedCamera.firstPhoto),
       endDate: getDate(selectedCamera.lastPhoto),
-      startTime: '08:00',
-      endTime: '20:00',
+      timeRangeType: 'allTime',
+      customTimeStart: '09:00',
+      customTimeEnd: '18:00',
       duration: 10,
-      fps: 20,
+      fps: 20, // default
     },
     onSubmit: (values, { resetForm, setSubmitting, setFieldError }) => {
       dispatch(taskActions.createOne({
@@ -78,12 +70,14 @@ function AddCreateVideoModal({ onHide }) {
   const maxVideoLength = Math.round(filesCount / formik.values.fps);
   const minVideoLength = 10;
   const isDidabled = false; // maxVideoLength < minVideoLength;
+  const isCustomTime = formik.values.timeRangeType === 'customTime';
 
   useEffect(() => {
     const query = {
+      type: 'photo',
       startDate: formik.values.startDate,
       endDate: formik.values.endDate,
-      type: 'photo',
+      ...isCustomTime && { startTime: formik.values.customTimeStart, endTime: formik.values.customTimeEnd },
     };
 
     const queryString = `?${Object.entries(query).map(([key, value]) => `${key}=${value}`).join('&')}`;
@@ -91,10 +85,14 @@ function AddCreateVideoModal({ onHide }) {
     fileManagerService.getCount(selectedCamera._id, queryString)
       .then((resp) => {
         setFilesCount(resp.data.count);
+        formik.setFieldValue(
+          'duration',
+          Math.round(resp.data.count / formik.values.fps),
+        );
       });
 
     // TODO clear request then unmount
-  }, [formik.values.startDate, formik.values.endDate]);
+  }, [formik.values]);
 
   return (
     <>
@@ -111,22 +109,22 @@ function AddCreateVideoModal({ onHide }) {
 
           <Row className="mb-3">
             <Form.Group as={Col}>
-              <Form.Label htmlFor="filename">File name</Form.Label>
+              <Form.Label htmlFor="customName">File name</Form.Label>
               <Form.Control
                 onChange={formik.handleChange}
-                value={formik.values.filename}
-                name="filename"
-                id="filename"
+                value={formik.values.customName}
+                name="customName"
+                id="customName"
                 type="string"
-                isInvalid={formik.errors && formik.errors.filename}
+                isInvalid={formik.errors && formik.errors.customName}
               />
               <Form.Control.Feedback type="invalid">
-                {formik.errors && formik.errors.filename}
+                {formik.errors && formik.errors.customName}
               </Form.Control.Feedback>
             </Form.Group>
           </Row>
 
-          <Row className="mb-3">
+          <Row className="mb-4">
             <Form.Group as={Col}>
               <Form.Label htmlFor="startDate">Start date</Form.Label>
               <Form.Control
@@ -160,78 +158,87 @@ function AddCreateVideoModal({ onHide }) {
 
           <div key="inline-radio" className="mb-3">
             <Form.Check
-              checked
               inline
-              label="AllFilesFromDay"
+              label="AllDayTime"
+              name="timeRangeType"
               type="radio"
-              id="inline-radio-1"
+              id="allTime"
+              onChange={formik.handleChange}
+              value="allTime"
+              checked={formik.values.timeRangeType === 'allTime'}
             />
             <Form.Check
-              disabled
               inline
-              label="CustomeTime"
+              label="CustomeDayTime"
+              name="timeRangeType"
               type="radio"
-              id="inline-radio-2"
-            />
-          </div>
-
-          <Row className="mb-4">
-            <Form.Group as={Col}>
-              {/* <Form.Label htmlFor="startTime">Start time</Form.Label> */}
-              <Form.Control
-                disabled
-                onChange={formik.handleChange}
-                value={formik.values.startTime}
-                name="startTime"
-                id="startTime"
-                type="time"
-                isInvalid={formik.errors && formik.errors.startTime}
-              />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors && formik.errors.startTime}
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group as={Col}>
-              {/* <Form.Label htmlFor="endTime">End time</Form.Label> */}
-              <Form.Control
-                disabled
-                onChange={formik.handleChange}
-                value={formik.values.endTime}
-                name="endTime"
-                id="endTime"
-                type="time"
-                isInvalid={formik.errors && formik.errors.endTime}
-              />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors && formik.errors.endTime}
-              </Form.Control.Feedback>
-            </Form.Group>
-          </Row>
-
-          <div className="mb-4">
-            {`Found: ${filesCount} photos (${maxVideoLength} sec video)`}
-          </div>
-
-          <div className="mb-4">
-            <Form.Label>{`Video length (${formik.values.duration} sec)`}</Form.Label>
-            <Form.Range
-              disabled={isDidabled}
-              name="duration"
-              id="duration"
-              min={minVideoLength}
-              max={maxVideoLength}
-              value={formik.values.duration}
+              id="customTime"
               onChange={formik.handleChange}
+              value="customTime"
+              checked={formik.values.timeRangeType === 'customTime'}
             />
           </div>
+
+          <If condition={isCustomTime}>
+            <Row className="mb-3">
+              <Form.Group as={Col}>
+                <Form.Label htmlFor="customTimeStart">Start time</Form.Label>
+                <Form.Control
+                  onChange={formik.handleChange}
+                  value={formik.values.customTimeStart}
+                  name="customTimeStart"
+                  id="customTimeStart"
+                  type="time"
+                  isInvalid={formik.errors && formik.errors.customTimeStart}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors && formik.errors.startTime}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group as={Col}>
+                <Form.Label htmlFor="customTimeEnd">End time</Form.Label>
+                <Form.Control
+                  onChange={formik.handleChange}
+                  value={formik.values.customTimeEnd}
+                  name="customTimeEnd"
+                  id="customTimeEnd"
+                  type="time"
+                  isInvalid={formik.errors && formik.errors.customTimeEnd}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors && formik.errors.customTimeEnd}
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Row>
+          </If>
+
+          <div className="mb-4">
+            {`Found: ${filesCount} photos (${maxVideoLength} seconds video)`}
+          </div>
+
+          <Choose>
+            <When condition={isDidabled}>
+              <div>
+                Minimum: 200 photos (10 seconds video )
+              </div>
+            </When>
+            <Otherwise>
+              <div className="mb-4">
+                <Form.Label>{`Video length (${formik.values.duration} sec)`}</Form.Label>
+                <Form.Range
+                  disabled={isDidabled}
+                  name="duration"
+                  id="duration"
+                  min={minVideoLength}
+                  max={maxVideoLength}
+                  value={formik.values.duration}
+                  onChange={formik.handleChange}
+                />
+              </div>
+            </Otherwise>
+          </Choose>
 
         </Form>
-
-        <If condition={isDidabled}>
-          <Message variant="warning">
-            Minimum 10 sec video length.
-          </Message>
-        </If>
 
       </Modal.Body>
 

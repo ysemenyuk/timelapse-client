@@ -63,7 +63,7 @@ function VideosManager() {
             </div>
           </div>
           <div className={styles.itemBody}>
-            <div className="text-truncate">{file.name}</div>
+            <div className="text-truncate">{videoFileData.customName}</div>
             {`${format(new Date(videoFileData.startDate), 'yyyy.MM.dd')} - ${format(new Date(videoFileData.endDate), 'yyyy.MM.dd')}`}
             <div>{`${videoFileData.duration} seconds`}</div>
             <div className="d-flex gap-2 align-items-start">

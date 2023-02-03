@@ -9,8 +9,9 @@ import { taskStatus } from '../../../utils/constants.js';
 import PhotosByTimeForm from './Form.jsx';
 
 const validationSchema = Yup.object({
-  startTime: Yup.string().required(),
-  stopTime: Yup.string().required(),
+  timeRangeType: Yup.string().required(),
+  customTimeStart: Yup.string().required(),
+  customTimeStop: Yup.string().required(),
   interval: Yup.number().required(),
 });
 
@@ -20,7 +21,7 @@ function EditCreatePhotosByTimeModal({ onHide, data: { taskId } }) {
   const task = useSelector(taskSelectors.selectTaskById(taskId));
 
   const { status, photoSettings, ...rest } = task;
-  const { startTime, stopTime, interval } = photoSettings;
+  const { timeRangeType, customTimeStart, customTimeStop, interval } = photoSettings;
 
   const handleStartPhotosByTime = (values) => {
     console.log('handleStart');
@@ -57,7 +58,7 @@ function EditCreatePhotosByTimeModal({ onHide, data: { taskId } }) {
   };
 
   const formik = useFormik({
-    initialValues: { startTime, stopTime, interval },
+    initialValues: { timeRangeType, customTimeStart, customTimeStop, interval },
     validationSchema,
     onSubmit: handleStartPhotosByTime,
   });

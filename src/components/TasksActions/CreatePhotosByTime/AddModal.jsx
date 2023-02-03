@@ -10,14 +10,16 @@ import PhotosByTimeForm from './Form.jsx';
 import { cameraSelectors } from '../../../redux/camera/cameraSlice.js';
 
 const validationSchema = Yup.object({
-  startTime: Yup.string().required(),
-  stopTime: Yup.string().required(),
+  timeRangeType: Yup.string().required(),
+  customTimeStart: Yup.string().required(),
+  customTimeStop: Yup.string().required(),
   interval: Yup.number().required(),
 });
 
 const initialValues = {
-  startTime: '08:00',
-  stopTime: '20:00',
+  timeRangeType: 'customTime', // allTime, sunTime, customTime
+  customTimeStart: '08:00',
+  customTimeStop: '20:00',
   interval: 60,
 };
 

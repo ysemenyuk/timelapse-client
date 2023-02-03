@@ -20,7 +20,7 @@ function CameraTasks({ selectedCamera }) {
 
   const handleClickTask = (task) => {
     console.log('handleClickTask', `Edit${task.name}`);
-    dispatch(modalActions.openModal({ type: `Edit${task.name}`, data: { taskId: task._id } }));
+    dispatch(modalActions.openModal({ type: `Edit${task.name}`, data: { taskId: task._id, selectedCameraId: selectedCamera._id } }));
   };
 
   const handleDeleteTask = (e, task) => {
