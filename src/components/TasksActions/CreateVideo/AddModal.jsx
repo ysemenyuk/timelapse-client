@@ -68,8 +68,8 @@ function AddCreateVideoModal({ onHide }) {
 
   const [filesCount, setFilesCount] = useState(0);
   const maxVideoLength = Math.round(filesCount / formik.values.fps);
-  const minVideoLength = 10;
-  const isDidabled = false; // maxVideoLength < minVideoLength;
+  const minVideoLength = 1;
+  const isDidabled = maxVideoLength < minVideoLength;
   const isCustomTime = formik.values.timeRangeType === 'customTime';
 
   useEffect(() => {
@@ -92,7 +92,7 @@ function AddCreateVideoModal({ onHide }) {
       });
 
     // TODO clear request then unmount
-  }, [formik.values]);
+  }, [formik.values.startDate, formik.values.endDate, formik.values.timeRangeType, formik.values.customTimeStart, formik.values.customTimeEnd]);
 
   return (
     <>

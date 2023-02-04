@@ -9,7 +9,7 @@ import initApp from './App/initApp.jsx';
 import initSocket from './socket.js';
 import i18n from './i18n.js';
 import createStore from './redux/store.js';
-import setupYupLocale from '../setupYupLocale';
+import setupYupLocale from './setupYupLocale';
 
 if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'app:*';

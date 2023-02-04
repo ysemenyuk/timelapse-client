@@ -113,7 +113,9 @@ export default function useFileManager() {
 
   useEffect(() => {
     // TODO if addedFile in queryString
-    refetch();
+    if (currentFiles) {
+      refetch();
+    }
   }, [addedFile]);
 
   //

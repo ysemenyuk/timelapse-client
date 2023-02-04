@@ -1,4 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
+// const webpack = require('webpack');
+const Dotenv = require('dotenv-webpack');
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -37,6 +39,7 @@ module.exports = {
       favicon: 'template/favicon.ico',
     }),
     new MiniCssExtractPlugin(),
+    new Dotenv(),
   ],
   module: {
     rules: [
