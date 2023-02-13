@@ -14,27 +14,29 @@ import QueryBar from '../QueryBar/QueryBar';
 function CameraPhotosManager() {
   const {
     onCreatePhotoFile,
+    currentFiles,
+    currentFilesCount,
+    totalFilesCount,
     getFilesQuery,
     getDateInfoQuery,
-    isShowViewer,
-    onCloseViewer,
     selectedIndexes,
+    isShowViewer,
+    isSelectFiles,
+    onCloseViewer,
+    onRefetchClick,
     setSelectedIndexes,
+    onSetAvatar,
     onDeleteSelected,
     onFileClick,
-    onSetAvatar,
-    isSelectFiles,
     onSelectButtonClick,
-    startDate,
-    endDate,
-    oneDate,
-    onChangeStartDate,
-    onChangeEndDate,
-    onChangeOneDate,
+    onLoadMoreClick,
+    // startDate,
+    // endDate,
+    // oneDate,
+    // onChangeStartDate,
+    // onChangeEndDate,
+    // onChangeOneDate,
   } = useFileManager();
-
-  const currentFiles = getFilesQuery.data || [];
-  // console.log(1111, currentFiles);
 
   const onDeleteBtnClick = () => {
     const selectedItems = selectedIndexes.map((index) => currentFiles[index]);
@@ -90,26 +92,6 @@ function CameraPhotosManager() {
         </div>
 
         <div className="d-flex gap-2">
-          {/* <ButtonGroup>
-            <ToggleButton
-              size="sm"
-              id="Small-button"
-              type="checkbox"
-              variant="outline-primary"
-              checked
-            >
-              Small
-            </ToggleButton>
-            <ToggleButton
-              size="sm"
-              id="Medium-button"
-              type="checkbox"
-              variant="outline-primary"
-            >
-              Medium
-            </ToggleButton>
-          </ButtonGroup> */}
-
           <If condition={isSelectFiles}>
             <Button
               type="primary"
@@ -145,13 +127,16 @@ function CameraPhotosManager() {
       <QueryBar
         getFilesQuery={getFilesQuery}
         getDateInfoQuery={getDateInfoQuery}
+        currentFilesCount={currentFilesCount}
+        totalFilesCount={totalFilesCount}
         isRangeDate={false}
-        startDate={startDate}
-        endDate={endDate}
-        oneDate={oneDate}
-        onChangeStartDate={onChangeStartDate}
-        onChangeEndDate={onChangeEndDate}
-        onChangeOneDate={onChangeOneDate}
+        onRefetchClick={onRefetchClick}
+        // startDate={startDate}
+        // endDate={endDate}
+        // oneDate={oneDate}
+        // onChangeStartDate={onChangeStartDate}
+        // onChangeEndDate={onChangeEndDate}
+        // onChangeOneDate={onChangeOneDate}
       />
 
       <Col md={12} className="mb-4">
@@ -173,6 +158,14 @@ function CameraPhotosManager() {
               <Row xs={2} sm={2} md={4} lg={6} className="mb-3">
                 {renderCurrentFiles()}
               </Row>
+              <Button
+                variant="info"
+                size="sm"
+                onClick={onLoadMoreClick}
+              >
+                {'LoadMore '}
+                {getFilesQuery.isFetching && <Spinner as="span" animation="border" size="sm" />}
+              </Button>
             </div>
           </When>
         </Choose>

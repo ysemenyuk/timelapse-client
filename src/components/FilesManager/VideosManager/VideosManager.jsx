@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import React from 'react';
 import { Button, Card, Col, Row, Spinner } from 'react-bootstrap';
-import cn from 'classnames';
+// import cn from 'classnames';
 import format from 'date-fns/format';
 // import _ from 'lodash';
 import { PlayCircle } from 'react-bootstrap-icons';
@@ -15,23 +15,25 @@ import VideoViewer from './VideoViewer';
 function VideosManager() {
   const {
     onCreateVideoFile,
+    currentFiles,
+    currentFilesCount,
+    totalFilesCount,
     getFilesQuery,
-    getDateInfoQuery,
-    isShowViewer,
-    onCloseViewer,
+    // getDateInfoQuery,
     selectedIndexes,
+    isShowViewer,
+    // isSelectFiles,
+    onCloseViewer,
+    onRefetchClick,
     setSelectedIndexes,
+    // onSetAvatar,
     onDeleteSelected,
     onFileClick,
-    startDate,
-    endDate,
-    oneDate,
-    onChangeStartDate,
-    onChangeEndDate,
-    onChangeOneDate,
+    // onSelectButtonClick,
+    // onLoadMoreClick,
   } = useFileManager();
 
-  const currentFiles = getFilesQuery.data || [];
+  // const currentFiles = getFilesQuery.data || [];
   // console.log(2222, currentFiles);
 
   const onDeleteFile = (file) => () => {
@@ -41,12 +43,12 @@ function VideosManager() {
 
   const renderCurrentFiles = () => currentFiles.map((file, index) => {
     const { videoFileData } = file;
-    const classNames = cn(styles.item, { [styles.selectedItem]: selectedIndexes.includes(index) });
+    // const classNames = cn(styles.item);
     return (
       <Col key={file._id} className="mb-3">
         <Card
           border="light"
-          className={classNames}
+          className={styles.item}
         >
           <div
             role="presentation"
@@ -92,14 +94,17 @@ function VideosManager() {
 
       <QueryBar
         getFilesQuery={getFilesQuery}
-        getDateInfoQuery={getDateInfoQuery}
+        getDateInfoQuery={{}}
+        currentFilesCount={currentFilesCount}
+        totalFilesCount={totalFilesCount}
         isRangeDate
-        startDate={startDate}
-        endDate={endDate}
-        oneDate={oneDate}
-        onChangeStartDate={onChangeStartDate}
-        onChangeEndDate={onChangeEndDate}
-        onChangeOneDate={onChangeOneDate}
+        onRefetchClick={onRefetchClick}
+        // startDate={startDate}
+        // endDate={endDate}
+        // oneDate={oneDate}
+        // onChangeStartDate={onChangeStartDate}
+        // onChangeEndDate={onChangeEndDate}
+        // onChangeOneDate={onChangeOneDate}
       />
 
       <Col md={12} className="mb-4">
