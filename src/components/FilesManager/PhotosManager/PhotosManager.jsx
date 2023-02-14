@@ -85,19 +85,19 @@ function CameraPhotosManager() {
 
   return (
     <>
-      <div className="d-flex flex-wrap gap-2 mb-2 justify-content-between align-items-center">
-        <div className="d-flex gap-2">
-          <Button
-            variant="info"
-            size="sm"
-            onClick={onCreatePhotoFile}
-          >
-            +CreatePhoto
-          </Button>
-        </div>
-      </div>
-
       <div className="mb-4">
+        <div className="d-flex flex-wrap gap-2 mb-2 justify-content-between align-items-center">
+          <div className="d-flex gap-2">
+            <Button
+              variant="info"
+              size="sm"
+              onClick={onCreatePhotoFile}
+            >
+              +CreatePhoto
+            </Button>
+          </div>
+        </div>
+
         <QueryBar
           getFilesQuery={getFilesQuery}
           currentFilesCount={currentFilesCount}
@@ -123,7 +123,7 @@ function CameraPhotosManager() {
         </If>
       </div>
 
-      <Col md={12} className="mb-4">
+      <div className="mb-4">
         <Choose>
           <When condition={getFilesQuery.isError}>
             <Error message="Fetch files. Network error " type="error" />
@@ -139,7 +139,8 @@ function CameraPhotosManager() {
 
           <When condition={currentFiles.length > 0}>
             <div className={styles.overflowContainer}>
-              <Row xs={2} sm={3} md={4} lg={5} xl={6} className="mb-3">
+
+              <Row xs={1} sm={2} md={3} lg={5} xl={6} className="mb-3">
                 {renderCurrentFiles()}
               </Row>
 
@@ -157,7 +158,7 @@ function CameraPhotosManager() {
             </div>
           </When>
         </Choose>
-      </Col>
+      </div>
 
       <If condition={isShowViewer && selectedIndex >= 0}>
         <PhotoViewer

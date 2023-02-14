@@ -51,14 +51,14 @@ function CameraPage() {
     <Choose>
       <When condition={!fetchStatus.isLoading && !fetchStatus.isError && selectedCamera}>
         <Row>
-          <Col sm={3}>
+          <Col xs={6} md={4} lg={3} className="sticky-top">
             <Col md={12} className="mb-4">
               <CameraCard selectedCamera={selectedCamera} onClick={openEditCameraModal} tabName={tabName} />
             </Col>
             <TasksList selectedCamera={selectedCamera} />
           </Col>
 
-          <Col sm={9}>
+          <Col xs={6} md={8} lg={9}>
             <Nav variant="tabs" className="mb-4">
               <Nav.Item>
                 <Nav.Link active={tabName === 'photos'} onClick={handleClickOnTab('photos')}>
