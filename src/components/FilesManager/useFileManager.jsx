@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import _ from 'lodash';
+// import _ from 'lodash';
 // import format from 'date-fns/format';
 import { useOutletContext, useSearchParams } from 'react-router-dom';
 import { cameraActions } from '../../redux/camera/cameraSlice.js';
@@ -10,64 +10,75 @@ import { modals } from '../../utils/constants.js';
 import { modalActions } from '../../redux/modalSlice.js';
 import { useGetDateInfoQuery } from '../../api/dateInfo.api.js';
 
-export default function useFileManager() {
+export default function useFileManager(props) {
   const dispatch = useDispatch();
-  const { selectedCamera, tabName } = useOutletContext();
+  const { selectedCamera } = useOutletContext();
   const [searchParams] = useSearchParams();
   const [deleteOneFile] = useDeleteFileMutation();
   const addedFile = useSelector(fileManagerSelectors.addedFile);
 
-  const isPhotos = tabName === 'photos';
-  const isVideos = tabName === 'videos';
-
-  const fileType = useMemo(
-    () => {
-      if (isPhotos) return 'photo';
-      if (isVideos) return 'video';
-      return '';
-    },
-    [isPhotos, isVideos],
-  );
+  const searchString = searchParams.toString();
 
   const [isShowViewer, setIsShowViewer] = useState(false);
-  const [isSelectFiles, setIsSelectFiles] = useState(false);
-  const [selectedIndexes, setSelectedIndexes] = useState([]);
+  const [selectedIndex, setSelectedIndex] = useState(null);
 
-  const [limit, setLimit] = useState(6);
-  // const [skip, setSkip] = useState(0);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(props.limit);
+
+  const [currentData, setCurrentData] = useState({
+    items: { 1: [] },
+    currentPage: 1,
+    totalPages: 1,
+    totalFiles: 0,
+  });
 
   //
 
-  const queryString = useMemo(
-    () => `?type=${fileType}&limit=${limit}&${searchParams.toString()}`,
-    [fileType, limit, searchParams.toString()],
+  const queryFiles = useMemo(
+    () => `?${searchString}&page=${page}&limit=${limit}`,
+    [page, limit, searchString],
   );
 
   const getFilesQuery = useGetFilesQuery(
-    { cameraId: selectedCamera._id, query: queryString },
-    { skip: !searchParams.toString() },
+    { cameraId: selectedCamera._id, query: queryFiles },
+    { skip: !searchString },
   );
 
-  const { data: fetchedFiles, refetch } = getFilesQuery;
-
-  const [currentFiles, setCurrentFiles] = useState([]);
-
-  const currentFilesCount = currentFiles.length;
-  const totalFilesCount = fetchedFiles ? fetchedFiles.total : 0;
+  const { data: fetchedData, refetch } = getFilesQuery;
 
   useEffect(() => {
-    setCurrentFiles(() => {
-      const fetched = fetchedFiles ? fetchedFiles.files : [];
-      return fetched;
+    setCurrentData((current) => {
+      if (fetchedData && searchString) {
+        const isEqualSearch = current.searchString === searchString;
+        return {
+          items: {
+            ...(isEqualSearch && current.items),
+            [fetchedData.page]: fetchedData.items,
+          },
+          currentPage: fetchedData.page,
+          totalPages: fetchedData.pages,
+          totalFiles: fetchedData.total,
+          searchString,
+        };
+      }
+      return current;
     });
-  }, [fetchedFiles]);
+  }, [fetchedData]);
 
   useEffect(() => {
-    // TODO if addedFile in queryString
-    if (searchParams.toString()) {
+    setPage(1);
+  }, [searchString]);
+
+  //
+
+  useEffect(() => {
+    // TODO: refetch if addedFile in query
+    if (searchString) {
       refetch();
     }
   }, [addedFile]);
+
+  //
 
   const queryDate = useMemo(
     () => searchParams.get('date'),
@@ -76,69 +87,25 @@ export default function useFileManager() {
 
   const getDateInfoQuery = useGetDateInfoQuery(
     { cameraId: selectedCamera._id, date: queryDate },
-    { skip: isVideos || !queryDate },
+    { skip: !queryDate },
   );
 
-  // const { data: dateInfo } = getDateInfoQuery;
+  //
 
-  useEffect(() => {
-    if (currentFiles) {
-      const currentFilesNumber = currentFiles.length;
-      if (currentFilesCount === 0) {
-        setSelectedIndexes([]);
-        return;
-      }
-      if (_.head(selectedIndexes) > currentFilesNumber - 1) {
-        setSelectedIndexes([currentFilesNumber - 1]);
-      }
-    }
-  }, [currentFiles]);
-
-  const resetSelect = () => {
-    setSelectedIndexes([]);
-    setIsSelectFiles(false);
-  };
-
-  const onRefetchClick = () => {
-    resetSelect();
-    refetch();
-  };
-
-  const onLoadMoreClick = () => {
-    setLimit((current) => current + 6);
-  };
-
-  const onDeleteSelected = (selectedItems) => {
-    if (_.isEmpty(selectedItems)) {
-      return;
-    }
-
-    Promise.all(selectedItems.map((item) => deleteOneFile({
+  const onDeleteSelected = (item) => {
+    deleteOneFile({
       cameraId: item.camera,
       fileId: item._id,
-    })));
-  };
-
-  const onSelectButtonClick = () => {
-    setSelectedIndexes([]);
-    setIsSelectFiles(!isSelectFiles);
+    });
   };
 
   const onFileClick = (index) => {
-    if (isSelectFiles) {
-      if (!_.includes(selectedIndexes, index)) {
-        setSelectedIndexes((prew) => ([...prew, index]));
-      } else {
-        setSelectedIndexes((prew) => _.filter(prew, (i) => i !== index));
-      }
-    } else {
-      setSelectedIndexes([index]);
-      setIsShowViewer(true);
-    }
+    setSelectedIndex(index);
+    setIsShowViewer(true);
   };
 
   const onCloseViewer = () => {
-    setSelectedIndexes([]);
+    setSelectedIndex(null);
     setIsShowViewer(false);
   };
 
@@ -166,22 +133,16 @@ export default function useFileManager() {
     onCreatePhotoFile,
     onCreateVideoFile,
 
-    currentFiles,
-    currentFilesCount,
-    totalFilesCount,
+    currentData,
     getFilesQuery,
     getDateInfoQuery,
-    selectedIndexes,
+    selectedIndex,
     isShowViewer,
-    isSelectFiles,
-
+    setSelectedIndex,
     onCloseViewer,
-    onRefetchClick,
-    setSelectedIndexes,
     onSetAvatar,
     onDeleteSelected,
     onFileClick,
-    onSelectButtonClick,
-    onLoadMoreClick,
+    setPage,
   };
 }

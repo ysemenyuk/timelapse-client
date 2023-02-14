@@ -12,19 +12,35 @@ function ImageViewer(props) {
   const {
     onClose,
     currentFiles,
-    selectedIndexes,
-    setSelectedIndexes,
+    selectedIndex,
+    setSelectedIndex,
     onDeleteSelected,
     onSetAvatar,
   } = props;
 
   const [images, setImages] = useState(currentFiles.filter(isImage));
 
-  const currentIndex = _.head(selectedIndexes);
-  const currentImage = images[currentIndex];
+  useEffect(() => {
+    const newImages = currentFiles.filter(isImage);
+    const imagesCount = newImages.length;
 
-  const disabledNext = currentIndex === images.length - 1;
-  const disabledPrew = currentIndex === 0;
+    if (imagesCount === 0) {
+      setSelectedIndex(null);
+      onClose();
+      return;
+    }
+
+    if (selectedIndex > imagesCount - 1) {
+      setSelectedIndex(imagesCount - 1);
+    }
+
+    setImages(newImages);
+  }, [currentFiles]);
+
+  const currentImage = images[selectedIndex];
+
+  const disabledNext = selectedIndex === images.length - 1;
+  const disabledPrew = selectedIndex === 0;
 
   const refs = _.reduce(images, (acc, value) => {
     acc[value._id] = React.createRef();
@@ -32,48 +48,29 @@ function ImageViewer(props) {
   }, {});
 
   const onHide = () => {
-    setSelectedIndexes([]);
+    setSelectedIndex(null);
     onClose();
   };
 
   const onFileClick = (index) => {
-    setSelectedIndexes([index]);
+    setSelectedIndex(index);
   };
 
   const onNextClick = () => {
-    setSelectedIndexes((prew) => ([_.head(prew) + 1]));
+    setSelectedIndex((prew) => (prew + 1));
   };
 
   const onPrewClick = () => {
-    setSelectedIndexes((prew) => ([_.head(prew) - 1]));
+    setSelectedIndex((prew) => (prew - 1));
   };
 
   const onDeleteBtnClick = () => {
-    const selectedItems = selectedIndexes.map((index) => images[index]);
-    onDeleteSelected(selectedItems);
-    setSelectedIndexes((prew) => ([_.head(prew)]));
+    onDeleteSelected(currentImage);
   };
 
   const onAvatarBtnClick = () => {
     onSetAvatar(currentImage);
   };
-
-  useEffect(() => {
-    const newImages = currentFiles.filter(isImage);
-    const imagesCount = newImages.length;
-
-    if (imagesCount === 0) {
-      setSelectedIndexes([]);
-      onClose();
-      return;
-    }
-
-    if (currentIndex > imagesCount - 1) {
-      setSelectedIndexes([imagesCount - 1]);
-    }
-
-    setImages(newImages);
-  }, [currentFiles]);
 
   useEffect(() => {
     if (currentImage) {
@@ -113,7 +110,7 @@ function ImageViewer(props) {
           <div className={styles.overflowContainer}>
             <div style={{ width: `${images.length * 110}px` }} className={styles.itemsContainer}>
               {images.map((file, index) => {
-                const classNames = cn(styles.item, { [styles.selectedItem]: selectedIndexes.includes(index) });
+                const classNames = cn(styles.item, { [styles.selectedItem]: selectedIndex === index });
                 return (
                   <div ref={refs[file._id]} className={classNames} key={file._id}>
                     <ImgWrapper
@@ -137,7 +134,6 @@ function ImageViewer(props) {
               type="primary"
               size="sm"
               onClick={onAvatarBtnClick}
-              disabled={_.isEmpty(selectedIndexes)}
             >
               SetAsAvatar
             </Button>
@@ -151,7 +147,6 @@ function ImageViewer(props) {
               type="primary"
               size="sm"
               onClick={onDeleteBtnClick}
-              disabled={_.isEmpty(selectedIndexes)}
             >
               Delete
             </Button>

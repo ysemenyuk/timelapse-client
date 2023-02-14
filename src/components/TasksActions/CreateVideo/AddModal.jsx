@@ -39,7 +39,7 @@ function AddCreateVideoModal({ onHide }) {
       customTimeStart: '09:00',
       customTimeEnd: '18:00',
       duration: 10,
-      fps: 20, // default
+      fps: 25, // default
     },
     onSubmit: (values, { resetForm, setSubmitting, setFieldError }) => {
       dispatch(taskActions.createOne({
@@ -75,9 +75,9 @@ function AddCreateVideoModal({ onHide }) {
   useEffect(() => {
     const query = {
       type: 'photo',
-      startDate: formik.values.startDate,
-      endDate: formik.values.endDate,
-      ...isCustomTime && { startTime: formik.values.customTimeStart, endTime: formik.values.customTimeEnd },
+      date_gte: formik.values.startDate,
+      date_lte: formik.values.endDate,
+      ...isCustomTime && { time_gte: formik.values.customTimeStart, time_lte: formik.values.customTimeEnd },
     };
 
     const queryString = `?${Object.entries(query).map(([key, value]) => `${key}=${value}`).join('&')}`;

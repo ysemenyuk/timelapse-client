@@ -1,9 +1,10 @@
 import React from 'react';
-import { Button, Card, Col, Row, Spinner, ToggleButton } from 'react-bootstrap';
-import cn from 'classnames';
-import _ from 'lodash';
+import { Button, Card, Col, Row, Spinner } from 'react-bootstrap';
+// import cn from 'classnames';
+// import _ from 'lodash';
 import format from 'date-fns/format';
-import { Image } from 'react-bootstrap-icons';
+import fromUnixTime from 'date-fns/fromUnixTime';
+import { Image, Trash, Download } from 'react-bootstrap-icons';
 import styles from './PhotosManager.module.css';
 import ImgWrapper from '../../UI/ImgWrapper/ImgWrapper.jsx';
 import Error from '../../UI/Error';
@@ -14,46 +15,46 @@ import QueryBar from '../QueryBar/QueryBar';
 function CameraPhotosManager() {
   const {
     onCreatePhotoFile,
-    currentFiles,
-    currentFilesCount,
-    totalFilesCount,
+    currentData,
     getFilesQuery,
     getDateInfoQuery,
-    selectedIndexes,
+    selectedIndex,
     isShowViewer,
-    isSelectFiles,
+    setSelectedIndex,
     onCloseViewer,
-    onRefetchClick,
-    setSelectedIndexes,
     onSetAvatar,
     onDeleteSelected,
     onFileClick,
-    onSelectButtonClick,
-    onLoadMoreClick,
-    // startDate,
-    // endDate,
-    // oneDate,
-    // onChangeStartDate,
-    // onChangeEndDate,
-    // onChangeOneDate,
-  } = useFileManager();
+    setPage,
+  } = useFileManager({ limit: 24 });
 
-  const onDeleteBtnClick = () => {
-    const selectedItems = selectedIndexes.map((index) => currentFiles[index]);
-    onDeleteSelected(selectedItems);
-    setSelectedIndexes([]);
+  const onDeleteFile = (file) => () => {
+    onDeleteSelected(file);
   };
 
-  const renderCurrentFiles = () => currentFiles.map((file, index) => {
-    const classNames = cn(styles.item, { [styles.selectedItem]: selectedIndexes.includes(index) });
-    const date = format(new Date(file.date), 'dd.MM.yyyy');
-    const time = format(new Date(file.date), 'HH:mm:ss');
+  const onLoadMoreClick = () => {
+    setPage((current) => current + 1);
+  };
 
+  const currentFiles = Object.entries(currentData.items).reduce((acc, [, items]) => [...acc, ...items], []);
+  // console.log('currentFiles', currentFiles);
+
+  const currentFilesCount = currentFiles ? currentFiles.length : 0;
+  const totalFilesCount = currentData.totalFiles ? currentData.totalFiles : 0;
+
+  const isLoadMoreButton = currentFilesCount !== totalFilesCount;
+
+  const { data: dateInfo } = getDateInfoQuery;
+  // console.log('dateInfo', dateInfo);
+
+  const renderCurrentFiles = () => currentFiles.map((file, index) => {
+    // const date = format(new Date(file.date), 'dd.MM.yyyy');
+    const time = format(new Date(file.date), 'HH:mm:ss');
     return (
       <Col key={file._id} className="mb-3">
         <Card
           border="light"
-          className={classNames}
+          className={styles.item}
         >
           <div
             role="presentation"
@@ -71,7 +72,11 @@ function CameraPhotosManager() {
           </div>
           <div className={styles.itemBody}>
             <div>{time}</div>
-            <div>{date}</div>
+            {/* <div>{date}</div> */}
+            <div className="d-flex gap-2 align-items-center">
+              <Button className="p-0" variant="link" size="sm" as="a" href={file.link} download><Download /></Button>
+              <Button className="p-0" variant="link" size="sm" onClick={onDeleteFile(file)}><Trash /></Button>
+            </div>
           </div>
         </Card>
       </Col>
@@ -90,54 +95,33 @@ function CameraPhotosManager() {
             +CreatePhoto
           </Button>
         </div>
-
-        <div className="d-flex gap-2">
-          <If condition={isSelectFiles}>
-            <Button
-              type="primary"
-              size="sm"
-              onClick={onDeleteBtnClick}
-              disabled={getFilesQuery.isLoading || _.isEmpty(selectedIndexes)}
-            >
-              {`Delete ${isSelectFiles ? `(${selectedIndexes.length})` : ''}`}
-            </Button>
-
-            <Button
-              type="primary"
-              size="sm"
-            >
-              SelectAll
-            </Button>
-          </If>
-
-          <ToggleButton
-            size="sm"
-            id="select-button"
-            type="checkbox"
-            variant="outline-primary"
-            checked={isSelectFiles}
-            onChange={onSelectButtonClick}
-          >
-            {isSelectFiles ? 'Cancel' : 'SelectFiles'}
-          </ToggleButton>
-
-        </div>
       </div>
 
-      <QueryBar
-        getFilesQuery={getFilesQuery}
-        getDateInfoQuery={getDateInfoQuery}
-        currentFilesCount={currentFilesCount}
-        totalFilesCount={totalFilesCount}
-        isRangeDate={false}
-        onRefetchClick={onRefetchClick}
-        // startDate={startDate}
-        // endDate={endDate}
-        // oneDate={oneDate}
-        // onChangeStartDate={onChangeStartDate}
-        // onChangeEndDate={onChangeEndDate}
-        // onChangeOneDate={onChangeOneDate}
-      />
+      <div className="mb-4">
+        <QueryBar
+          getFilesQuery={getFilesQuery}
+          currentFilesCount={currentFilesCount}
+          totalFilesCount={totalFilesCount}
+          isRangeDate={false}
+          fileType="photo"
+        />
+
+        <If condition={dateInfo && dateInfo.weather}>
+          <div className="d-flex mb-2 gap-2 justify-content-start align-items-center">
+            <div className={`${styles.filesCount} d-flex h-100 gap-2 align-items-center`}>
+              <div>{`Date: ${format(new Date(dateInfo.date), 'dd.MM.yyyy')}`}</div>
+              <div>
+                {`Sun: ${format(fromUnixTime(dateInfo.weather.sys.sunrise), 'HH:mm')}`}
+                {` .. ${format(fromUnixTime(dateInfo.weather.sys.sunset), 'HH:mm')}`}
+              </div>
+              <div>
+                {`Temp: ${(dateInfo.weather.main.temp_min).toFixed(1)}°C`}
+                {` .. ${(dateInfo.weather.main.temp_max).toFixed(1)}°C`}
+              </div>
+            </div>
+          </div>
+        </If>
+      </div>
 
       <Col md={12} className="mb-4">
         <Choose>
@@ -155,28 +139,32 @@ function CameraPhotosManager() {
 
           <When condition={currentFiles.length > 0}>
             <div className={styles.overflowContainer}>
-              <Row xs={2} sm={2} md={4} lg={6} className="mb-3">
+              <Row xs={2} sm={3} md={4} lg={5} xl={6} className="mb-3">
                 {renderCurrentFiles()}
               </Row>
-              <Button
-                variant="info"
-                size="sm"
-                onClick={onLoadMoreClick}
-              >
-                {'LoadMore '}
-                {getFilesQuery.isFetching && <Spinner as="span" animation="border" size="sm" />}
-              </Button>
+
+              <If condition={isLoadMoreButton}>
+                <Button
+                  variant="info"
+                  size="sm"
+                  onClick={onLoadMoreClick}
+                >
+                  {'LoadMore '}
+                  {getFilesQuery.isFetching && <Spinner as="span" animation="border" size="sm" />}
+                </Button>
+              </If>
+
             </div>
           </When>
         </Choose>
       </Col>
 
-      <If condition={isShowViewer}>
+      <If condition={isShowViewer && selectedIndex >= 0}>
         <PhotoViewer
           onClose={onCloseViewer}
           currentFiles={currentFiles}
-          selectedIndexes={selectedIndexes}
-          setSelectedIndexes={setSelectedIndexes}
+          selectedIndex={selectedIndex}
+          setSelectedIndex={setSelectedIndex}
           onDeleteSelected={onDeleteSelected}
           onSetAvatar={onSetAvatar}
         />

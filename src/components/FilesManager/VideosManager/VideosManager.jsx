@@ -1,9 +1,9 @@
 /* eslint-disable max-len */
-import React from 'react';
-import { Button, Card, Col, Row, Spinner } from 'react-bootstrap';
+import React, { useMemo } from 'react';
+import { Button, Card, Col, Row, Spinner, Pagination } from 'react-bootstrap';
 // import cn from 'classnames';
-import format from 'date-fns/format';
 // import _ from 'lodash';
+import format from 'date-fns/format';
 import { PlayCircle } from 'react-bootstrap-icons';
 import styles from './VideosManager.module.css';
 import ImgWrapper from '../../UI/ImgWrapper/ImgWrapper.jsx';
@@ -15,35 +15,44 @@ import VideoViewer from './VideoViewer';
 function VideosManager() {
   const {
     onCreateVideoFile,
-    currentFiles,
-    currentFilesCount,
-    totalFilesCount,
+    currentData,
     getFilesQuery,
-    // getDateInfoQuery,
-    selectedIndexes,
+    selectedIndex,
     isShowViewer,
-    // isSelectFiles,
+    setSelectedIndex,
     onCloseViewer,
-    onRefetchClick,
-    setSelectedIndexes,
-    // onSetAvatar,
     onDeleteSelected,
     onFileClick,
-    // onSelectButtonClick,
-    // onLoadMoreClick,
-  } = useFileManager();
+    setPage,
+  } = useFileManager({ limit: 4 });
 
-  // const currentFiles = getFilesQuery.data || [];
-  // console.log(2222, currentFiles);
+  const currentFiles = currentData.items[currentData.currentPage];
+  // console.log('currentFiles', currentFiles);
+
+  const currentFilesCount = currentFiles ? currentFiles.length : 0;
+  const totalFilesCount = currentData.totalFiles ? currentData.totalFiles : 0;
+
+  const isPagunation = currentFilesCount < totalFilesCount;
+
+  const pages = useMemo(() => {
+    const active = currentData.currentPage;
+    const items = [];
+    for (let number = 1; number <= currentData.totalPages; number += 1) {
+      items.push(
+        <Pagination.Item onClick={() => setPage(number)} key={number} active={number === active}>
+          {number}
+        </Pagination.Item>,
+      );
+    }
+    return items;
+  }, [currentData]);
 
   const onDeleteFile = (file) => () => {
-    // console.log('onDeleteBtnClick', file);
-    onDeleteSelected([file]);
+    onDeleteSelected(file);
   };
 
   const renderCurrentFiles = () => currentFiles.map((file, index) => {
     const { videoFileData } = file;
-    // const classNames = cn(styles.item);
     return (
       <Col key={file._id} className="mb-3">
         <Card
@@ -66,7 +75,8 @@ function VideosManager() {
           </div>
           <div className={styles.itemBody}>
             <div className="text-truncate">{videoFileData.customName}</div>
-            {`${format(new Date(videoFileData.startDate), 'yyyy.MM.dd')} - ${format(new Date(videoFileData.endDate), 'yyyy.MM.dd')}`}
+            {`${format(new Date(videoFileData.startDate), 'yyyy.MM.dd')} 
+            - ${format(new Date(videoFileData.endDate), 'yyyy.MM.dd')}`}
             <div>{`${videoFileData.duration} seconds`}</div>
             <div className="d-flex gap-2 align-items-start">
               <Button className="p-0" variant="link" size="sm" onClick={onDeleteFile(file)}>Delete</Button>
@@ -92,20 +102,15 @@ function VideosManager() {
         </div>
       </div>
 
-      <QueryBar
-        getFilesQuery={getFilesQuery}
-        getDateInfoQuery={{}}
-        currentFilesCount={currentFilesCount}
-        totalFilesCount={totalFilesCount}
-        isRangeDate
-        onRefetchClick={onRefetchClick}
-        // startDate={startDate}
-        // endDate={endDate}
-        // oneDate={oneDate}
-        // onChangeStartDate={onChangeStartDate}
-        // onChangeEndDate={onChangeEndDate}
-        // onChangeOneDate={onChangeOneDate}
-      />
+      <div className="mb-4">
+        <QueryBar
+          getFilesQuery={getFilesQuery}
+          currentFilesCount={currentFilesCount}
+          totalFilesCount={totalFilesCount}
+          isRangeDate
+          fileType="video"
+        />
+      </div>
 
       <Col md={12} className="mb-4">
         <Choose>
@@ -126,17 +131,22 @@ function VideosManager() {
               <Row xs={1} sm={2} lg={4} className="mb-3">
                 {renderCurrentFiles()}
               </Row>
+
+              <If condition={isPagunation}>
+                <Pagination>{pages}</Pagination>
+              </If>
             </div>
+
           </When>
         </Choose>
       </Col>
 
-      <If condition={isShowViewer}>
+      <If condition={isShowViewer && selectedIndex >= 0}>
         <VideoViewer
           onClose={onCloseViewer}
           currentFiles={currentFiles}
-          selectedIndexes={selectedIndexes}
-          setSelectedIndexes={setSelectedIndexes}
+          selectedIndex={selectedIndex}
+          setSelectedIndex={setSelectedIndex}
           onDeleteSelected={onDeleteSelected}
         />
       </If>

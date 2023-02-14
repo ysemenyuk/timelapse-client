@@ -1,5 +1,5 @@
 import React from 'react';
-import _ from 'lodash';
+// import _ from 'lodash';
 // import cn from 'classnames';
 import format from 'date-fns/format';
 import { Modal, Button } from 'react-bootstrap';
@@ -10,27 +10,25 @@ function VideoViewer(props) {
   const {
     onClose,
     currentFiles,
-    selectedIndexes,
-    setSelectedIndexes,
+    selectedIndex,
+    setSelectedIndex,
     onDeleteSelected,
   } = props;
 
-  const currentIndex = _.head(selectedIndexes);
-  const currentVideo = currentFiles[currentIndex];
+  const currentVideo = currentFiles[selectedIndex];
+  // console.log(666, currentVideo);
+
   const startDate = format(new Date(currentVideo.videoFileData.startDate), 'yyyy.MM.dd');
   const endDate = format(new Date(currentVideo.videoFileData.endDate), 'yyyy.MM.dd');
 
-  // console.log(666, currentVideo);
-
   const onHide = () => {
-    setSelectedIndexes([]);
+    setSelectedIndex(null);
     onClose();
   };
 
   const onDeleteBtnClick = () => {
-    const selectedItems = selectedIndexes.map((index) => currentFiles[index]);
-    onDeleteSelected(selectedItems);
-    setSelectedIndexes([]);
+    onDeleteSelected(currentVideo);
+    setSelectedIndex(null);
     onClose();
   };
 
@@ -69,7 +67,6 @@ function VideoViewer(props) {
             type="primary"
             size="sm"
             onClick={onDeleteBtnClick}
-            disabled={_.isEmpty(selectedIndexes)}
           >
             Delete
           </Button>

@@ -4,7 +4,6 @@ import { Button } from 'react-bootstrap';
 // import cn from 'classnames';
 // import _ from 'lodash';
 import format from 'date-fns/format';
-import fromUnixTime from 'date-fns/fromUnixTime';
 import DatePicker from 'react-datepicker';
 import styles from './QueryBar.module.css';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -12,24 +11,14 @@ import 'react-datepicker/dist/react-datepicker.css';
 function QueryBar(props) {
   const {
     getFilesQuery,
-    getDateInfoQuery,
     currentFilesCount,
     totalFilesCount,
     isRangeDate,
-    // startDate,
-    // endDate,
-    // oneDate,
-    // onChangeDateFormat,
-    // onChangeFileType,
-    // onChangeStartDate,
-    // onChangeEndDate,
-    // onChangeOneDate,
+    fileType,
   } = props;
 
   const { selectedCamera } = useOutletContext();
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const { data: dateInfo } = getDateInfoQuery;
 
   const initStartDate = () => {
     if (searchParams.get('date_gte')) {
@@ -61,6 +50,7 @@ function QueryBar(props) {
     return new Date();
   };
 
+  const [type] = useState(fileType);
   const [startDate, setStartDate] = useState(initStartDate);
   const [endDate, setEndDate] = useState(initEndDate);
   const [oneDate, setOneDate] = useState(initOneDate);
@@ -72,23 +62,24 @@ function QueryBar(props) {
     } else {
       searchParams.set('date', format(oneDate, 'yyyy-MM-dd'));
     }
+    searchParams.set('type', type);
+
     setSearchParams(searchParams);
   }, [isRangeDate, startDate, endDate, oneDate]);
 
   return (
-    <div className="mb-4">
-      <div className="d-flex flex-wrap gap-2 mb-3 justify-content-start align-items-center">
-        <div className="d-flex gap-2 justify-content-start align-items-center">
-          <Button
-            type="primary"
-            size="sm"
-            onClick={getFilesQuery.refetch}
-            disabled={getFilesQuery.isFetching}
-          >
-            Refetch
-          </Button>
+    <div className="d-flex flex-wrap gap-2 mb-2 justify-content-start align-items-center">
+      <div className="d-flex gap-2 justify-content-start align-items-center">
+        <Button
+          type="primary"
+          size="sm"
+          onClick={getFilesQuery.refetch}
+          disabled={getFilesQuery.isFetching}
+        >
+          Refetch
+        </Button>
 
-          {/* <ButtonGroup>
+        {/* <ButtonGroup>
             <ToggleButton
               size="sm"
               id="button-1"
@@ -118,7 +109,7 @@ function QueryBar(props) {
             </ToggleButton>
           </ButtonGroup> */}
 
-          {/* <If condition={false}>
+        {/* <If condition={false}>
             <ButtonGroup>
               <ToggleButton
                 size="sm"
@@ -142,60 +133,43 @@ function QueryBar(props) {
               </ToggleButton>
             </ButtonGroup>
           </If> */}
+      </div>
+
+      <div className="d-flex gap-2 justify-content-start align-items-center">
+        <Choose>
+          <When condition={isRangeDate}>
+            <DatePicker
+              className={styles.dateInput}
+              dateFormat="dd/MM/yyyy"
+              selected={startDate}
+              onChange={setStartDate}
+              selectsStart
+              startDate={startDate}
+              endDate={endDate}
+            />
+            <DatePicker
+              className={styles.dateInput}
+              dateFormat="dd/MM/yyyy"
+              selected={endDate}
+              onChange={setEndDate}
+              selectsEnd
+              startDate={startDate}
+              endDate={endDate}
+              minDate={startDate}
+            />
+          </When>
+          <Otherwise>
+            <DatePicker
+              className={styles.dateInput}
+              dateFormat="dd/MM/yyyy"
+              selected={oneDate}
+              onChange={setOneDate}
+            />
+          </Otherwise>
+        </Choose>
+        <div className={`${styles.filesCount} d-flex h-100 align-items-center`}>
+          {`Files: ${currentFilesCount} (${totalFilesCount})`}
         </div>
-
-        <div className="d-flex gap-2 justify-content-start align-items-center">
-          <Choose>
-            <When condition={isRangeDate}>
-              <DatePicker
-                className={styles.dateInput}
-                dateFormat="dd/MM/yyyy"
-                selected={startDate}
-                onChange={setStartDate}
-                selectsStart
-                startDate={startDate}
-                endDate={endDate}
-              />
-              <DatePicker
-                className={styles.dateInput}
-                dateFormat="dd/MM/yyyy"
-                selected={endDate}
-                onChange={setEndDate}
-                selectsEnd
-                startDate={startDate}
-                endDate={endDate}
-                minDate={startDate}
-              />
-            </When>
-            <Otherwise>
-              <DatePicker
-                className={styles.dateInput}
-                dateFormat="dd/MM/yyyy"
-                selected={oneDate}
-                onChange={setOneDate}
-              />
-            </Otherwise>
-          </Choose>
-          <div className={`${styles.filesCount} d-flex h-100 align-items-center`}>
-            {`Files: ${currentFilesCount} (${totalFilesCount})`}
-          </div>
-        </div>
-
-        <If condition={dateInfo && dateInfo.weather}>
-          <div className="d-flex gap-2 justify-content-end align-items-center ms-auto">
-            <div className={`${styles.filesCount} d-flex h-100 gap-2 align-items-center`}>
-              <div>{`Sunrise: ${format(fromUnixTime(dateInfo.weather.sys.sunrise), 'HH:mm')}`}</div>
-              <div>
-                {`Sunset: ${format(fromUnixTime(dateInfo.weather.sys.sunset), 'HH:mm')}`}
-              </div>
-              <div>
-                {`Temp: ${(dateInfo.weather.main.temp_min).toFixed(1)}°C 
-                .. ${(dateInfo.weather.main.temp_max).toFixed(1)}°C`}
-              </div>
-            </div>
-          </div>
-        </If>
-
       </div>
     </div>
   );
