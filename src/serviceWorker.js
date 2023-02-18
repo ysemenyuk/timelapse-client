@@ -1,5 +1,5 @@
 export default function serviceWorker() {
-  let swUrl = `http://localhost:3000/sw.js`;
+  const swUrl = 'http://localhost:3000/sw.js';
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
