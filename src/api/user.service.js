@@ -1,10 +1,9 @@
 import axios from 'axios';
+import { HOST } from '../utils/constants.js';
 import getAuthHeader from './authHeader.js';
 
-const host = 'http://localhost:4000';
-
 const instance = axios.create({
-  baseURL: `${host}/api/users`,
+  baseURL: `${HOST}/api/users`,
 });
 
 const singup = async (data) => {

@@ -13,8 +13,8 @@ function CreatePhotosByTimeForm({ formik, status }) {
   const { location: { latitude, longitude } } = selectedCamera;
   const isLocationExist = latitude && longitude;
 
-  // console.log('formik.errors -', formik.errors);
-  // console.log('formik.values -', formik.values);
+  console.log('formik.errors -', formik.errors);
+  console.log('formik.values -', formik.values);
 
   const [startTime, setStartTime] = useState(false);
   const [stopTime, setStopTime] = useState(false);

@@ -1,4 +1,5 @@
 export const IMAGE_VIEWER = 'IMAGE_VIEWER';
+export const HOST = 'http://localhost:4000';
 
 // modals
 export const modals = {

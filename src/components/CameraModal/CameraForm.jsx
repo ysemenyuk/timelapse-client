@@ -3,9 +3,8 @@ import { Col, Form, InputGroup, Row } from 'react-bootstrap';
 import Error from '../UI/Error.jsx';
 
 function CameraForm({ formik }) {
-  console.log('formik.errors -', formik.errors);
-  console.log('formik.values -', formik.values);
-
+  // console.log('formik.errors -', formik.errors);
+  // console.log('formik.values -', formik.values);
   return (
     <>
       <Form className="mb-3">

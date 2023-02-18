@@ -1,12 +1,11 @@
 import io from 'socket.io-client';
 import { cameraActions } from './redux/camera/cameraSlice.js';
-import { fileManagerActions } from './redux/fileManager/fileManagerSlice.js';
+import { fileActions } from './redux/file/fileSlice.js';
 import { taskActions } from './redux/task/taskSlice.js';
-
-const SERVER_URL = 'http://localhost:4000';
+import { HOST } from './utils/constants';
 
 export default (store) => {
-  const socket = io(SERVER_URL, { autoConnect: false });
+  const socket = io(HOST, { autoConnect: false });
 
   const connectSocket = (user) => {
     socket.auth = { userId: user.userId, token: user.token };
@@ -54,7 +53,7 @@ export default (store) => {
 
     const { cameraId, file } = data;
     store.dispatch(cameraActions.fetchOne(cameraId));
-    store.dispatch(fileManagerActions.addFile(file));
+    store.dispatch(fileActions.addFile(file));
   });
 
   const isSocketConnected = () => socket && socket.connected;

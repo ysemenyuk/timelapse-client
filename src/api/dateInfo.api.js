@@ -1,10 +1,11 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { HOST } from '../utils/constants';
 
 export const dateInfoApi = createApi({
   reducerPath: 'dateInfoApi',
   tagTypes: ['Dates'],
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:4000/api/cameras',
+    baseUrl: `${HOST}/api/cameras`,
     prepareHeaders: (headers) => {
       const userInfo = JSON.parse(localStorage.getItem('userInfo'));
       if (userInfo && userInfo.token) {

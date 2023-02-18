@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // import format from 'date-fns/format';
 import { useOutletContext, useSearchParams } from 'react-router-dom';
 import { cameraActions } from '../../redux/camera/cameraSlice.js';
-import { fileManagerSelectors } from '../../redux/fileManager/fileManagerSlice.js';
+import { fileSelectors } from '../../redux/file/fileSlice.js';
 import { useGetFilesQuery, useDeleteFileMutation } from '../../api/fileManager.api.js';
 import { modals } from '../../utils/constants.js';
 import { modalActions } from '../../redux/modalSlice.js';
@@ -15,7 +15,7 @@ export default function useFileManager(props) {
   const { selectedCamera } = useOutletContext();
   const [searchParams] = useSearchParams();
   const [deleteOneFile] = useDeleteFileMutation();
-  const addedFile = useSelector(fileManagerSelectors.addedFile);
+  const addedFile = useSelector(fileSelectors.addedFile);
 
   const searchString = searchParams.toString();
 

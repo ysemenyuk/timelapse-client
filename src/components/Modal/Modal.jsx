@@ -12,8 +12,6 @@ import AddCreateVideoModal from '../TasksActions/CreateVideo/AddModal';
 import EditCreateVideoModal from '../TasksActions/CreateVideo/InfoModal';
 import AddCreatePhotosByTimeModal from '../TasksActions/CreatePhotosByTime/AddModal';
 import EditCreatePhotosByTimeModal from '../TasksActions/CreatePhotosByTime/EditModal';
-import AddCreateVideosByTimeModal from '../TasksActions/CreateVideosByTime/AddModal';
-import EditCreateVideosByTimeModal from '../TasksActions/CreateVideosByTime/EditModal';
 
 const modalsMap = {
   [modals.ADD_CAMERA]: AddCameraModal,
@@ -25,8 +23,6 @@ const modalsMap = {
   [modals.EDIT_CREATE_VIDEO]: EditCreateVideoModal,
   [modals.ADD_CREATE_PHOTOS_BY_TIME]: AddCreatePhotosByTimeModal,
   [modals.EDIT_CREATE_PHOTOS_BY_TIME]: EditCreatePhotosByTimeModal,
-  [modals.ADD_CREATE_VIDEOS_BY_TIME]: AddCreateVideosByTimeModal,
-  [modals.EDIT_CREATE_VIDEOS_BY_TIME]: EditCreateVideosByTimeModal,
 };
 
 function ModalWrapper() {

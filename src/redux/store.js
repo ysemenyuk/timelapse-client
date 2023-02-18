@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import cameraReducer from './camera/cameraSlice.js';
 import thunkReducer from './thunkSlice.js';
 import userReducer from './user/userSlice.js';
-import fileManagerReducer from './fileManager/fileManagerSlice.js';
+import fileReducer from './file/fileSlice.js';
 import modalReducer from './modalSlice.js';
 import taskReducer from './task/taskSlice.js';
 import { fileManagerApi } from '../api/fileManager.api.js';
@@ -16,7 +16,7 @@ export default () => configureStore({
     user: userReducer,
     camera: cameraReducer,
     thunk: thunkReducer,
-    fileManager: fileManagerReducer,
+    file: fileReducer,
     modal: modalReducer,
     task: taskReducer,
     [fileManagerApi.reducerPath]: fileManagerApi.reducer,

@@ -24,6 +24,7 @@ function AddCreatePhotoModal({ onHide }) {
         },
       },
     }))
+      .unwrap()
       .then(() => {
         onHide();
       })
