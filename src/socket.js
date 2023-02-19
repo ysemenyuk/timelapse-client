@@ -1,10 +1,11 @@
 import io from 'socket.io-client';
-import { cameraActions } from './redux/camera/cameraSlice.js';
-import { fileActions } from './redux/file/fileSlice.js';
-import { taskActions } from './redux/task/taskSlice.js';
+// import { toast } from 'react-toastify';
+// import { cameraActions } from './redux/camera/cameraSlice.js';
+// import { fileActions } from './redux/file/fileSlice.js';
+// import { taskActions } from './redux/task/taskSlice.js';
 import { HOST } from './utils/constants';
 
-export default (store) => {
+export default () => {
   const socket = io(HOST, { autoConnect: false });
 
   const connectSocket = (user) => {
@@ -14,7 +15,7 @@ export default (store) => {
   };
 
   const disconnectSocket = () => {
-    if (socket && socket.connected) {
+    if (socket.connected) {
       socket.disconnect();
       console.log('disconnectSocket');
     }
@@ -32,31 +33,31 @@ export default (store) => {
   //   console.log('socket.onAny onAny', { event, args });
   // });
 
-  socket.on('update-task', (data) => {
-    console.log('socket.on update-task data -', data);
+  // socket.on('update-task', (data) => {
+  //   console.log('socket.on update-task data -', data);
 
-    const { cameraId, taskId } = data;
-    const allTasks = store.getState().task.tasks;
+  //   // toast('socket.on update-task');
 
-    if (allTasks[cameraId]) {
-      const task = allTasks[cameraId].find((item) => item._id === taskId);
-      if (task) {
-        store.dispatch(taskActions.fetchOne({ cameraId, taskId }));
-      } else {
-        store.dispatch(taskActions.fetchAll({ cameraId }));
-      }
-    }
-  });
+  //   const { cameraId, taskId } = data;
+  //   const allTasks = store.getState().task.tasks;
 
-  socket.on('create-file', (data) => {
-    console.log('socket.on create-file data -', data);
+  //   if (allTasks[cameraId]) {
+  //     const task = allTasks[cameraId].find((item) => item._id === taskId);
+  //     if (task) {
+  //       store.dispatch(taskActions.fetchOne({ cameraId, taskId }));
+  //     } else {
+  //       store.dispatch(taskActions.fetchAll({ cameraId }));
+  //     }
+  //   }
+  // });
 
-    const { cameraId, file } = data;
-    store.dispatch(cameraActions.fetchOne(cameraId));
-    store.dispatch(fileActions.addFile(file));
-  });
+  // socket.on('create-file', (data) => {
+  //   console.log('socket.on create-file data -', data);
 
-  const isSocketConnected = () => socket && socket.connected;
+  //   const { cameraId, file } = data;
+  //   store.dispatch(cameraActions.fetchOne(cameraId));
+  //   store.dispatch(fileActions.addFile(file));
+  // });
 
-  return { socket, isSocketConnected, connectSocket, disconnectSocket };
+  return { socket, connectSocket, disconnectSocket };
 };

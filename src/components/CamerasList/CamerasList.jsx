@@ -18,9 +18,9 @@ function CamerasList({ cameras }) {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const handleSelectItem = (camera) => () => {
-    dispatch(cameraActions.selectCamera(camera._id));
-    navigate(`/cameras/${camera._id}/photos`);
+  const handleSelectItem = (cameraId) => () => {
+    dispatch(cameraActions.selectCamera(cameraId));
+    navigate(`/cameras/${cameraId}/photos`);
   };
 
   const handleAddCamera = () => {
@@ -36,7 +36,7 @@ function CamerasList({ cameras }) {
       <Row sm={4} className="mb-3">
         {cameras.map((camera) => (
           <Col className="mb-4" key={camera._id}>
-            <CameraCard selectedCamera={camera} onClick={handleSelectItem(camera)} main />
+            <CameraCard camera={camera} onClick={handleSelectItem(camera._id)} camerasList />
           </Col>
         ))}
 

@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 // import _ from 'lodash';
 // import format from 'date-fns/format';
 import { useOutletContext, useSearchParams } from 'react-router-dom';
+import useSocket from '../../hooks/useSocket.js';
 import { cameraActions } from '../../redux/camera/cameraSlice.js';
-import { fileSelectors } from '../../redux/file/fileSlice.js';
 import { useGetFilesQuery, useDeleteFileMutation } from '../../api/fileManager.api.js';
 import { modals } from '../../utils/constants.js';
 import { modalActions } from '../../redux/modalSlice.js';
@@ -12,12 +12,13 @@ import { useGetDateInfoQuery } from '../../api/dateInfo.api.js';
 
 export default function useFileManager(props) {
   const dispatch = useDispatch();
-  const { selectedCamera } = useOutletContext();
-  const [searchParams] = useSearchParams();
+  const { socket } = useSocket();
+  const { selectedCameraId } = useOutletContext();
   const [deleteOneFile] = useDeleteFileMutation();
-  const addedFile = useSelector(fileSelectors.addedFile);
-
+  const [searchParams] = useSearchParams();
   const searchString = searchParams.toString();
+
+  //
 
   const [isShowViewer, setIsShowViewer] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(null);
@@ -40,7 +41,7 @@ export default function useFileManager(props) {
   );
 
   const getFilesQuery = useGetFilesQuery(
-    { cameraId: selectedCamera._id, query: queryFiles },
+    { cameraId: selectedCameraId, query: queryFiles },
     { skip: !searchString },
   );
 
@@ -72,11 +73,33 @@ export default function useFileManager(props) {
   //
 
   useEffect(() => {
-    // TODO: refetch if addedFile in query
-    if (searchString) {
-      refetch();
-    }
-  }, [addedFile]);
+    socket.on('create-file', (data) => {
+      console.log('socket.on create-file data -', data);
+      const { cameraId } = data;
+
+      // update stats in camera card
+      dispatch(cameraActions.fetchOne(cameraId));
+
+      // if last page refetch
+      const { currentPage, totalPages } = currentData;
+      if (currentPage === totalPages) {
+        refetch();
+      }
+    });
+    return () => {
+      socket.off('create-file');
+    };
+  }, [currentData]);
+
+  //
+
+  // useEffect(() => {
+  // if last page refetch
+  // const { currentPage, totalPages } = currentData;
+  // if (currentPage === totalPages) {
+  //   refetch();
+  // }
+  // }, [addedFile]);
 
   //
 
@@ -86,7 +109,7 @@ export default function useFileManager(props) {
   );
 
   const getDateInfoQuery = useGetDateInfoQuery(
-    { cameraId: selectedCamera._id, date: queryDate },
+    { cameraId: selectedCameraId, date: queryDate },
     { skip: !queryDate },
   );
 
@@ -114,8 +137,7 @@ export default function useFileManager(props) {
       return;
     }
     dispatch(cameraActions.updateOne({
-      cameraId: selectedCamera._id,
-      payload: { ...selectedCamera, avatar: file._id },
+      cameraId: selectedCameraId, payload: { avatar: file._id },
     }));
   };
 

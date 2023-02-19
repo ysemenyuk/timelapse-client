@@ -18,62 +18,62 @@ const getDate = (file) => {
   return '-';
 };
 
-function CameraCard({ selectedCamera, onClick, tabName, main }) {
+function CameraCard({ camera, onClick, tabName, camerasList }) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
   const openEditCameraModal = () => {
-    dispatch(cameraActions.selectCamera(selectedCamera._id));
+    dispatch(cameraActions.selectCamera(camera._id));
     dispatch(modalActions.openModal({ type: modals.EDIT_CAMERA }));
   };
 
   const openDeleteCameraModal = async () => {
-    dispatch(cameraActions.selectCamera(selectedCamera._id));
+    dispatch(cameraActions.selectCamera(camera._id));
     dispatch(modalActions.openModal({ type: modals.DELETE_CAMERA }));
   };
 
-  if (selectedCamera === null) {
+  if (camera === null) {
     return null;
   }
 
   return (
     <Card className={styles.card}>
       <div className={styles.cardImgWithHeader} role="presentation" onClick={onClick}>
-        <ImgWrapper width={100} height={0.5625} src={selectedCamera.avatar && `${selectedCamera.avatar.link}`} />
+        <ImgWrapper width={100} height={0.5625} src={camera.avatar && `${camera.avatar.link}`} />
         <Card.Header className={styles.cardHeader}>
-          <div className="text-truncate fw-bold">{selectedCamera.name}</div>
-          <div className="text-truncate">{selectedCamera.description}</div>
+          <div className="text-truncate fw-bold">{camera.name}</div>
+          <div className="text-truncate">{camera.description}</div>
         </Card.Header>
       </div>
       <Card.Body className={styles.cardBody}>
 
-        <If condition={main && selectedCamera.photosByTimeTask}>
+        <If condition={camerasList && camera.photosByTimeTask}>
           <div className="d-flex gap-2 align-items-start">
-            {`PhotosByTime: ${selectedCamera.photosByTimeTask.status}`}
+            {`PhotosByTime: ${camera.photosByTimeTask.status}`}
           </div>
         </If>
 
         <Choose>
           <When condition={tabName === 'videos'}>
             <div className="text-truncate">
-              {`First video: ${getDate(selectedCamera.firstVideo)}`}
+              {`First video: ${getDate(camera.firstVideo)}`}
             </div>
             <div className="text-truncate">
-              {`Last video: ${getDate(selectedCamera.lastVideo)}`}
+              {`Last video: ${getDate(camera.lastVideo)}`}
             </div>
             <div className="text-truncate">
-              {`Total videos: ${selectedCamera.totalVideos}`}
+              {`Total videos: ${camera.totalVideos}`}
             </div>
           </When>
           <Otherwise>
             <div className="text-truncate">
-              {`First photo: ${getDate(selectedCamera.firstPhoto)}`}
+              {`First photo: ${getDate(camera.firstPhoto)}`}
             </div>
             <div className="text-truncate">
-              {`Last photo: ${getDate(selectedCamera.lastPhoto)}`}
+              {`Last photo: ${getDate(camera.lastPhoto)}`}
             </div>
             <div className="text-truncate">
-              {`Total photos: ${selectedCamera.totalPhotos}`}
+              {`Total photos: ${camera.totalPhotos}`}
             </div>
           </Otherwise>
         </Choose>

@@ -26,7 +26,7 @@ function CameraPhotosManager() {
     onDeleteSelected,
     onFileClick,
     setPage,
-  } = useFileManager({ limit: 24 });
+  } = useFileManager({ limit: 30 });
 
   const onDeleteFile = (file) => () => {
     onDeleteSelected(file);

@@ -4,23 +4,26 @@ import React, { useEffect } from 'react';
 import _ from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Card, Col } from 'react-bootstrap';
+import useSocket from '../../hooks/useSocket.js';
 import Heading from '../UI/Heading.jsx';
-// import useThunkStatus from '../../hooks/useThunkStatus';
 import { taskActions, taskSelectors } from '../../redux/task/taskSlice';
 import { modalActions } from '../../redux/modalSlice.js';
 import Badge from '../UI/Badge.jsx';
 // import { taskName } from '../../utils/constants.js';
 // import TasksActions from '../TasksActions/TasksActions.jsx';
+// import useThunkStatus from '../../hooks/useThunkStatus';
 
-function CameraTasks({ selectedCamera }) {
+function CameraTasks({ selectedCameraId }) {
   const dispatch = useDispatch();
-
+  const { socket } = useSocket();
   const cameraTasks = useSelector(taskSelectors.cameraTasks);
   // const fetchStatus = useThunkStatus(taskActions.fetchAll);
 
   const handleClickTask = (task) => {
     console.log('handleClickTask', `Edit${task.name}`);
-    dispatch(modalActions.openModal({ type: `Edit${task.name}`, data: { taskId: task._id, selectedCameraId: selectedCamera._id } }));
+    dispatch(modalActions.openModal({
+      type: `Edit${task.name}`, data: { taskId: task._id, selectedCameraId },
+    }));
   };
 
   const handleDeleteTask = (e, task) => {
@@ -29,10 +32,42 @@ function CameraTasks({ selectedCamera }) {
     console.log('handleDeleteTask', task);
 
     dispatch(taskActions.deleteOne({
-      cameraId: selectedCamera._id,
+      cameraId: selectedCameraId,
       taskId: task._id,
     }));
   };
+
+  //
+
+  useEffect(() => {
+    socket.on('update-task', (data) => {
+      console.log('socket.on update-task data -', data);
+
+      const { cameraId, taskId } = data;
+
+      if (cameraTasks) {
+        const task = cameraTasks.find((item) => item._id === taskId);
+        if (task) {
+          dispatch(taskActions.fetchOne({ cameraId, taskId }));
+        } else {
+          dispatch(taskActions.fetchAll({ cameraId }));
+        }
+      }
+    });
+    return () => {
+      socket.off('update-task');
+    };
+  }, [cameraTasks]);
+
+  //
+
+  useEffect(() => {
+    if (selectedCameraId && _.isEmpty(cameraTasks)) {
+      dispatch(
+        taskActions.fetchAll({ cameraId: selectedCameraId }),
+      );
+    }
+  }, [selectedCameraId]);
 
   // TODO refactor
   const renderText = (task) => {
@@ -60,19 +95,14 @@ function CameraTasks({ selectedCamera }) {
 
     return _id.toString();
   };
-  //
 
-  useEffect(() => {
-    if (selectedCamera._id && _.isEmpty(cameraTasks)) {
-      dispatch(
-        taskActions.fetchAll({ cameraId: selectedCamera._id }),
-      );
-    }
-  }, [selectedCamera._id]);
+  //
 
   if (!cameraTasks) {
     return null;
   }
+
+  //
 
   return (
     <Col md={12} className="mb-4">

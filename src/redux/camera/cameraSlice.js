@@ -24,9 +24,6 @@ const cameraSlice = createSlice({
       // console.log('fetchAll.fulfilled action -', action);
       const cameras = action.payload;
       state.cameras = cameras;
-      // if (cameras.length > 0) {
-      //   state.selectedCameraId = cameras[0]._id;
-      // }
     },
     [fetchOne.fulfilled]: (state, action) => {
       // console.log('fetchOne.fulfilled action -', action);

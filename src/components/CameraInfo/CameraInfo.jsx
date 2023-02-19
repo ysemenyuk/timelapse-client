@@ -5,8 +5,6 @@ import { useOutletContext } from 'react-router-dom';
 function CameraInfo() {
   const { selectedCamera } = useOutletContext();
 
-  console.log(123, selectedCamera);
-
   return (
     <Col md={12} className="mb-4">
       <pre className="p-2">

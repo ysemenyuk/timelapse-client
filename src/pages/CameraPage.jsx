@@ -51,11 +51,11 @@ function CameraPage() {
     <Choose>
       <When condition={!fetchStatus.isLoading && !fetchStatus.isError && selectedCamera}>
         <Row>
-          <Col xs={6} md={4} lg={3} className="sticky-top">
+          <Col xs={6} md={4} lg={3}>
             <Col md={12} className="mb-4">
-              <CameraCard selectedCamera={selectedCamera} onClick={openEditCameraModal} tabName={tabName} />
+              <CameraCard camera={selectedCamera} onClick={openEditCameraModal} tabName={tabName} />
             </Col>
-            <TasksList selectedCamera={selectedCamera} />
+            <TasksList selectedCameraId={cameraId} />
           </Col>
 
           <Col xs={6} md={8} lg={9}>
@@ -85,7 +85,7 @@ function CameraPage() {
               <Nav.Item />
             </Nav>
 
-            <Outlet context={{ selectedCamera, tabName }} />
+            <Outlet context={{ selectedCameraId: cameraId, selectedCamera }} />
 
           </Col>
         </Row>

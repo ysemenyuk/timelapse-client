@@ -1,4 +1,4 @@
-// import { toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import taskService from '../../api/task.service.js';
 
@@ -35,7 +35,7 @@ const createOne = createAsyncThunk('task/createOne', async ({ cameraId, payload 
     return { cameraId, data };
   } catch (e) {
     console.log('task/createOne error -', e.message);
-    // toast('task/createOne error');
+    toast('task/createOne error');
     throw e;
   }
 });
