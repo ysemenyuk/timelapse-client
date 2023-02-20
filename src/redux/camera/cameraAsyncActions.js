@@ -3,8 +3,7 @@ import cameraService from '../../api/camera.service.js';
 
 const fetchAll = createAsyncThunk('camera/fetchAll', async () => {
   try {
-    console.log('camera/fetchAll -');
-
+    // console.log('camera/fetchAll -');
     const { data } = await cameraService.getAll();
     console.log('camera/fetchAll response.data -', data);
     return data;
@@ -16,8 +15,7 @@ const fetchAll = createAsyncThunk('camera/fetchAll', async () => {
 
 const fetchOne = createAsyncThunk('camera/fetchOne', async (cameraId) => {
   try {
-    console.log('camera/fetchOne cameraId -', cameraId);
-
+    // console.log('camera/fetchOne cameraId -', cameraId);
     const { data } = await cameraService.getOne(cameraId);
     console.log('camera/fetchOne response.data -', data);
     return data;
@@ -29,8 +27,7 @@ const fetchOne = createAsyncThunk('camera/fetchOne', async (cameraId) => {
 
 const createOne = createAsyncThunk('camera/createOne', async (values) => {
   try {
-    console.log('camera/createOne values -', values);
-
+    // console.log('camera/createOne values -', values);
     const { data } = await cameraService.createOne(values);
     console.log('createOne response.data -', data);
     return data;
@@ -42,10 +39,8 @@ const createOne = createAsyncThunk('camera/createOne', async (values) => {
 
 const updateOne = createAsyncThunk('camera/updateOne', async ({ cameraId, payload }) => {
   try {
-    console.log('camera/updateOne camera, payload -', cameraId, payload);
-
+    // console.log('camera/updateOne camera, payload -', cameraId, payload);
     const { data } = await cameraService.updateOne(cameraId, payload);
-
     console.log('camera/updateOne response.data -', data);
     return data;
   } catch (e) {
@@ -56,10 +51,8 @@ const updateOne = createAsyncThunk('camera/updateOne', async ({ cameraId, payloa
 
 const deleteOne = createAsyncThunk('camera/deleteOne', async (camera) => {
   try {
-    console.log('camera/deleteOne camera -', camera);
-
+    // console.log('camera/deleteOne camera -', camera);
     const { data } = await cameraService.deleteOne(camera._id);
-
     console.log('camera/deleteOne response -', data);
     return camera;
   } catch (e) {

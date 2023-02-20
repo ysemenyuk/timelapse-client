@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import format from 'date-fns/format';
 // import cn from 'classnames';
@@ -9,7 +9,7 @@ import styles from './CameraCard.module.css';
 import { modals } from '../../utils/constants.js';
 import { modalActions } from '../../redux/modalSlice.js';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
-import { cameraActions } from '../../redux/camera/cameraSlice';
+import { cameraActions, cameraSelectors } from '../../redux/camera/cameraSlice';
 
 const getDate = (file) => {
   if (file && file.date) {
@@ -18,21 +18,24 @@ const getDate = (file) => {
   return '-';
 };
 
-function CameraCard({ camera, onClick, tabName, camerasList }) {
+function CameraCard({ cameraId, onClick, tabName, camerasList }) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const camera = useSelector(cameraSelectors.cameraById(cameraId));
+
+  console.log(3333, 'CameraCard');
 
   const openEditCameraModal = () => {
-    dispatch(cameraActions.selectCamera(camera._id));
+    dispatch(cameraActions.selectCamera(cameraId));
     dispatch(modalActions.openModal({ type: modals.EDIT_CAMERA }));
   };
 
   const openDeleteCameraModal = async () => {
-    dispatch(cameraActions.selectCamera(camera._id));
+    dispatch(cameraActions.selectCamera(cameraId));
     dispatch(modalActions.openModal({ type: modals.DELETE_CAMERA }));
   };
 
-  if (camera === null) {
+  if (cameraId === null) {
     return null;
   }
 

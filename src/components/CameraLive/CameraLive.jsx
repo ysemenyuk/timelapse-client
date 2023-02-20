@@ -1,11 +1,12 @@
 import React from 'react';
 import { Col } from 'react-bootstrap';
-import { useOutletContext } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+// import { useOutletContext } from 'react-router-dom';
 import ReactPlayer from 'react-player';
-// import 'hls.js/dist/hls.js';
+import { cameraSelectors } from '../../redux/camera/cameraSlice';
 
 function CameraLive() {
-  const { selectedCamera } = useOutletContext();
+  const selectedCamera = useSelector(cameraSelectors.selectedCamera);
 
   return (
     <Col md={12} className="mb-4">

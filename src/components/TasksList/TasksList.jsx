@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import React, { useEffect } from 'react';
 // import cn from 'classnames';
-import _ from 'lodash';
+// import _ from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Card, Col } from 'react-bootstrap';
 import useSocket from '../../hooks/useSocket.js';
@@ -18,6 +18,8 @@ function CameraTasks({ selectedCameraId }) {
   const { socket } = useSocket();
   const cameraTasks = useSelector(taskSelectors.cameraTasks);
   // const fetchStatus = useThunkStatus(taskActions.fetchAll);
+
+  console.log(4444, 'CameraTasks');
 
   const handleClickTask = (task) => {
     console.log('handleClickTask', `Edit${task.name}`);
@@ -42,30 +44,19 @@ function CameraTasks({ selectedCameraId }) {
   useEffect(() => {
     socket.on('update-task', (data) => {
       console.log('socket.on update-task data -', data);
-
       const { cameraId, taskId } = data;
-
-      if (cameraTasks) {
-        const task = cameraTasks.find((item) => item._id === taskId);
-        if (task) {
-          dispatch(taskActions.fetchOne({ cameraId, taskId }));
-        } else {
-          dispatch(taskActions.fetchAll({ cameraId }));
-        }
-      }
+      dispatch(taskActions.fetchOne({ cameraId, taskId }));
     });
     return () => {
       socket.off('update-task');
     };
-  }, [cameraTasks]);
+  }, []);
 
   //
 
   useEffect(() => {
-    if (selectedCameraId && _.isEmpty(cameraTasks)) {
-      dispatch(
-        taskActions.fetchAll({ cameraId: selectedCameraId }),
-      );
+    if (selectedCameraId) {
+      dispatch(taskActions.fetchAll({ cameraId: selectedCameraId }));
     }
   }, [selectedCameraId]);
 

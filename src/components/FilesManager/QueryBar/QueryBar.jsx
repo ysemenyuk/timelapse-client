@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useOutletContext, useSearchParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useSearchParams } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 // import cn from 'classnames';
 // import _ from 'lodash';
@@ -7,6 +8,7 @@ import format from 'date-fns/format';
 import DatePicker from 'react-datepicker';
 import styles from './QueryBar.module.css';
 import 'react-datepicker/dist/react-datepicker.css';
+import { cameraSelectors } from '../../../redux/camera/cameraSlice';
 
 function QueryBar(props) {
   const {
@@ -17,7 +19,9 @@ function QueryBar(props) {
     fileType,
   } = props;
 
-  const { selectedCamera } = useOutletContext();
+  console.log(2222, 'QueryBar');
+
+  const selectedCamera = useSelector(cameraSelectors.selectedCamera);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const initStartDate = () => {

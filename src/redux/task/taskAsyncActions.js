@@ -26,12 +26,9 @@ const fetchOne = createAsyncThunk('task/fetchOne', async ({ cameraId, taskId }) 
 
 const createOne = createAsyncThunk('task/createOne', async ({ cameraId, payload }) => {
   try {
-    console.log('task/createOne payload -', payload);
-
+    // console.log('task/createOne payload -', payload);
     const { data } = await taskService.createOne(cameraId, payload);
-
     console.log('createOne response.data -', data);
-    // toast('task/createOne successed');
     return { cameraId, data };
   } catch (e) {
     console.log('task/createOne error -', e.message);
@@ -42,10 +39,8 @@ const createOne = createAsyncThunk('task/createOne', async ({ cameraId, payload 
 
 const updateOne = createAsyncThunk('task/updateOne', async ({ cameraId, taskId, payload }) => {
   try {
-    console.log('task/updateOne payload -', payload);
-
+    // console.log('task/updateOne payload -', payload);
     const { data } = await taskService.updateOne(cameraId, taskId, payload);
-
     console.log('task/updateOne response.data -', data);
     return { cameraId, taskId, data };
   } catch (e) {
@@ -56,10 +51,8 @@ const updateOne = createAsyncThunk('task/updateOne', async ({ cameraId, taskId, 
 
 const deleteOne = createAsyncThunk('task/deleteOne', async ({ cameraId, taskId }) => {
   try {
-    console.log('task/deleteOne taskId -', taskId);
-
+    // console.log('task/deleteOne taskId -', taskId);
     const response = await taskService.deleteOne(cameraId, taskId);
-
     console.log('task/deleteOne response -', response);
     return { cameraId, taskId };
   } catch (e) {

@@ -12,10 +12,10 @@ function CameraListPage() {
   const dispatch = useDispatch();
   // const { t } = useTranslation();
   const fetchStatus = useThunkStatus(cameraActions.fetchAll);
-  const allCameras = useSelector(cameraSelectors.allCameras);
+  const camerasIds = useSelector(cameraSelectors.camerasIds);
 
   useEffect(() => {
-    if (allCameras.length < 2) {
+    if (camerasIds.length < 1) {
       dispatch(cameraActions.fetchAll());
     }
   }, []);
@@ -25,7 +25,7 @@ function CameraListPage() {
       <When condition={!fetchStatus.isLoading && !fetchStatus.isError}>
         <Row>
           <Col sm={12}>
-            <CamerasList cameras={allCameras} />
+            <CamerasList camerasIds={camerasIds} />
           </Col>
         </Row>
       </When>

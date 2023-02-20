@@ -18,6 +18,8 @@ export default function useFileManager(props) {
   const [searchParams] = useSearchParams();
   const searchString = searchParams.toString();
 
+  console.log(1111, 'useFileManager');
+
   //
 
   const [isShowViewer, setIsShowViewer] = useState(false);
@@ -72,24 +74,28 @@ export default function useFileManager(props) {
 
   //
 
+  const [addedFile, setAddedFile] = useState(null);
+
   useEffect(() => {
     socket.on('create-file', (data) => {
       console.log('socket.on create-file data -', data);
-      const { cameraId } = data;
-
+      const { cameraId, file } = data;
       // update stats in camera card
       dispatch(cameraActions.fetchOne(cameraId));
-
-      // if last page refetch
-      const { currentPage, totalPages } = currentData;
-      if (currentPage === totalPages) {
-        refetch();
-      }
+      setAddedFile(file);
     });
     return () => {
       socket.off('create-file');
     };
-  }, [currentData]);
+  }, []);
+
+  useEffect(() => {
+    // if last page refetch
+    const { currentPage, totalPages } = currentData;
+    if (getFilesQuery.currentData && currentPage === totalPages) {
+      refetch();
+    }
+  }, [addedFile]);
 
   //
 

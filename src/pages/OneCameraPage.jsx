@@ -20,12 +20,14 @@ function CameraPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  console.log(5555, 'CameraPage');
+
   const fetchStatus = useThunkStatus(cameraActions.fetchAll);
-  const selectedCamera = useSelector(cameraSelectors.selectedCamera);
+  const selectedCameraId = useSelector(cameraSelectors.selectedCameraId);
 
   useEffect(() => {
-    if (selectedCamera === null) {
-      dispatch(cameraActions.fetchAll(cameraId))
+    if (selectedCameraId === null) {
+      dispatch(cameraActions.fetchAll())
         .then(() => {
           dispatch(cameraActions.selectCamera(cameraId));
         });
@@ -49,11 +51,11 @@ function CameraPage() {
 
   return (
     <Choose>
-      <When condition={!fetchStatus.isLoading && !fetchStatus.isError && selectedCamera}>
+      <When condition={!fetchStatus.isLoading && !fetchStatus.isError && selectedCameraId}>
         <Row>
           <Col xs={6} md={4} lg={3}>
             <Col md={12} className="mb-4">
-              <CameraCard camera={selectedCamera} onClick={openEditCameraModal} tabName={tabName} />
+              <CameraCard cameraId={cameraId} onClick={openEditCameraModal} tabName={tabName} />
             </Col>
             <TasksList selectedCameraId={cameraId} />
           </Col>
@@ -85,7 +87,7 @@ function CameraPage() {
               <Nav.Item />
             </Nav>
 
-            <Outlet context={{ selectedCameraId: cameraId, selectedCamera }} />
+            <Outlet context={{ selectedCameraId: cameraId }} />
 
           </Col>
         </Row>

@@ -4,8 +4,6 @@ import taskAsyncActions from './taskAsyncActions.js';
 
 const { fetchAll, fetchOne, createOne, updateOne, deleteOne } = taskAsyncActions;
 
-// console.log("cameraSlice");
-
 const taskSlice = createSlice({
   name: 'task',
   initialState: {
@@ -36,6 +34,8 @@ const taskSlice = createSlice({
       const index = state.tasks[cameraId].findIndex((task) => task._id === taskId);
       if (index >= 0) {
         state.tasks[cameraId][index] = data;
+      } else {
+        state.tasks[cameraId].push(data);
       }
     },
     [createOne.fulfilled]: (state, action) => {

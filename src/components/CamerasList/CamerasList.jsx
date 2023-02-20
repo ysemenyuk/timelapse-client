@@ -13,7 +13,7 @@ import { modals } from '../../utils/constants.js';
 import { modalActions } from '../../redux/modalSlice.js';
 import CameraCard from '../CameraCard/CameraCard.jsx';
 
-function CamerasList({ cameras }) {
+function CamerasList({ camerasIds }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -34,9 +34,9 @@ function CamerasList({ cameras }) {
       </Heading>
 
       <Row sm={4} className="mb-3">
-        {cameras.map((camera) => (
-          <Col className="mb-4" key={camera._id}>
-            <CameraCard camera={camera} onClick={handleSelectItem(camera._id)} camerasList />
+        {camerasIds.map((cameraId) => (
+          <Col className="mb-4" key={cameraId}>
+            <CameraCard cameraId={cameraId} onClick={handleSelectItem(cameraId)} camerasList />
           </Col>
         ))}
 

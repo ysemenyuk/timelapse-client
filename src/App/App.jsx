@@ -8,7 +8,7 @@ import LoginPage from '../pages/LoginPage.jsx';
 import SignupPage from '../pages/SignupPage.jsx';
 import ProfilePage from '../pages/ProfilePage.jsx';
 import CamerasListPage from '../pages/CamerasListPage.jsx';
-import CameraPage from '../pages/CameraPage.jsx';
+import OneCameraPage from '../pages/OneCameraPage.jsx';
 import HomePage from '../pages/HomePage.jsx';
 import MainLayout from '../layouts/MainLayout.jsx';
 import SocketContext from '../context/SocketContext.js';
@@ -84,7 +84,7 @@ function App() {
                   path="cameras/:cameraId"
                   element={(
                     <RequireAuth>
-                      <CameraPage />
+                      <OneCameraPage />
                     </RequireAuth>
                   )}
                 >
