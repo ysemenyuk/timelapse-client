@@ -22,9 +22,10 @@ function QueryBar(props) {
 
   console.log(2222, 'QueryBar');
 
-  const selectedCamera = useSelector(cameraSelectors.selectedCamera);
+  const selectedCameraId = useSelector(cameraSelectors.selectedCameraId);
+  const selectedCameraStats = useSelector(cameraSelectors.cameraStatsByCameraId(selectedCameraId));
 
-  const getFilesCountsByDatesQuery = useGetFilesCountsByDatesQuery({ cameraId: selectedCamera._id });
+  const getFilesCountsByDatesQuery = useGetFilesCountsByDatesQuery({ cameraId: selectedCameraId });
   const { data: filesCountsByDates } = getFilesCountsByDatesQuery;
 
   const datesWiithFiles = useMemo(() => {
@@ -40,8 +41,8 @@ function QueryBar(props) {
     if (searchParams.get('date_gte')) {
       return new Date(searchParams.get('date_gte'));
     }
-    if (selectedCamera.firstVideo && selectedCamera.firstVideo.date) {
-      return new Date(selectedCamera.firstVideo.date);
+    if (selectedCameraStats.firstVideo && selectedCameraStats.firstVideo.date) {
+      return new Date(selectedCameraStats.firstVideo.date);
     }
     return new Date();
   };
@@ -50,8 +51,8 @@ function QueryBar(props) {
     if (searchParams.get('date_lte')) {
       return new Date(searchParams.get('date_lte'));
     }
-    if (selectedCamera.lastVideo && selectedCamera.lastVideo.date) {
-      return new Date(selectedCamera.lastVideo.date);
+    if (selectedCameraStats.lastVideo && selectedCameraStats.lastVideo.date) {
+      return new Date(selectedCameraStats.lastVideo.date);
     }
     return new Date();
   };
@@ -60,8 +61,8 @@ function QueryBar(props) {
     if (searchParams.get('date')) {
       return new Date(searchParams.get('date'));
     }
-    if (selectedCamera.lastPhoto && selectedCamera.lastPhoto.date) {
-      return new Date(selectedCamera.lastPhoto.date);
+    if (selectedCameraStats.lastPhoto && selectedCameraStats.lastPhoto.date) {
+      return new Date(selectedCameraStats.lastPhoto.date);
     }
     return new Date();
   };

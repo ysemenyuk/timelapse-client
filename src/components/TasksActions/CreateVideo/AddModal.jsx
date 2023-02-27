@@ -27,14 +27,16 @@ const getDate = (file) => {
 function AddCreateVideoModal({ onHide }) {
   const dispatch = useDispatch();
   const fetchStatus = useThunkStatus(taskActions.createOne);
-  const selectedCamera = useSelector(cameraSelectors.selectedCamera);
+
+  const selectedCameraId = useSelector(cameraSelectors.selectedCameraId);
+  const selectedCameraStats = useSelector(cameraSelectors.cameraStatsByCameraId(selectedCameraId));
 
   const formik = useFormik({
     validationSchema,
     initialValues: {
       customName: 'filename',
-      startDate: getDate(selectedCamera.firstPhoto),
-      endDate: getDate(selectedCamera.lastPhoto),
+      startDate: getDate(selectedCameraStats.firstPhoto),
+      endDate: getDate(selectedCameraStats.lastPhoto),
       timeRangeType: 'allTime',
       customTimeStart: '09:00',
       customTimeEnd: '18:00',
@@ -43,7 +45,7 @@ function AddCreateVideoModal({ onHide }) {
     },
     onSubmit: (values, { resetForm, setSubmitting, setFieldError }) => {
       dispatch(taskActions.createOne({
-        cameraId: selectedCamera._id,
+        cameraId: selectedCameraId,
         payload: {
           name: taskName.CREATE_VIDEO,
           type: taskType.ONE_TIME,
@@ -84,7 +86,7 @@ function AddCreateVideoModal({ onHide }) {
   ]);
 
   const getFilesCountQuery = useGetFilesCountQuery({
-    cameraId: selectedCamera._id,
+    cameraId: selectedCameraId,
     query: queryString,
   });
 
