@@ -79,10 +79,10 @@ export default function useFileManager(props) {
   useEffect(() => {
     socket.on('create-file', (data) => {
       console.log('socket.on create-file data -', data);
-      const { cameraId, fileId } = data;
+      const { cameraId, file } = data;
+      setAddedFile(file);
       // update stats in camera card
-      dispatch(cameraActions.fetchOne(cameraId));
-      setAddedFile(fileId);
+      dispatch(cameraActions.fetchCameraStats(cameraId));
     });
     return () => {
       socket.off('create-file');
@@ -96,16 +96,6 @@ export default function useFileManager(props) {
       refetch();
     }
   }, [addedFile]);
-
-  //
-
-  // useEffect(() => {
-  // if last page refetch
-  // const { currentPage, totalPages } = currentData;
-  // if (currentPage === totalPages) {
-  //   refetch();
-  // }
-  // }, [addedFile]);
 
   //
 
@@ -138,15 +128,6 @@ export default function useFileManager(props) {
     setIsShowViewer(false);
   };
 
-  const onSetAvatar = (file) => {
-    if (!file) {
-      return;
-    }
-    dispatch(cameraActions.updateOne({
-      cameraId: selectedCameraId, payload: { avatar: file._id },
-    }));
-  };
-
   const onCreatePhotoFile = () => {
     dispatch(modalActions.openModal({ type: modals.ADD_CREATE_PHOTO }));
   };
@@ -168,7 +149,6 @@ export default function useFileManager(props) {
     isShowViewer,
     setSelectedIndex,
     onCloseViewer,
-    onSetAvatar,
     onDeleteSelected,
     onFileClick,
     setPage,

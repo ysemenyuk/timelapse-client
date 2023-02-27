@@ -7,7 +7,7 @@ const instance = axios.create({
 });
 
 const getAll = async () => {
-  const response = await instance.get('/', { headers: getAuthHeader() });
+  const response = await instance.get('?including=stats', { headers: getAuthHeader() });
   return response;
 };
 
@@ -16,8 +16,13 @@ const getOne = async (cameraId) => {
   return response;
 };
 
+const getCameraStats = async (cameraId) => {
+  const response = await instance.get(`/${cameraId}/stats`, { headers: getAuthHeader() });
+  return response;
+};
+
 const createOne = async (data) => {
-  const response = await instance.post('/', data, { headers: getAuthHeader() });
+  const response = await instance.post('', data, { headers: getAuthHeader() });
   return response;
 };
 
@@ -34,6 +39,7 @@ const deleteOne = async (cameraId) => {
 export default {
   getAll,
   getOne,
+  getCameraStats,
   createOne,
   updateOne,
   deleteOne,

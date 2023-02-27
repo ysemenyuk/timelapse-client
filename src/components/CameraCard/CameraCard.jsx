@@ -18,12 +18,20 @@ const getDate = (file) => {
   return '-';
 };
 
+const getCount = (count) => {
+  if (count) {
+    return count;
+  }
+  return '-';
+};
+
 function CameraCard({ cameraId, onClick, tabName, camerasList }) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const camera = useSelector(cameraSelectors.cameraById(cameraId));
+  const cameraStats = useSelector(cameraSelectors.cameraStatsByCameraId(cameraId));
 
-  console.log(3333, 'CameraCard');
+  console.log(3333, 'CameraCard', cameraStats);
 
   const openEditCameraModal = () => {
     dispatch(cameraActions.selectCamera(cameraId));
@@ -59,24 +67,24 @@ function CameraCard({ cameraId, onClick, tabName, camerasList }) {
         <Choose>
           <When condition={tabName === 'videos'}>
             <div className="text-truncate">
-              {`First video: ${getDate(camera.firstVideo)}`}
+              {`First video: ${getDate(cameraStats.firstVideo)}`}
             </div>
             <div className="text-truncate">
-              {`Last video: ${getDate(camera.lastVideo)}`}
+              {`Last video: ${getDate(cameraStats.lastVideo)}`}
             </div>
             <div className="text-truncate">
-              {`Total videos: ${camera.totalVideos}`}
+              {`Total videos: ${getCount(cameraStats.totalVideos)}`}
             </div>
           </When>
           <Otherwise>
             <div className="text-truncate">
-              {`First photo: ${getDate(camera.firstPhoto)}`}
+              {`First photo: ${getDate(cameraStats.firstPhoto)}`}
             </div>
             <div className="text-truncate">
-              {`Last photo: ${getDate(camera.lastPhoto)}`}
+              {`Last photo: ${getDate(cameraStats.lastPhoto)}`}
             </div>
             <div className="text-truncate">
-              {`Total photos: ${camera.totalPhotos}`}
+              {`Total photos: ${getCount(cameraStats.totalPhotos)}`}
             </div>
           </Otherwise>
         </Choose>

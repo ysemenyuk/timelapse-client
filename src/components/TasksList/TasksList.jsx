@@ -10,7 +10,6 @@ import { taskActions, taskSelectors } from '../../redux/task/taskSlice';
 import { modalActions } from '../../redux/modalSlice.js';
 import Badge from '../UI/Badge.jsx';
 // import { taskName } from '../../utils/constants.js';
-// import TasksActions from '../TasksActions/TasksActions.jsx';
 // import useThunkStatus from '../../hooks/useThunkStatus';
 
 function CameraTasks({ selectedCameraId }) {
@@ -44,8 +43,8 @@ function CameraTasks({ selectedCameraId }) {
   useEffect(() => {
     socket.on('update-task', (data) => {
       console.log('socket.on update-task data -', data);
-      const { cameraId, taskId } = data;
-      dispatch(taskActions.fetchOne({ cameraId, taskId }));
+      const { task } = data;
+      dispatch(taskActions.updateTask(task));
     });
     return () => {
       socket.off('update-task');
@@ -121,9 +120,6 @@ function CameraTasks({ selectedCameraId }) {
           </Card.Body>
         </Card>
       ))}
-
-      {/* <TasksActions /> */}
-
     </Col>
   );
 }

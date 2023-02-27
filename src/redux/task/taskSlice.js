@@ -15,7 +15,7 @@ const taskSlice = createSlice({
       state.selectedTaskId = action.payload;
     },
     updateTask: (state, action) => {
-      // console.log('updateTask action -', action);
+      console.log('updateTask action -', action);
       const updatedTask = action.payload;
       const cameraId = updatedTask.camera;
       const index = state.tasks[cameraId].findIndex((task) => task._id === updatedTask._id);

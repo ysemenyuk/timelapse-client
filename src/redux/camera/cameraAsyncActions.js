@@ -25,6 +25,18 @@ const fetchOne = createAsyncThunk('camera/fetchOne', async (cameraId) => {
   }
 });
 
+const fetchCameraStats = createAsyncThunk('camera/fetchCameraStats', async (cameraId) => {
+  try {
+    // console.log('camera/fetchCameraStats cameraId -', cameraId);
+    const { data } = await cameraService.getCameraStats(cameraId);
+    console.log('camera/fetchCameraStats response.data -', data);
+    return data;
+  } catch (e) {
+    console.log('camera/fetchCameraStats error -', e.message);
+    throw e;
+  }
+});
+
 const createOne = createAsyncThunk('camera/createOne', async (values) => {
   try {
     // console.log('camera/createOne values -', values);
@@ -61,4 +73,4 @@ const deleteOne = createAsyncThunk('camera/deleteOne', async (camera) => {
   }
 });
 
-export default { fetchAll, fetchOne, createOne, updateOne, deleteOne };
+export default { fetchAll, fetchOne, fetchCameraStats, createOne, updateOne, deleteOne };

@@ -5,12 +5,14 @@ import { Button, Card, Col, Row, Spinner } from 'react-bootstrap';
 import format from 'date-fns/format';
 import fromUnixTime from 'date-fns/fromUnixTime';
 import { Image, Trash, Download } from 'react-bootstrap-icons';
+import { useDispatch, useSelector } from 'react-redux';
 import styles from './PhotosManager.module.css';
 import ImgWrapper from '../../UI/ImgWrapper/ImgWrapper.jsx';
 import Error from '../../UI/Error';
 import useFileManager from '../useFileManager';
 import PhotoViewer from './PhotoViewer';
 import QueryBar from '../QueryBar/QueryBar';
+import { cameraActions, cameraSelectors } from '../../../redux/camera/cameraSlice';
 
 function CameraPhotosManager() {
   const {
@@ -22,11 +24,23 @@ function CameraPhotosManager() {
     isShowViewer,
     setSelectedIndex,
     onCloseViewer,
-    onSetAvatar,
     onDeleteSelected,
     onFileClick,
     setPage,
   } = useFileManager({ limit: 30 });
+
+  const dispatch = useDispatch();
+  const selectedCamera = useSelector(cameraSelectors.selectedCamera);
+
+  const onSetAvatar = (file) => {
+    if (!file) {
+      return;
+    }
+    dispatch(cameraActions.updateOne({
+      cameraId: selectedCamera._id,
+      payload: { ...selectedCamera, avatar: file._id },
+    }));
+  };
 
   const onDeleteFile = (file) => () => {
     onDeleteSelected(file);
