@@ -26,6 +26,11 @@ export const fileManagerApi = createApi({
         url: `/${cameraId}/files/count${query}`,
       }),
     }),
+    getFilesCountsByDates: build.query({
+      query: ({ cameraId, query = '' }) => ({
+        url: `/${cameraId}/files/countsByDates${query}`,
+      }),
+    }),
     deleteFile: build.mutation({
       query: ({ cameraId, fileId }) => ({
         url: `/${cameraId}/files/${fileId}`,
@@ -36,4 +41,6 @@ export const fileManagerApi = createApi({
   }),
 });
 
-export const { useGetFilesQuery, useDeleteFileMutation, useGetFilesCountQuery } = fileManagerApi;
+export const {
+  useGetFilesQuery, useDeleteFileMutation, useGetFilesCountQuery, useGetFilesCountsByDatesQuery,
+} = fileManagerApi;

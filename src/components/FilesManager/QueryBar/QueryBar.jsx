@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
@@ -9,6 +9,7 @@ import DatePicker from 'react-datepicker';
 import styles from './QueryBar.module.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import { cameraSelectors } from '../../../redux/camera/cameraSlice';
+import { useGetFilesCountsByDatesQuery } from '../../../api/fileManager.api';
 
 function QueryBar(props) {
   const {
@@ -22,6 +23,17 @@ function QueryBar(props) {
   console.log(2222, 'QueryBar');
 
   const selectedCamera = useSelector(cameraSelectors.selectedCamera);
+
+  const getFilesCountsByDatesQuery = useGetFilesCountsByDatesQuery({ cameraId: selectedCamera._id });
+  const { data: filesCountsByDates } = getFilesCountsByDatesQuery;
+
+  const datesWiithFiles = useMemo(() => {
+    if (filesCountsByDates) {
+      return filesCountsByDates.map((i) => new Date(i._id));
+    }
+    return [];
+  }, [filesCountsByDates]);
+
   const [searchParams, setSearchParams] = useSearchParams();
 
   const initStartDate = () => {
@@ -78,10 +90,48 @@ function QueryBar(props) {
           type="primary"
           size="sm"
           onClick={getFilesQuery.refetch}
-          disabled={getFilesQuery.isFetching}
+          disabled={getFilesQuery.isLoading}
         >
           Refetch
         </Button>
+
+        <div className="d-flex gap-2 justify-content-start align-items-center">
+          <Choose>
+            <When condition={isRangeDate}>
+              <DatePicker
+                className={styles.dateInput}
+                dateFormat="dd/MM/yyyy"
+                selected={startDate}
+                onChange={setStartDate}
+                selectsStart
+                startDate={startDate}
+                endDate={endDate}
+              />
+              <DatePicker
+                className={styles.dateInput}
+                dateFormat="dd/MM/yyyy"
+                selected={endDate}
+                onChange={setEndDate}
+                selectsEnd
+                startDate={startDate}
+                endDate={endDate}
+                minDate={startDate}
+              />
+            </When>
+            <Otherwise>
+              <DatePicker
+                className={styles.dateInput}
+                dateFormat="dd/MM/yyyy"
+                selected={oneDate}
+                onChange={setOneDate}
+                includeDates={datesWiithFiles}
+              />
+            </Otherwise>
+          </Choose>
+          <div className={`${styles.filesCount} d-flex h-100 align-items-center`}>
+            {`Files: ${currentFilesCount} (${totalFilesCount})`}
+          </div>
+        </div>
 
         {/* <ButtonGroup>
             <ToggleButton
@@ -137,43 +187,7 @@ function QueryBar(props) {
               </ToggleButton>
             </ButtonGroup>
           </If> */}
-      </div>
 
-      <div className="d-flex gap-2 justify-content-start align-items-center">
-        <Choose>
-          <When condition={isRangeDate}>
-            <DatePicker
-              className={styles.dateInput}
-              dateFormat="dd/MM/yyyy"
-              selected={startDate}
-              onChange={setStartDate}
-              selectsStart
-              startDate={startDate}
-              endDate={endDate}
-            />
-            <DatePicker
-              className={styles.dateInput}
-              dateFormat="dd/MM/yyyy"
-              selected={endDate}
-              onChange={setEndDate}
-              selectsEnd
-              startDate={startDate}
-              endDate={endDate}
-              minDate={startDate}
-            />
-          </When>
-          <Otherwise>
-            <DatePicker
-              className={styles.dateInput}
-              dateFormat="dd/MM/yyyy"
-              selected={oneDate}
-              onChange={setOneDate}
-            />
-          </Otherwise>
-        </Choose>
-        <div className={`${styles.filesCount} d-flex h-100 align-items-center`}>
-          {`Files: ${currentFilesCount} (${totalFilesCount})`}
-        </div>
       </div>
     </div>
   );

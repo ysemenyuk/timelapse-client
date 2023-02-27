@@ -79,10 +79,10 @@ export default function useFileManager(props) {
   useEffect(() => {
     socket.on('create-file', (data) => {
       console.log('socket.on create-file data -', data);
-      const { cameraId, file } = data;
+      const { cameraId, fileId } = data;
       // update stats in camera card
       dispatch(cameraActions.fetchOne(cameraId));
-      setAddedFile(file);
+      setAddedFile(fileId);
     });
     return () => {
       socket.off('create-file');

@@ -1,16 +1,16 @@
 /* eslint-disable max-len */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
 import format from 'date-fns/format';
 import * as Yup from 'yup';
 import { Modal, Button, Form, Row, Col, Spinner } from 'react-bootstrap';
-import fileManagerService from '../../../api/fileManager.service.js'; //
 import { cameraSelectors } from '../../../redux/camera/cameraSlice.js';
 import { taskActions } from '../../../redux/task/taskSlice.js';
 import useThunkStatus from '../../../hooks/useThunkStatus.js';
 import { taskName, taskType } from '../../../utils/constants.js';
+import { useGetFilesCountQuery } from '../../../api/fileManager.api.js';
 // import Message from '../../UI/Message.jsx';
 
 const validationSchema = Yup.object({
@@ -72,7 +72,7 @@ function AddCreateVideoModal({ onHide }) {
   const isDidabled = maxVideoLength < minVideoLength;
   const isCustomTime = formik.values.timeRangeType === 'customTime';
 
-  useEffect(() => {
+  const queryString = useMemo(() => {
     const query = {
       type: 'photo',
       date_gte: formik.values.startDate,
@@ -80,19 +80,25 @@ function AddCreateVideoModal({ onHide }) {
       ...isCustomTime && { time_gte: formik.values.customTimeStart, time_lte: formik.values.customTimeEnd },
     };
 
-    const queryString = `?${Object.entries(query).map(([key, value]) => `${key}=${value}`).join('&')}`;
-
-    fileManagerService.getCount(selectedCamera._id, queryString)
-      .then((resp) => {
-        setFilesCount(resp.data.count);
-        formik.setFieldValue(
-          'duration',
-          Math.round(resp.data.count / formik.values.fps),
-        );
-      });
-
-    // TODO clear request then unmount
+    return `?${Object.entries(query).map(([key, value]) => `${key}=${value}`).join('&')}`;
   }, [formik.values.startDate, formik.values.endDate, formik.values.timeRangeType, formik.values.customTimeStart, formik.values.customTimeEnd]);
+
+  const getFilesCountQuery = useGetFilesCountQuery({
+    cameraId: selectedCamera._id,
+    query: queryString,
+  });
+
+  const { data } = getFilesCountQuery;
+
+  useEffect(() => {
+    if (data && data.count) {
+      setFilesCount(data.count);
+      formik.setFieldValue(
+        'duration',
+        Math.round(data.count / formik.values.fps),
+      );
+    }
+  }, [data]);
 
   return (
     <>
