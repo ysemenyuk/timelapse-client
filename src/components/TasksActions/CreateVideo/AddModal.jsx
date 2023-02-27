@@ -5,7 +5,7 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
 import format from 'date-fns/format';
 import * as Yup from 'yup';
-import { Modal, Button, Form, Row, Col, Spinner } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col, Spinner, Placeholder } from 'react-bootstrap';
 import { cameraSelectors } from '../../../redux/camera/cameraSlice.js';
 import { taskActions } from '../../../redux/task/taskSlice.js';
 import useThunkStatus from '../../../hooks/useThunkStatus.js';
@@ -67,9 +67,6 @@ function AddCreateVideoModal({ onHide }) {
   // console.log(22222222, 'formik.values -', formik.values);
 
   const [filesCount, setFilesCount] = useState(0);
-  const maxVideoLength = Math.round(filesCount / formik.values.fps);
-  const minVideoLength = 1;
-  const isDidabled = maxVideoLength < minVideoLength;
   const isCustomTime = formik.values.timeRangeType === 'customTime';
 
   const queryString = useMemo(() => {
@@ -81,7 +78,10 @@ function AddCreateVideoModal({ onHide }) {
     };
 
     return `?${Object.entries(query).map(([key, value]) => `${key}=${value}`).join('&')}`;
-  }, [formik.values.startDate, formik.values.endDate, formik.values.timeRangeType, formik.values.customTimeStart, formik.values.customTimeEnd]);
+  }, [
+    formik.values.startDate, formik.values.endDate, formik.values.timeRangeType,
+    formik.values.customTimeStart, formik.values.customTimeEnd,
+  ]);
 
   const getFilesCountQuery = useGetFilesCountQuery({
     cameraId: selectedCamera._id,
@@ -99,6 +99,12 @@ function AddCreateVideoModal({ onHide }) {
       );
     }
   }, [data]);
+
+  const minVideoLength = 1;
+  const maxVideoLength = Math.round(filesCount / formik.values.fps);
+
+  const isLoading = getFilesCountQuery.isFetching;
+  const isDidabled = maxVideoLength < minVideoLength || isLoading;
 
   return (
     <>
@@ -218,31 +224,50 @@ function AddCreateVideoModal({ onHide }) {
             </Row>
           </If>
 
-          <div className="mb-4">
-            {`Found: ${filesCount} photos (${maxVideoLength} seconds video)`}
-          </div>
-
           <Choose>
-            <When condition={isDidabled}>
-              <div>
-                Minimum: 200 photos (10 seconds video )
+            <When condition={isLoading}>
+              <div className="mb-3">
+                <Placeholder as="p" animation="glow">
+                  <Placeholder xs={7} bg="secondary" />
+                </Placeholder>
+              </div>
+              <div className="mb-3">
+                <Placeholder as="p" animation="glow">
+                  <Placeholder xs={4} bg="secondary" />
+                </Placeholder>
               </div>
             </When>
             <Otherwise>
-              <div className="mb-4">
-                <Form.Label>{`Video length (${formik.values.duration} sec)`}</Form.Label>
-                <Form.Range
-                  disabled={isDidabled}
-                  name="duration"
-                  id="duration"
-                  min={minVideoLength}
-                  max={maxVideoLength}
-                  value={formik.values.duration}
-                  onChange={formik.handleChange}
-                />
+              <div className="mb-3">
+                {`Found: ${filesCount} photos (${maxVideoLength} seconds video)`}
               </div>
+              <Choose>
+                <When condition={isDidabled}>
+                  <div className="mb-3">
+                    Minimum: 200 photos (10 seconds video )
+                  </div>
+                </When>
+                <Otherwise>
+                  <div className="mb-3">
+                    {`Video length (${formik.values.duration} sec)`}
+                  </div>
+                </Otherwise>
+              </Choose>
             </Otherwise>
           </Choose>
+
+          <div className="mb-3">
+            {/* <Form.Label>{`Video length (${formik.values.duration} sec)`}</Form.Label> */}
+            <Form.Range
+              disabled={isDidabled}
+              name="duration"
+              id="duration"
+              min={minVideoLength}
+              max={maxVideoLength}
+              value={formik.values.duration}
+              onChange={formik.handleChange}
+            />
+          </div>
 
         </Form>
 
