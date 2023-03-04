@@ -1,13 +1,12 @@
 {
-  "name": "front",
-  "version": "0.1.0",
-  "description": "timelapse",
+  "name": "timelapse",
+  "version": "1.0.1",
+  "description": "timelapse client",
   "main": "index.js",
   "type": "module",
-  "proxy": "http://localhost:4000",
   "scripts": {
-    "dev": "webpack serve --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js"
+    "dev": "set NODE_ENV=development && webpack serve --config webpack.dev.js",
+    "build": "set NODE_ENV=production && webpack --config webpack.prod.js"
   },
   "author": "",
   "license": "ISC",

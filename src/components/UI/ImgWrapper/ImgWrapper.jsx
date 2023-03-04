@@ -3,10 +3,13 @@ import LazyLoad from 'react-lazyload';
 // import cn from 'classnames';
 import styles from './ImgWrapper.module.css';
 import noImg from '../../../assets/no_img.png';
+import { IMG_HOST } from '../../../utils/constants';
 
 export default function ImgWrapper({ src, width, height, ...props }) {
   const [load, setLoad] = useState(false);
   const [error, setError] = useState(false);
+
+  const imgsrc = `${IMG_HOST}${src}`;
 
   const wd = `${width}%`;
   const pd = `${width * height}%`;
@@ -32,7 +35,8 @@ export default function ImgWrapper({ src, width, height, ...props }) {
                   setLoad(true);
                   setError(true);
                 }}
-                src={src}
+                src={imgsrc}
+                crossOrigin="anonymous"
                 {...props}
               />
             </When>

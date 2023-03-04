@@ -50,7 +50,7 @@ function CameraCard({ cameraId, onClick, tabName, camerasList }) {
   return (
     <Card className={styles.card}>
       <div className={styles.cardImgWithHeader} role="presentation" onClick={onClick}>
-        <ImgWrapper width={100} height={0.5625} src={camera.avatar && `${camera.avatar.link}`} />
+        <ImgWrapper width={100} height={0.5625} src={camera.avatar && camera.avatar.link} />
         <Card.Header className={styles.cardHeader}>
           <div className="text-truncate fw-bold">{camera.name}</div>
           <div className="text-truncate">{camera.description}</div>

@@ -1,12 +1,8 @@
 import io from 'socket.io-client';
-// import { toast } from 'react-toastify';
-// import { cameraActions } from './redux/camera/cameraSlice.js';
-// import { fileActions } from './redux/file/fileSlice.js';
-// import { taskActions } from './redux/task/taskSlice.js';
-import { HOST } from './utils/constants';
+import { WS_HOST } from './utils/constants';
 
 export default () => {
-  const socket = io(HOST, { autoConnect: false });
+  const socket = io(WS_HOST, { autoConnect: false });
 
   const connectSocket = (user) => {
     socket.auth = { userId: user.userId, token: user.token };

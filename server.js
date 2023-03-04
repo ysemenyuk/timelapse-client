@@ -2,8 +2,8 @@
 import express from 'express';
 import path from 'path';
 
-const PORT = 3000;
-const MODE = 'Production';
+const PORT = process.env.PORT || 3000;
+const MODE = process.env.NODE_ENV || 'development';
 
 const app = express();
 

@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { HOST } from '../utils/constants.js';
+import { API_HOST } from '../utils/constants.js';
 import getAuthHeader from './authHeader.js';
 
 const instance = axios.create({
-  baseURL: `${HOST}/api/cameras`,
+  baseURL: `${API_HOST}/api/cameras`,
 });
 
 const getAll = async () => {
