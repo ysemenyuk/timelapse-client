@@ -1,36 +1,20 @@
 /* eslint-disable import/no-extraneous-dependencies */
-const Dotenv = require('dotenv-webpack');
-const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+import Dotenv from 'dotenv-webpack';
+import path from 'path';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 
-const mode = process.env.NODE_ENV || 'development';
+// const mode = process.env.NODE_ENV;
 
-module.exports = {
-  mode,
-  devtool: 'inline-source-map',
+export default {
   resolve: {
     extensions: ['.js', '.jsx'],
   },
   output: {
     filename: 'main.js',
-    path: path.join(__dirname, 'public'),
+    path: path.join(process.cwd(), 'public'),
     clean: true,
     publicPath: '/public/',
-  },
-  devServer: {
-    compress: true,
-    hot: true,
-    port: 3000,
-    host: 'localhost',
-    contentBase: path.join(__dirname, 'public'),
-    publicPath: '/public/',
-    proxy: {
-      context: ['/files', 'files/:id/poster'],
-      target: 'http://localhost:4000',
-    },
-    historyApiFallback: true,
-    open: true,
   },
   plugins: [
     new HtmlWebpackPlugin({

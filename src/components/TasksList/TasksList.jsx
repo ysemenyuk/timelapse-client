@@ -18,7 +18,7 @@ function CameraTasks({ selectedCameraId }) {
   const cameraTasks = useSelector(taskSelectors.cameraTasks);
   // const fetchStatus = useThunkStatus(taskActions.fetchAll);
 
-  console.log(4444, 'CameraTasks');
+  // console.log(4444, 'CameraTasks');
 
   const handleClickTask = (task) => {
     console.log('handleClickTask', `Edit${task.name}`);

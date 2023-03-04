@@ -1,12 +1,13 @@
 {
   "name": "front",
   "version": "0.1.0",
-  "description": "",
+  "description": "timelapse",
   "main": "index.js",
   "type": "module",
+  "proxy": "http://localhost:4000",
   "scripts": {
-    "dev": "webpack serve",
-    "build": "npx webpack"
+    "dev": "webpack serve --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js"
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +20,7 @@
     "classnames": "^2.3.2",
     "core-js": "^3.29.0",
     "date-fns": "^2.28.0",
+    "express": "^4.18.2",
     "formik": "^2.2.6",
     "hls.js": "^1.3.3",
     "i18next": "^22.4.9",
@@ -40,6 +42,7 @@
     "regenerator-runtime": "^0.13.9",
     "socket.io-client": "^4.4.1",
     "video-react": "^0.16.0",
+    "webpack-merge": "^5.8.0",
     "yup": "^0.32.9"
   },
   "devDependencies": {

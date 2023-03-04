@@ -18,7 +18,7 @@ export default function useFileManager(props) {
   const [searchParams] = useSearchParams();
   const searchString = searchParams.toString();
 
-  console.log(1111, 'useFileManager');
+  // console.log(1111, 'useFileManager');
 
   //
 
@@ -78,7 +78,7 @@ export default function useFileManager(props) {
 
   useEffect(() => {
     socket.on('create-file', (data) => {
-      console.log('socket.on create-file data -', data);
+      // console.log('socket.on create-file data -', data);
       const { cameraId, file } = data;
       setAddedFile(file);
       // update stats in camera card
@@ -90,9 +90,8 @@ export default function useFileManager(props) {
   }, []);
 
   useEffect(() => {
-    // if last page refetch
-    const { currentPage, totalPages } = currentData;
-    if (getFilesQuery.currentData && currentPage === totalPages) {
+    // TODO: add conditions
+    if (getFilesQuery.currentData) {
       refetch();
     }
   }, [addedFile]);

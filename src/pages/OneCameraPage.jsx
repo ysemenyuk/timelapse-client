@@ -20,7 +20,7 @@ function CameraPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  console.log(5555, 'CameraPage');
+  // console.log(5555, 'CameraPage');
 
   const fetchStatus = useThunkStatus(cameraActions.fetchAll);
   const selectedCameraId = useSelector(cameraSelectors.selectedCameraId);

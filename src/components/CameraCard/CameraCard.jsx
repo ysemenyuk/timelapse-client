@@ -31,7 +31,7 @@ function CameraCard({ cameraId, onClick, tabName, camerasList }) {
   const camera = useSelector(cameraSelectors.cameraById(cameraId));
   const cameraStats = useSelector(cameraSelectors.cameraStatsByCameraId(cameraId));
 
-  console.log(3333, 'CameraCard', cameraStats);
+  // console.log(3333, 'CameraCard', cameraStats);
 
   const openEditCameraModal = () => {
     dispatch(cameraActions.selectCamera(cameraId));

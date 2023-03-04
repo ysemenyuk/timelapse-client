@@ -20,7 +20,7 @@ function QueryBar(props) {
     fileType,
   } = props;
 
-  console.log(2222, 'QueryBar');
+  // console.log(2222, 'QueryBar');
 
   const selectedCameraId = useSelector(cameraSelectors.selectedCameraId);
   const selectedCameraStats = useSelector(cameraSelectors.cameraStatsByCameraId(selectedCameraId));

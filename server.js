@@ -1,0 +1,18 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+import express from 'express';
+import path from 'path';
+
+const PORT = 3000;
+const MODE = 'Production';
+
+const app = express();
+
+app.use('/public', express.static(path.join(process.cwd(), 'public')));
+
+app.use('/*', (request, response) => {
+  response.sendFile(path.join(process.cwd(), 'public', 'index.html'));
+});
+
+app.listen(PORT, () => {
+  console.log(`httpServer running in ${MODE} mode on port ${PORT}`);
+});

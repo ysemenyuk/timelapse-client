@@ -27,7 +27,7 @@ function CameraPhotosManager() {
     onDeleteSelected,
     onFileClick,
     setPage,
-  } = useFileManager({ limit: 30 });
+  } = useFileManager({ limit: 24 });
 
   const dispatch = useDispatch();
   const selectedCamera = useSelector(cameraSelectors.selectedCamera);

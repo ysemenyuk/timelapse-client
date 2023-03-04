@@ -29,35 +29,5 @@ export default () => {
     console.log('socket.on connect_error', { err: err.message });
   });
 
-  // socket.onAny((event, ...args) => {
-  //   console.log('socket.onAny onAny', { event, args });
-  // });
-
-  // socket.on('update-task', (data) => {
-  //   console.log('socket.on update-task data -', data);
-
-  //   // toast('socket.on update-task');
-
-  //   const { cameraId, taskId } = data;
-  //   const allTasks = store.getState().task.tasks;
-
-  //   if (allTasks[cameraId]) {
-  //     const task = allTasks[cameraId].find((item) => item._id === taskId);
-  //     if (task) {
-  //       store.dispatch(taskActions.fetchOne({ cameraId, taskId }));
-  //     } else {
-  //       store.dispatch(taskActions.fetchAll({ cameraId }));
-  //     }
-  //   }
-  // });
-
-  // socket.on('create-file', (data) => {
-  //   console.log('socket.on create-file data -', data);
-
-  //   const { cameraId, file } = data;
-  //   store.dispatch(cameraActions.fetchOne(cameraId));
-  //   store.dispatch(fileActions.addFile(file));
-  // });
-
   return { socket, connectSocket, disconnectSocket };
 };

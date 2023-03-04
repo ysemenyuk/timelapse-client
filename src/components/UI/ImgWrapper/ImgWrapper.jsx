@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// import { Spinner } from 'react-bootstrap';
 import LazyLoad from 'react-lazyload';
 // import cn from 'classnames';
 import styles from './ImgWrapper.module.css';
