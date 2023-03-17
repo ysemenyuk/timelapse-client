@@ -6,19 +6,19 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { taskActions, taskSelectors } from '../../../redux/task/taskSlice.js';
 import useThunkStatus from '../../../hooks/useThunkStatus';
 import { taskStatus } from '../../../utils/constants.js';
-import PhotosByTimeForm from './Form.jsx';
-import { photosByTimeSchema } from '../../../utils/validations.js';
+import VideosByTimeForm from './Form.jsx';
+import { videosByTimeSchema } from '../../../utils/validations.js';
 
 function EditCreatePhotosByTimeModal({ onHide, data: { taskId } }) {
   const dispatch = useDispatch();
   const fetchStatus = useThunkStatus(taskActions.updateOne);
   const task = useSelector(taskSelectors.selectTaskById(taskId));
 
-  const { status, photoSettings, ...rest } = task;
-  const { timeRangeType, customTimeStart, customTimeStop, interval } = photoSettings;
+  const { status, videoSettings, ...rest } = task;
+  // const { dateRangeType, timeRangeType, startTime, endTime, duration, interval, deletExistingFile } = videoSettings;
 
-  const handleStartPhotosByTime = (values, { resetForm, setSubmitting, setFieldError }) => {
-    console.log('handleStartPhotosByTime');
+  const handleStartVideosByTime = (values, { resetForm, setSubmitting, setFieldError }) => {
+    console.log('handleStartVideosByTime');
 
     dispatch(taskActions.updateOne({
       cameraId: task.camera,
@@ -26,7 +26,7 @@ function EditCreatePhotosByTimeModal({ onHide, data: { taskId } }) {
       payload: {
         ...rest,
         status: taskStatus.RUNNING,
-        photoSettings: values,
+        videoSettings: values,
       },
     }))
       .then((resp) => {
@@ -42,8 +42,8 @@ function EditCreatePhotosByTimeModal({ onHide, data: { taskId } }) {
       });
   };
 
-  const handleStopPhotosByTime = () => {
-    console.log('handleStopPhotosByTime');
+  const handleStopVideosByTime = () => {
+    console.log('handleStopVideosByTime');
 
     dispatch(taskActions.updateOne({
       cameraId: task.camera,
@@ -51,15 +51,15 @@ function EditCreatePhotosByTimeModal({ onHide, data: { taskId } }) {
       payload: {
         ...rest,
         status: taskStatus.STOPPED,
-        photoSettings,
+        videoSettings,
       },
     }));
   };
 
   const formik = useFormik({
-    initialValues: { timeRangeType, customTimeStart, customTimeStop, interval },
-    validationSchema: photosByTimeSchema,
-    onSubmit: handleStartPhotosByTime,
+    initialValues: videoSettings,
+    validationSchema: videosByTimeSchema,
+    onSubmit: handleStartVideosByTime,
   });
 
   const isRunning = status === taskStatus.RUNNING;
@@ -71,14 +71,14 @@ function EditCreatePhotosByTimeModal({ onHide, data: { taskId } }) {
       </Modal.Header>
 
       <Modal.Body>
-        <PhotosByTimeForm formik={formik} status={status} />
+        <VideosByTimeForm formik={formik} status={status} />
       </Modal.Body>
 
       <Modal.Footer className="modal-footer justify-content-between">
         <div className="d-flex align-items-center gap-2">
           <Button
             disabled={!isRunning}
-            onClick={handleStopPhotosByTime}
+            onClick={handleStopVideosByTime}
             size="sm"
           >
             Stop

@@ -7,7 +7,7 @@ const instance = axios.create({
 });
 
 const getAll = async () => {
-  const response = await instance.get('?including=stats', { headers: getAuthHeader() });
+  const response = await instance.get('?stats=true&avatar=true', { headers: getAuthHeader() });
   return response;
 };
 

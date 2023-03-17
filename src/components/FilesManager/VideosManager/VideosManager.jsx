@@ -15,6 +15,7 @@ import VideoViewer from './VideoViewer';
 function VideosManager() {
   const {
     onCreateVideoFile,
+    onAddVideosByTimeTask,
     currentData,
     getFilesQuery,
     selectedIndex,
@@ -98,6 +99,13 @@ function VideosManager() {
             onClick={onCreateVideoFile}
           >
             +CreateVideo
+          </Button>
+          <Button
+            variant="info"
+            size="sm"
+            onClick={onAddVideosByTimeTask}
+          >
+            +AddVideoTask
           </Button>
         </div>
       </div>

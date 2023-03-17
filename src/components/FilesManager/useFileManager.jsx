@@ -135,11 +135,16 @@ export default function useFileManager(props) {
     dispatch(modalActions.openModal({ type: modals.ADD_CREATE_VIDEO }));
   };
 
+  const onAddVideosByTimeTask = () => {
+    dispatch(modalActions.openModal({ type: modals.ADD_CREATE_VIDEOS_BY_TIME }));
+  };
+
   //
 
   return {
     onCreatePhotoFile,
     onCreateVideoFile,
+    onAddVideosByTimeTask,
 
     currentData,
     getFilesQuery,

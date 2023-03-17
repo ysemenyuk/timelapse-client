@@ -17,7 +17,7 @@ function CreatePhotosByTimeForm({ formik, status }) {
   // console.log('formik.values -', formik.values);
 
   const [startTime, setStartTime] = useState(false);
-  const [stopTime, setStopTime] = useState(false);
+  const [endTime, setEndTime] = useState(false);
 
   // const [sunTime, setSunTime] = useState(false);
   // console.log('sunTime', sunTime);
@@ -25,7 +25,7 @@ function CreatePhotosByTimeForm({ formik, status }) {
   useEffect(() => {
     if (formik.values.timeRangeType === 'allTime') {
       setStartTime('00:00');
-      setStopTime('23:59');
+      setEndTime('23:59');
     }
 
     if (formik.values.timeRangeType === 'sunTime') {
@@ -33,17 +33,17 @@ function CreatePhotosByTimeForm({ formik, status }) {
         weatherService.getCurrentDateWeather([latitude, longitude])
           .then((resp) => {
             setStartTime(format(fromUnixTime(resp.data.sys.sunrise), 'HH:mm'));
-            setStopTime(format(fromUnixTime(resp.data.sys.sunset), 'HH:mm'));
+            setEndTime(format(fromUnixTime(resp.data.sys.sunset), 'HH:mm'));
           });
       } else {
         setStartTime('08:00');
-        setStopTime('20:00');
+        setEndTime('20:00');
       }
     }
 
     if (formik.values.timeRangeType === 'customTime') {
-      setStartTime(formik.values.customTimeStart);
-      setStopTime(formik.values.customTimeStop);
+      setStartTime(formik.values.startTime);
+      setEndTime(formik.values.endTime);
     }
 
     // TODO clear request then unmount
@@ -51,8 +51,8 @@ function CreatePhotosByTimeForm({ formik, status }) {
 
   const isRunning = status === taskStatus.RUNNING;
   const files = useMemo(
-    () => calculateFilesPerDay(startTime, stopTime, formik.values.interval),
-    [startTime, stopTime, formik.values.interval],
+    () => calculateFilesPerDay(startTime, endTime, formik.values.interval),
+    [startTime, endTime, formik.values.interval],
   );
 
   return (
@@ -117,7 +117,7 @@ function CreatePhotosByTimeForm({ formik, status }) {
               <When condition={isLocationExist}>
                 <div className="d-flex gap-2 justify-content-start align-items-center mb-3">
                   <div>{`Sunrise: ${startTime}`}</div>
-                  <div>{`Sunset: ${stopTime}`}</div>
+                  <div>{`Sunset: ${endTime}`}</div>
                 </div>
               </When>
               <Otherwise>
@@ -137,29 +137,29 @@ function CreatePhotosByTimeForm({ formik, status }) {
                 <Form.Control
                   disabled={isRunning}
                   onChange={formik.handleChange}
-                  value={formik.values.customTimeStart}
-                  name="customTimeStart"
-                  id="customTimeStart"
+                  value={formik.values.startTime}
+                  name="startTime"
+                  id="startTime"
                   type="time"
-                  isInvalid={formik.errors && formik.errors.customTimeStart}
+                  isInvalid={formik.errors && formik.errors.startTime}
                 />
                 <Form.Control.Feedback type="invalid">
-                  {formik.errors && formik.errors.customTimeStart}
+                  {formik.errors && formik.errors.startTime}
                 </Form.Control.Feedback>
               </InputGroup>
               <InputGroup as={Col}>
-                <InputGroup.Text id="inputGroup-sizing-sm">StopTime</InputGroup.Text>
+                <InputGroup.Text id="inputGroup-sizing-sm">EndTime</InputGroup.Text>
                 <Form.Control
                   disabled={isRunning}
                   onChange={formik.handleChange}
-                  value={formik.values.customTimeStop}
-                  name="customTimeStop"
-                  id="customTimeStop"
+                  value={formik.values.endTime}
+                  name="endTime"
+                  id="endTime"
                   type="time"
-                  isInvalid={formik.errors && formik.errors.customTimeStop}
+                  isInvalid={formik.errors && formik.errors.endTime}
                 />
                 <Form.Control.Feedback type="invalid">
-                  {formik.errors && formik.errors.customTimeStop}
+                  {formik.errors && formik.errors.endTime}
                 </Form.Control.Feedback>
               </InputGroup>
             </Row>

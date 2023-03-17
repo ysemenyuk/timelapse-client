@@ -1,20 +1,25 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
 import { Modal, Button, Spinner } from 'react-bootstrap';
-import { unwrapResult } from '@reduxjs/toolkit';
 import { taskActions } from '../../../redux/task/taskSlice.js';
 import useThunkStatus from '../../../hooks/useThunkStatus';
 import { taskName, taskStatus, taskType } from '../../../utils/constants.js';
-import PhotosByTimeForm from './Form.jsx';
+import VideosByTimeForm from './Form.jsx';
 import { cameraSelectors } from '../../../redux/camera/cameraSlice.js';
-import { photosByTimeSchema } from '../../../utils/validations.js';
+import { videosByTimeSchema } from '../../../utils/validations.js';
 
 const initialValues = {
-  timeRangeType: 'customTime', // allTime, sunTime, customTime
-  startTime: '08:00',
-  endTime: '20:00',
-  interval: 60,
+  dateRangeType: 'customDates', // allDates, customDates
+  dateRange: 'lastDay', // lastDay, lastWeek, lastMonth
+  timeRangeType: 'allTime', // allTime, customTime
+  startTime: '09:00',
+  endTime: '18:00',
+  interval: 'oneTimeDay', // oneTimeMonth, oneTimeWeek, oneTimeDay
+  duration: 60,
+  fps: 30,
+  deletExistingFile: 'yes',
 };
 
 function AddCreatePhotosByTimeModal({ onHide }) {
@@ -22,16 +27,16 @@ function AddCreatePhotosByTimeModal({ onHide }) {
   const fetchStatus = useThunkStatus(taskActions.createOne);
   const selectedCameraId = useSelector(cameraSelectors.selectedCameraId);
 
-  const handleStartCreatePhotosByTime = (values, { resetForm, setSubmitting, setFieldError }) => {
-    console.log('handleStartCreatePhotosByTime');
+  const handleStartCreateVideosByTime = (values, { resetForm, setSubmitting, setFieldError }) => {
+    console.log('handleStartCreateVideosByTime');
 
     dispatch(taskActions.createOne({
       cameraId: selectedCameraId,
       payload: {
-        name: taskName.CREATE_PHOTOS_BY_TIME,
+        name: taskName.CREATE_VIDEOS_BY_TIME,
         type: taskType.REPEAT_EVERY,
         status: taskStatus.RUNNING,
-        photoSettings: values,
+        videoSettings: values,
       },
     }))
       .then((resp) => {
@@ -49,18 +54,18 @@ function AddCreatePhotosByTimeModal({ onHide }) {
 
   const formik = useFormik({
     initialValues,
-    validationSchema: photosByTimeSchema,
-    onSubmit: handleStartCreatePhotosByTime,
+    validationSchema: videosByTimeSchema,
+    onSubmit: handleStartCreateVideosByTime,
   });
 
   return (
     <>
       <Modal.Header closeButton>
-        <Modal.Title>PhotosByTimeTask</Modal.Title>
+        <Modal.Title>VideosByTimeTask</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
-        <PhotosByTimeForm formik={formik} status={taskStatus.CREATED} />
+        <VideosByTimeForm formik={formik} status={taskStatus.CREATED} />
       </Modal.Body>
 
       <Modal.Footer>

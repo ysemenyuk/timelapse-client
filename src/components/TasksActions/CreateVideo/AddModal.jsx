@@ -5,13 +5,12 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
 import format from 'date-fns/format';
 import * as Yup from 'yup';
-import { Modal, Button, Form, Row, Col, Spinner, Placeholder } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col, Spinner, Placeholder, InputGroup } from 'react-bootstrap';
 import { cameraSelectors } from '../../../redux/camera/cameraSlice.js';
 import { taskActions } from '../../../redux/task/taskSlice.js';
 import useThunkStatus from '../../../hooks/useThunkStatus.js';
 import { taskName, taskType } from '../../../utils/constants.js';
 import { useGetFilesCountQuery } from '../../../api/fileManager.api.js';
-// import Message from '../../UI/Message.jsx';
 
 const validationSchema = Yup.object({
   customName: Yup.string().min(2).max(20),
@@ -34,14 +33,15 @@ function AddCreateVideoModal({ onHide }) {
   const formik = useFormik({
     validationSchema,
     initialValues: {
-      customName: 'filename',
+      customName: 'filename', // TODO: make by current date
+      dateRangeType: 'allDates',
       startDate: getDate(selectedCameraStats.firstPhoto),
       endDate: getDate(selectedCameraStats.lastPhoto),
       timeRangeType: 'allTime',
-      customTimeStart: '09:00',
-      customTimeEnd: '18:00',
+      startTime: '09:00',
+      endTime: '18:00',
       duration: 10,
-      fps: 25, // default
+      fps: 30,
     },
     onSubmit: (values, { resetForm, setSubmitting, setFieldError }) => {
       dispatch(taskActions.createOne({
@@ -69,20 +69,21 @@ function AddCreateVideoModal({ onHide }) {
   // console.log(22222222, 'formik.values -', formik.values);
 
   const [filesCount, setFilesCount] = useState(0);
+  const isCustomDates = formik.values.dateRangeType === 'customDates';
   const isCustomTime = formik.values.timeRangeType === 'customTime';
 
   const queryString = useMemo(() => {
     const query = {
       type: 'photo',
-      date_gte: formik.values.startDate,
-      date_lte: formik.values.endDate,
-      ...isCustomTime && { time_gte: formik.values.customTimeStart, time_lte: formik.values.customTimeEnd },
+      ...isCustomDates && { date_gte: formik.values.startDate, date_lte: formik.values.endDate },
+      ...isCustomTime && { time_gte: formik.values.startTime, time_lte: formik.values.endTime },
     };
 
     return `?${Object.entries(query).map(([key, value]) => `${key}=${value}`).join('&')}`;
   }, [
-    formik.values.startDate, formik.values.endDate, formik.values.timeRangeType,
-    formik.values.customTimeStart, formik.values.customTimeEnd,
+    formik.values.startDate, formik.values.endDate,
+    formik.values.startTime, formik.values.endTime,
+    formik.values.timeRangeType, formik.values.dateRangeType,
   ]);
 
   const getFilesCountQuery = useGetFilesCountQuery({
@@ -102,7 +103,7 @@ function AddCreateVideoModal({ onHide }) {
     }
   }, [data]);
 
-  const minVideoLength = 1;
+  const minVideoLength = 10;
   const maxVideoLength = Math.round(filesCount / formik.values.fps);
 
   const isLoading = getFilesCountQuery.isFetching;
@@ -138,39 +139,63 @@ function AddCreateVideoModal({ onHide }) {
             </Form.Group>
           </Row>
 
-          <Row className="mb-4">
-            <Form.Group as={Col}>
-              <Form.Label htmlFor="startDate">Start date</Form.Label>
-              <Form.Control
-                onChange={formik.handleChange}
-                value={formik.values.startDate}
-                name="startDate"
-                id="startDate"
-                type="date"
-                isInvalid={formik.errors && formik.errors.startDate}
-              />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors && formik.errors.startDate}
-              </Form.Control.Feedback>
-            </Form.Group>
+          <div key="inline-radio-dateRangeType" className="mb-3">
+            <Form.Check
+              inline
+              label="AllDates"
+              name="dateRangeType"
+              type="radio"
+              id="allDates"
+              onChange={formik.handleChange}
+              value="allDates"
+              checked={formik.values.dateRangeType === 'allDates'}
+            />
+            <Form.Check
+              inline
+              label="CustomDates"
+              name="dateRangeType"
+              type="radio"
+              id="customDates"
+              onChange={formik.handleChange}
+              value="customDates"
+              checked={formik.values.dateRangeType === 'customDates'}
+            />
+          </div>
 
-            <Form.Group as={Col}>
-              <Form.Label htmlFor="endDate">End date</Form.Label>
-              <Form.Control
-                onChange={formik.handleChange}
-                value={formik.values.endDate}
-                name="endDate"
-                id="endDate"
-                type="date"
-                isInvalid={formik.errors && formik.errors.endDate}
-              />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors && formik.errors.endDate}
-              </Form.Control.Feedback>
-            </Form.Group>
-          </Row>
+          <If condition={isCustomDates}>
+            <Row className="mb-4">
+              <InputGroup as={Col}>
+                <InputGroup.Text id="inputGroup-sizing-sm">StartDate</InputGroup.Text>
+                <Form.Control
+                  onChange={formik.handleChange}
+                  value={formik.values.startDate}
+                  name="startDate"
+                  id="startDate"
+                  type="date"
+                  isInvalid={formik.errors && formik.errors.startDate}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors && formik.errors.startDate}
+                </Form.Control.Feedback>
+              </InputGroup>
+              <InputGroup as={Col}>
+                <InputGroup.Text id="inputGroup-sizing-sm">EndDate</InputGroup.Text>
+                <Form.Control
+                  onChange={formik.handleChange}
+                  value={formik.values.endDate}
+                  name="endDate"
+                  id="endDate"
+                  type="date"
+                  isInvalid={formik.errors && formik.errors.endDate}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors && formik.errors.endDate}
+                </Form.Control.Feedback>
+              </InputGroup>
+            </Row>
+          </If>
 
-          <div key="inline-radio" className="mb-3">
+          <div key="inline-radio-timeRangeType" className="mb-3">
             <Form.Check
               inline
               label="AllDayTime"
@@ -194,35 +219,37 @@ function AddCreateVideoModal({ onHide }) {
           </div>
 
           <If condition={isCustomTime}>
-            <Row className="mb-3">
-              <Form.Group as={Col}>
-                <Form.Label htmlFor="customTimeStart">Start time</Form.Label>
+            <Row className="mb-4">
+              <InputGroup as={Col}>
+                <InputGroup.Text id="inputGroup-sizing-sm">StartTime</InputGroup.Text>
                 <Form.Control
+                // disabled={isRunning}
                   onChange={formik.handleChange}
-                  value={formik.values.customTimeStart}
-                  name="customTimeStart"
-                  id="customTimeStart"
+                  value={formik.values.startTime}
+                  name="startTime"
+                  id="startTime"
                   type="time"
-                  isInvalid={formik.errors && formik.errors.customTimeStart}
+                  isInvalid={formik.errors && formik.errors.startTime}
                 />
                 <Form.Control.Feedback type="invalid">
                   {formik.errors && formik.errors.startTime}
                 </Form.Control.Feedback>
-              </Form.Group>
-              <Form.Group as={Col}>
-                <Form.Label htmlFor="customTimeEnd">End time</Form.Label>
+              </InputGroup>
+              <InputGroup as={Col}>
+                <InputGroup.Text id="inputGroup-sizing-sm">EndTime</InputGroup.Text>
                 <Form.Control
+                // disabled={isRunning}
                   onChange={formik.handleChange}
-                  value={formik.values.customTimeEnd}
-                  name="customTimeEnd"
-                  id="customTimeEnd"
+                  value={formik.values.endTime}
+                  name="endTime"
+                  id="endTime"
                   type="time"
-                  isInvalid={formik.errors && formik.errors.customTimeEnd}
+                  isInvalid={formik.errors && formik.errors.endTime}
                 />
                 <Form.Control.Feedback type="invalid">
-                  {formik.errors && formik.errors.customTimeEnd}
+                  {formik.errors && formik.errors.endTime}
                 </Form.Control.Feedback>
-              </Form.Group>
+              </InputGroup>
             </Row>
           </If>
 
@@ -246,12 +273,12 @@ function AddCreateVideoModal({ onHide }) {
               <Choose>
                 <When condition={isDidabled}>
                   <div className="mb-3">
-                    Minimum: 200 photos (10 seconds video )
+                    Minimum: 300 photos (10 seconds video )
                   </div>
                 </When>
                 <Otherwise>
                   <div className="mb-3">
-                    {`Video length (${formik.values.duration} sec)`}
+                    {`Length (${formik.values.duration} sec)`}
                   </div>
                 </Otherwise>
               </Choose>
@@ -259,7 +286,7 @@ function AddCreateVideoModal({ onHide }) {
           </Choose>
 
           <div className="mb-3">
-            {/* <Form.Label>{`Video length (${formik.values.duration} sec)`}</Form.Label> */}
+            {/* <Form.Label>{`Length (${formik.values.duration} sec)`}</Form.Label> */}
             <Form.Range
               disabled={isDidabled}
               name="duration"
