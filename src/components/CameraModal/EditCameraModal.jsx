@@ -2,19 +2,12 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { Button, Modal, Spinner } from 'react-bootstrap';
 import CameraForm from './CameraForm.jsx';
 import { cameraActions, cameraSelectors } from '../../redux/camera/cameraSlice.js';
 import { modals } from '../../utils/constants.js';
 import { modalActions } from '../../redux/modalSlice.js';
-
-const validationSchema = Yup.object({
-  name: Yup.string().required().min(3).max(20),
-  description: Yup.string().required().min(3).max(30),
-  photoUrl: Yup.string().url(),
-  rtspUrl: Yup.string(),
-});
+import { cameraSchema } from '../../utils/validations.js';
 
 function EditCameraModal({ onHide }) {
   const dispatch = useDispatch();
@@ -41,7 +34,7 @@ function EditCameraModal({ onHide }) {
 
   const formik = useFormik({
     initialValues: selectedCamera,
-    validationSchema,
+    validationSchema: cameraSchema,
     onSubmit: handleSubmit,
   });
 

@@ -15,7 +15,6 @@ function EditCreatePhotosByTimeModal({ onHide, data: { taskId } }) {
   const task = useSelector(taskSelectors.selectTaskById(taskId));
 
   const { status, videoSettings, ...rest } = task;
-  // const { dateRangeType, timeRangeType, startTime, endTime, duration, interval, deletExistingFile } = videoSettings;
 
   const handleStartVideosByTime = (values, { resetForm, setSubmitting, setFieldError }) => {
     console.log('handleStartVideosByTime');
@@ -67,7 +66,7 @@ function EditCreatePhotosByTimeModal({ onHide, data: { taskId } }) {
   return (
     <>
       <Modal.Header closeButton>
-        <Modal.Title>PhotosByTimeTask</Modal.Title>
+        <Modal.Title>VideosByTimeTask</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>

@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useNavigate, Link, Navigate, useLocation } from 'react-router-dom';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { Container, Row, Col, Form, Button, Spinner, Alert, Stack } from 'react-bootstrap';
 import Heading from '../components/UI/Heading.jsx';
 import { userActions } from '../redux/user/userSlice.js';
+import { loginSchema } from '../utils/validations.js';
 
 function LoginPage() {
   const dispatch = useDispatch();
@@ -23,10 +23,7 @@ function LoginPage() {
       email: '',
       password: '',
     },
-    validationSchema: Yup.object({
-      email: Yup.string().required().email(),
-      password: Yup.string().required().min(6),
-    }),
+    validationSchema: loginSchema,
     onSubmit: (values, { resetForm, setSubmitting, setFieldError }) => {
       dispatch(userActions.login(values))
         .then((resp) => {
