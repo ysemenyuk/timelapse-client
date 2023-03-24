@@ -31,8 +31,6 @@ function CameraInfo() {
         <div>{`firstVideo.date: ${selectedCamera.firstVideo?.date}`}</div>
         <div>{`totalVideos: ${selectedCamera.totalVideos}`}</div>
         <div>---</div>
-        <div>{`photosByTimeTask.status: ${selectedCamera.photosByTimeTask.status}`}</div>
-        <div>---</div>
       </pre>
       {/* <pre>{JSON.stringify(selectedCamera, null, 2)}</pre> */}
     </Col>

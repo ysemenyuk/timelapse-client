@@ -15,7 +15,7 @@ function EditCreatePhotosByTimeModal({ onHide, data: { taskId } }) {
   const task = useSelector(taskSelectors.selectTaskById(taskId));
 
   const { status, photoSettings, ...rest } = task;
-  const { timeRangeType, customTimeStart, customTimeStop, interval } = photoSettings;
+  // const { timeRangeType, startTime, endTime, interval } = photoSettings;
 
   const handleStartPhotosByTime = (values, { resetForm, setSubmitting, setFieldError }) => {
     console.log('handleStartPhotosByTime');
@@ -57,7 +57,7 @@ function EditCreatePhotosByTimeModal({ onHide, data: { taskId } }) {
   };
 
   const formik = useFormik({
-    initialValues: { timeRangeType, customTimeStart, customTimeStop, interval },
+    initialValues: photoSettings,
     validationSchema: photosByTimeSchema,
     onSubmit: handleStartPhotosByTime,
   });

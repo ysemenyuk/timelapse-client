@@ -47,7 +47,7 @@ function CreatePhotosByTimeForm({ formik, status }) {
     }
 
     // TODO clear request then unmount
-  }, [formik.values.timeRangeType, formik.values.customTimeStart, formik.values.customTimeStop]);
+  }, [formik.values.timeRangeType, formik.values.startTime, formik.values.endTime]);
 
   const isRunning = status === taskStatus.RUNNING;
   const files = useMemo(
