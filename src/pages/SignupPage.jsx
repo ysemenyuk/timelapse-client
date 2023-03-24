@@ -4,10 +4,10 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, Link, Navigate } from 'react-router-dom';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { Container, Row, Col, Form, Button, Spinner, Alert, Stack } from 'react-bootstrap';
 import Heading from '../components/UI/Heading.jsx';
 import { userActions } from '../redux/user/userSlice.js';
+import { singupSchema } from '../utils/validations.js';
 
 function LoginPage() {
   const dispatch = useDispatch();
@@ -21,11 +21,7 @@ function LoginPage() {
       password: '',
       confirmPassword: '',
     },
-    validationSchema: Yup.object({
-      email: Yup.string().required().email(),
-      password: Yup.string().required().min(6),
-      confirmPassword: Yup.string().required().oneOf([Yup.ref('password')]),
-    }),
+    validationSchema: singupSchema,
     onSubmit: (values, { resetForm, setSubmitting, setFieldError }) => {
       dispatch(userActions.singup(values))
         .then((resp) => {

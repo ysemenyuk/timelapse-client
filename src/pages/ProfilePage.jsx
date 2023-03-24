@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import Message from '../components/UI/Message.jsx';
 import Heading from '../components/UI/Heading.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
-// import Error from '../components/UI/Error.jsx';
 import { userActions } from '../redux/user/userSlice.js';
 import useThunkStatus from '../hooks/useThunkStatus.js';
 

@@ -4,17 +4,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
 import format from 'date-fns/format';
-import * as Yup from 'yup';
 import { Modal, Button, Form, Row, Col, Spinner, Placeholder, InputGroup } from 'react-bootstrap';
 import { cameraSelectors } from '../../../redux/camera/cameraSlice.js';
 import { taskActions } from '../../../redux/task/taskSlice.js';
 import useThunkStatus from '../../../hooks/useThunkStatus.js';
 import { taskName, taskType } from '../../../utils/constants.js';
 import { useGetFilesCountQuery } from '../../../api/fileManager.api.js';
-
-const validationSchema = Yup.object({
-  customName: Yup.string().min(2).max(20),
-});
+import { videoSchema } from '../../../utils/validations.js';
 
 const getDate = (file) => {
   if (file && file.date) {
@@ -31,9 +27,9 @@ function AddCreateVideoModal({ onHide }) {
   const selectedCameraStats = useSelector(cameraSelectors.cameraStatsByCameraId(selectedCameraId));
 
   const formik = useFormik({
-    validationSchema,
+    validationSchema: videoSchema,
     initialValues: {
-      customName: 'filename', // TODO: make by current date
+      customName: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
       dateRangeType: 'allDates',
       startDate: getDate(selectedCameraStats.firstPhoto),
       endDate: getDate(selectedCameraStats.lastPhoto),
@@ -124,7 +120,7 @@ function AddCreateVideoModal({ onHide }) {
 
           <Row className="mb-3">
             <Form.Group as={Col}>
-              <Form.Label htmlFor="customName">File name</Form.Label>
+              <Form.Label htmlFor="customName">FileName</Form.Label>
               <Form.Control
                 onChange={formik.handleChange}
                 value={formik.values.customName}
@@ -198,7 +194,7 @@ function AddCreateVideoModal({ onHide }) {
           <div key="inline-radio-timeRangeType" className="mb-3">
             <Form.Check
               inline
-              label="AllDayTime"
+              label="AllTime"
               name="timeRangeType"
               type="radio"
               id="allTime"
@@ -208,7 +204,7 @@ function AddCreateVideoModal({ onHide }) {
             />
             <Form.Check
               inline
-              label="CustomeDayTime"
+              label="CustomeTime"
               name="timeRangeType"
               type="radio"
               id="customTime"

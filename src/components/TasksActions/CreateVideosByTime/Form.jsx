@@ -1,16 +1,8 @@
 import React from 'react';
 import { Form, Row, Col, ProgressBar, InputGroup } from 'react-bootstrap';
-// import format from 'date-fns/format';
-// import fromUnixTime from 'date-fns/fromUnixTime';
-// import { useSelector } from 'react-redux';
-// import weatherService from '../../../api/weather.service';
 import { taskStatus } from '../../../utils/constants';
-// import { calculateFilesPerDay } from '../../../utils/utils';
-// import { cameraSelectors } from '../../../redux/camera/cameraSlice';
 
 function CreateVideosByTimeForm({ formik, status }) {
-  // const selectedCamera = useSelector(cameraSelectors.selectedCamera);
-
   // console.log('formik.errors -', formik.errors);
   // console.log('formik.values -', formik.values);
 
@@ -108,12 +100,12 @@ function CreateVideosByTimeForm({ formik, status }) {
 
         <div className="mb-3">
           <Form.Group as={Col}>
-            <Form.Label htmlFor="interval">DayTimeRange</Form.Label>
+            <Form.Label htmlFor="interval">TimeRange</Form.Label>
             <div key="inline-radio-timeRangeType">
               <Form.Check
                 disabled={isRunning}
                 inline
-                label="AllDayTime"
+                label="AllTime"
                 name="timeRangeType"
                 type="radio"
                 id="allTime"
@@ -124,7 +116,7 @@ function CreateVideosByTimeForm({ formik, status }) {
               <Form.Check
                 disabled={isRunning}
                 inline
-                label="CustomeDayTime"
+                label="CustomeTime"
                 name="timeRangeType"
                 type="radio"
                 id="customTime"
