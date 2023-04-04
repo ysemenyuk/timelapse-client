@@ -3,8 +3,7 @@ import Dotenv from 'dotenv-webpack';
 import path from 'path';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-
-// const mode = process.env.NODE_ENV;
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 export default {
   resolve: {
@@ -12,17 +11,24 @@ export default {
   },
   output: {
     filename: 'main.js',
+    // filename: '[name].bundle.js',
     path: path.join(process.cwd(), 'public'),
     clean: true,
     publicPath: '/public/',
   },
+  optimization: {
+    minimize: true,
+    concatenateModules: true,
+    // runtimeChunk: 'single',
+  },
   plugins: [
+    new Dotenv(),
     new HtmlWebpackPlugin({
       template: 'template/index.html',
       favicon: 'template/favicon.ico',
     }),
     new MiniCssExtractPlugin(),
-    new Dotenv(),
+    new BundleAnalyzerPlugin(),
   ],
   module: {
     rules: [

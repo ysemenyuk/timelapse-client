@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "set NODE_ENV=development && webpack serve --config webpack.dev.js",
-    "build": "set NODE_ENV=production && webpack --config webpack.prod.js",
-    "serv": "node server.js"
+    "build": "set NODE_ENV=production && webpack --mode production --config webpack.prod.js",
+    "start": "node server.js"
   },
   "author": "yu.semenyuk",
   "license": "ISC",
@@ -71,6 +71,7 @@
     "sass-loader": "^11.0.1",
     "url-loader": "^4.1.1",
     "webpack": "^5.75.0",
+    "webpack-bundle-analyzer": "^4.8.0",
     "webpack-cli": "^4.6.0",
     "webpack-dev-server": "^3.11.2"
   }
