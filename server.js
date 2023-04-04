@@ -13,6 +13,6 @@ app.use('/*', (request, response) => {
   response.sendFile(path.join(process.cwd(), 'public', 'index.html'));
 });
 
-app.listen(PORT, () => {
+app.listen(9090, '192.168.1.43', () => {
   console.log(`httpServer running in ${MODE} mode on port ${PORT}`);
 });
