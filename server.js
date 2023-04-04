@@ -2,8 +2,8 @@
 import express from 'express';
 import path from 'path';
 
-const PORT = process.env.PORT || 3000;
-const MODE = process.env.NODE_ENV || 'development';
+const { PORT, HOST } = process.env;
+const MODE = process.env.NODE_ENV;
 
 const app = express();
 
@@ -13,6 +13,6 @@ app.use('/*', (request, response) => {
   response.sendFile(path.join(process.cwd(), 'public', 'index.html'));
 });
 
-app.listen(9090, '192.168.1.43', () => {
+app.listen(PORT, HOST, () => {
   console.log(`httpServer running in ${MODE} mode on port ${PORT}`);
 });
