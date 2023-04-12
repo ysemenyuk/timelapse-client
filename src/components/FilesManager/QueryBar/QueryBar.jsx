@@ -26,14 +26,14 @@ function QueryBar(props) {
   const selectedCameraStats = useSelector(cameraSelectors.cameraStatsByCameraId(selectedCameraId));
 
   const getFilesCountsByDatesQuery = useGetFilesCountsByDatesQuery({ cameraId: selectedCameraId });
-  const { data: filesCountsByDates } = getFilesCountsByDatesQuery;
+  const { data } = getFilesCountsByDatesQuery;
 
   const datesWiithFiles = useMemo(() => {
-    if (filesCountsByDates) {
-      return filesCountsByDates.map((i) => new Date(i._id));
+    if (data && data.countsByDates) {
+      return data.countsByDates.map((i) => new Date(i._id));
     }
     return [];
-  }, [filesCountsByDates]);
+  }, [data]);
 
   const [searchParams, setSearchParams] = useSearchParams();
 

@@ -5,6 +5,7 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
 import format from 'date-fns/format';
 import { Modal, Button, Form, Row, Col, Spinner, Placeholder, InputGroup } from 'react-bootstrap';
+import _ from 'lodash';
 import { cameraSelectors } from '../../../redux/camera/cameraSlice.js';
 import { taskActions } from '../../../redux/task/taskSlice.js';
 import useThunkStatus from '../../../hooks/useThunkStatus.js';
@@ -90,7 +91,7 @@ function AddCreateVideoModal({ onHide }) {
   const { data } = getFilesCountQuery;
 
   useEffect(() => {
-    if (data && data.count) {
+    if (data && _.has(data, 'count')) {
       setFilesCount(data.count);
       formik.setFieldValue(
         'duration',
