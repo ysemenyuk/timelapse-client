@@ -53,7 +53,7 @@ export default {
           { loader: MiniCssExtractPlugin.loader },
           { loader: 'css-loader' },
           { loader: 'postcss-loader' },
-          { loader: 'sass-loader' },
+          // { loader: 'sass-loader' },
         ],
       },
       {
